@@ -1,0 +1,16 @@
+PODS:
+  - ABMediaView (0.1.0)
+
+DEPENDENCIES:
+  - ABMediaView (from `../`)
+
+EXTERNAL SOURCES:
+  ABMediaView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ABMediaView: 4f7c4cb65f2c0972f3b367f07335d28900c187b1
+
+PODFILE CHECKSUM: 27f21669c59b960a5f333218526081e637aaa73e
+
+COCOAPODS: 1.2.0.beta.3
