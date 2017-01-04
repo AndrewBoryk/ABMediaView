@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ABMediaView'
-  s.version          = '0.1.1'
+  s.version          = '0.1.0'
   s.summary          = 'ABMediaView provides a view that can display an image and play a video.'
 
 # This description is used to generate tags and improve search results.
