@@ -22,7 +22,7 @@ pod "ABMediaView"
 
 ## Author
 
-Andrew Boryk, aboryk@mercymavericks.edu
+Andrew Boryk, andrewcboryk@gmail.com
 
 ## License
 
