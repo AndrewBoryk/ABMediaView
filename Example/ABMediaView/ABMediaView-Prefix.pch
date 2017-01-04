@@ -14,3 +14,6 @@
     @import UIKit;
     @import Foundation;
 #endif
+
+#import <ABMediaView/ABMediaView.h>
+

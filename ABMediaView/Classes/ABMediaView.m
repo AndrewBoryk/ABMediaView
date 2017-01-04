@@ -39,64 +39,12 @@
         
     }
     
-    if (![ABUtils notNull:self.imageView]) {
-        self.imageView = [[UIImageView alloc] initWithFrame:self.frame];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.imageView.backgroundColor = [UIColor clearColor];
-    }
-    
     if (![ABUtils notNull:self.track]) {
         self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 4)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
     }
     
     self.track.hidden = YES;
-    
-    if (![self.subviews containsObject:self.imageView]) {
-        
-        self.imageView.hidden = YES;
-        
-        [self addSubview:self.imageView];
-        
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeCenterX
-                                      relatedBy:0
-                                         toItem:self.imageView
-                                      attribute:NSLayoutAttributeCenterX
-                                     multiplier:1
-                                       constant:0]];
-        
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeCenterY
-                                      relatedBy:0
-                                         toItem:self.imageView
-                                      attribute:NSLayoutAttributeCenterY
-                                     multiplier:1
-                                       constant:0]];
-        
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeHeight
-                                      relatedBy:NSLayoutRelationEqual
-                                         toItem:self.imageView
-                                      attribute:NSLayoutAttributeHeight
-                                     multiplier:1
-                                       constant:0]];
-        
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeWidth
-                                      relatedBy:NSLayoutRelationEqual
-                                         toItem:self.imageView
-                                      attribute:NSLayoutAttributeWidth
-                                     multiplier:1
-                                       constant:0]];
-        
-    }
-    
     
     if (![self.subviews containsObject:self.videoIndicator]) {
         self.videoIndicator.alpha = 0;
@@ -255,7 +203,7 @@
     self.isLoadingVideo = false;
     
     if (!self.imageViewNotReused) {
-        self.imageView.image = nil;
+        self.image = nil;
     }
     
     
@@ -279,7 +227,7 @@
                 UIImage *image = [UIImage imageWithData:data];
                 if (image) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        self.imageView.image = image;
+                        self.image = image;
                         
                         //                        [self.loadingIndicator stopLoading];
                         

@@ -49,9 +49,6 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 /// Play video recognizer
 @property (strong, nonatomic) UITapGestureRecognizer *playRecognizer;
 
-/// Shows image for view
-@property (strong, nonatomic) UIImageView *imageView;
-
 /// Shows that the image is loading
 @property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
 

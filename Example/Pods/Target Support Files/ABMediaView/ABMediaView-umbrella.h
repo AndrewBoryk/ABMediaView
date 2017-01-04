@@ -10,6 +10,9 @@
 #endif
 #endif
 
+#import "ABMediaView.h"
+#import "ABUtils.h"
+#import "VideoTrackView.h"
 
 FOUNDATION_EXPORT double ABMediaViewVersionNumber;
 FOUNDATION_EXPORT const unsigned char ABMediaViewVersionString[];

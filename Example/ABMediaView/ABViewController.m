@@ -27,4 +27,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.mediaView setImageURL:@"http://cdn3-www.cattime.com/assets/uploads/2011/08/best-kitten-names-1.jpg" withCompletion:^(UIImage *image, NSError *error) {
+        
+    }];
+
+}
 @end
