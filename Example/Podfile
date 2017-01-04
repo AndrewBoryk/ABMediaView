@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ABMediaView_Example' do
+  pod 'ABMediaView', :path => '../'
+
+  target 'ABMediaView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
