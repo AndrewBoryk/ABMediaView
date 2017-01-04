@@ -10,8 +10,13 @@
 		085616DE8B8AAA2AC75D437AB10DB6E9 /* ABMediaView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		17F6E9E2AB640A538AAF71A26C284FA6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		257A5337C65A09F112F5CCB03105DF74 /* Pods-ABMediaView_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2928552F7FA22D7FF09157BC6F8C12D3 /* ReplaceMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 773155AFF29904A59D688A1DB2D3329A /* ReplaceMe.m */; };
 		37C3903634FFD4E8E92C26902E6BA84C /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
+		458BB9591E1D7FB900F642A2 /* ABMediaView.h in Headers */ = {isa = PBXBuildFile; fileRef = 458BB9571E1D7FB900F642A2 /* ABMediaView.h */; };
+		458BB95A1E1D7FB900F642A2 /* ABMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458BB9581E1D7FB900F642A2 /* ABMediaView.m */; };
+		458BB95D1E1D800000F642A2 /* VideoTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 458BB95B1E1D800000F642A2 /* VideoTrackView.h */; };
+		458BB95E1E1D800000F642A2 /* VideoTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458BB95C1E1D800000F642A2 /* VideoTrackView.m */; };
+		458BB9611E1D80E200F642A2 /* ABUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 458BB95F1E1D80E200F642A2 /* ABUtils.h */; };
+		458BB9621E1D80E200F642A2 /* ABUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 458BB9601E1D80E200F642A2 /* ABUtils.m */; };
 		5D53BCC2949DD8548383FACADBBAE863 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		7DDF517DBAD72F29544850EA073D0C83 /* Pods-ABMediaView_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F8F880349FE6ECF6AFA3E08C722368 /* Pods-ABMediaView_Example-dummy.m */; };
 		ABAC1B6A04ECDAD5F7571B704209F734 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
@@ -32,9 +37,15 @@
 /* Begin PBXFileReference section */
 		088153BFDE46DC28C3A303D3B0047168 /* Pods-ABMediaView_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Tests-resources.sh"; sourceTree = "<group>"; };
 		1B0B801098B63BAE57DED975A99907E4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2226A379F32A992A7C83D39EE0582BB4 /* Pods-ABMediaView_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-ABMediaView_Tests.modulemap"; sourceTree = "<group>"; };
+		2226A379F32A992A7C83D39EE0582BB4 /* Pods-ABMediaView_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ABMediaView_Tests.modulemap"; sourceTree = "<group>"; };
 		34F8F880349FE6ECF6AFA3E08C722368 /* Pods-ABMediaView_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ABMediaView_Example-dummy.m"; sourceTree = "<group>"; };
 		417BF06B15201C58C0C1D9D40CC9057C /* Pods-ABMediaView_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Example-frameworks.sh"; sourceTree = "<group>"; };
+		458BB9571E1D7FB900F642A2 /* ABMediaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABMediaView.h; sourceTree = "<group>"; };
+		458BB9581E1D7FB900F642A2 /* ABMediaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABMediaView.m; sourceTree = "<group>"; };
+		458BB95B1E1D800000F642A2 /* VideoTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTrackView.h; sourceTree = "<group>"; };
+		458BB95C1E1D800000F642A2 /* VideoTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTrackView.m; sourceTree = "<group>"; };
+		458BB95F1E1D80E200F642A2 /* ABUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABUtils.h; sourceTree = "<group>"; };
+		458BB9601E1D80E200F642A2 /* ABUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABUtils.m; sourceTree = "<group>"; };
 		4919760FC8F10ADB4D56AA2DA0A02B2A /* Pods-ABMediaView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4C025123E37568A1D42A9663DB47DD21 /* ABMediaView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ABMediaView-prefix.pch"; sourceTree = "<group>"; };
 		4EC7228C84537130D06D125671D4AC85 /* Pods-ABMediaView_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ABMediaView_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -44,21 +55,20 @@
 		590BA9F8B8BA40336382BA812C7FA4F0 /* ABMediaView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ABMediaView.xcconfig; sourceTree = "<group>"; };
 		5C9C31F7679E37F62AA8CB0C4BFAD99F /* Pods-ABMediaView_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Example-resources.sh"; sourceTree = "<group>"; };
 		770233456A6115FB138DC42FC58F14DA /* Pods-ABMediaView_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ABMediaView_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		773155AFF29904A59D688A1DB2D3329A /* ReplaceMe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ReplaceMe.m; sourceTree = "<group>"; };
-		7BDF655D3B164B844CC191924DB4A44C /* ABMediaView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = ABMediaView.modulemap; sourceTree = "<group>"; };
-		876E0EC985A204AF6CE8DB31949EF1EA /* ABMediaView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ABMediaView.framework; path = ABMediaView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		7BDF655D3B164B844CC191924DB4A44C /* ABMediaView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ABMediaView.modulemap; sourceTree = "<group>"; };
+		876E0EC985A204AF6CE8DB31949EF1EA /* ABMediaView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ABMediaView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		982359C74882CC0544D159916F1D2628 /* Pods-ABMediaView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		A45C42D1F1571B191EAE8817C73102EC /* Pods-ABMediaView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A5DA0BF1F7247E87A4DA103F56D778B7 /* Pods-ABMediaView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ABMediaView_Tests-umbrella.h"; sourceTree = "<group>"; };
 		B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ABMediaView-umbrella.h"; sourceTree = "<group>"; };
-		B962F5F9DCA1D1F3FDC6C16F28B63A44 /* Pods-ABMediaView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-ABMediaView_Example.modulemap"; sourceTree = "<group>"; };
+		B962F5F9DCA1D1F3FDC6C16F28B63A44 /* Pods-ABMediaView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ABMediaView_Example.modulemap"; sourceTree = "<group>"; };
 		BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ABMediaView-dummy.m"; sourceTree = "<group>"; };
 		BC528D0F0F3432D8A98955B2ACC0736C /* Pods-ABMediaView_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ABMediaView_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		C1A0EC830330F518FF881349962CEBB7 /* Pods_ABMediaView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ABMediaView_Tests.framework; path = "Pods-ABMediaView_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1A0EC830330F518FF881349962CEBB7 /* Pods_ABMediaView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABMediaView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		D0303F9F0C235335772E8E5792871B89 /* Pods_ABMediaView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ABMediaView_Example.framework; path = "Pods-ABMediaView_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0303F9F0C235335772E8E5792871B89 /* Pods_ABMediaView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABMediaView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E19391C502C17A39AD7EAF5B195C75BC /* Pods-ABMediaView_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ABMediaView_Example-umbrella.h"; sourceTree = "<group>"; };
 		E7420D61127FEF6A1F382DC7ED24D1FB /* Pods-ABMediaView_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ABMediaView_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		F5E4F83D9A59B9C218B0CC05BD489373 /* Pods-ABMediaView_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Tests-frameworks.sh"; sourceTree = "<group>"; };
@@ -120,7 +130,6 @@
 			children = (
 				C857652458BFB2B8B6152AE8C36376C9 /* Classes */,
 			);
-			name = ABMediaView;
 			path = ABMediaView;
 			sourceTree = "<group>";
 		};
@@ -208,9 +217,13 @@
 		C857652458BFB2B8B6152AE8C36376C9 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				773155AFF29904A59D688A1DB2D3329A /* ReplaceMe.m */,
+				458BB9571E1D7FB900F642A2 /* ABMediaView.h */,
+				458BB9581E1D7FB900F642A2 /* ABMediaView.m */,
+				458BB95B1E1D800000F642A2 /* VideoTrackView.h */,
+				458BB95C1E1D800000F642A2 /* VideoTrackView.m */,
+				458BB95F1E1D80E200F642A2 /* ABUtils.h */,
+				458BB9601E1D80E200F642A2 /* ABUtils.m */,
 			);
-			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -247,7 +260,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				458BB95D1E1D800000F642A2 /* VideoTrackView.h in Headers */,
 				085616DE8B8AAA2AC75D437AB10DB6E9 /* ABMediaView-umbrella.h in Headers */,
+				458BB9591E1D7FB900F642A2 /* ABMediaView.h in Headers */,
+				458BB9611E1D80E200F642A2 /* ABUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,8 +363,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				458BB9621E1D80E200F642A2 /* ABUtils.m in Sources */,
+				458BB95A1E1D7FB900F642A2 /* ABMediaView.m in Sources */,
+				458BB95E1E1D800000F642A2 /* VideoTrackView.m in Sources */,
 				37C3903634FFD4E8E92C26902E6BA84C /* ABMediaView-dummy.m in Sources */,
-				2928552F7FA22D7FF09157BC6F8C12D3 /* ReplaceMe.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

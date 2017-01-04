@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'ABMediaView'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of ABMediaView.'
+  s.summary          = 'ABMediaView provides a view that can display an image and play a video.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,15 +17,13 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  s.description      = 'With ABMediaView, one can drop in a view that is able to display images or videos. The image lazy-loading is by the view, or can be implemented view datasource. The same applies for videos. In addition, videos contain a player with timeline and scrubbing.'
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/ABMediaView'
+  s.homepage         = 'https://github.com/andrewboryk/ABMediaView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Andrew Boryk' => 'aboryk@mercymavericks.edu' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/ABMediaView.git', :tag => s.version.to_s }
+  s.author           = { 'Andrew Boryk' => 'andrewcboryk@gmail.com' }
+  s.source           = { :git => 'https://github.com/andrewboryk/ABMediaView.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
