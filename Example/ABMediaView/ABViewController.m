@@ -18,6 +18,18 @@
 {
     [super viewDidLoad];
     
+    self.mediaView.delegate = self;
+    
+    self.mediaView.backgroundColor = [UIColor blackColor];
+    
+    /// Changing the theme color changes the color of the play indicator as well as the progress track
+    [self.mediaView setThemeColor:[UIColor redColor]];
+    
+    [self.mediaView setShowTrack:YES];
+    
+    [self.mediaView setAllowLooping:YES];
+    
+    self.mediaView.contentMode = UIViewContentModeScaleAspectFit;
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -34,15 +46,11 @@
         
     }];
     
-    [self.mediaView setThemeColor:[UIColor redColor]];
-    
-    [self.mediaView setShowTrack:YES];
-    
-    [self.mediaView setAllowLooping:YES];
-    
-    self.mediaView.contentMode = UIViewContentModeScaleAspectFill;
-    
     [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
 
+}
+
+- (void) playVideo {
+    self.mediaView.image = nil;
 }
 @end

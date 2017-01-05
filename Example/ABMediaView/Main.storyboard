@@ -6,8 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -24,20 +22,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Vf-rt-rcR" customClass="ABMediaView">
-                                <rect key="frame" x="16" y="44" width="343" height="193"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="3Vf-rt-rcR" secondAttribute="height" multiplier="16:9" id="MaS-fr-iK8"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="3Vf-rt-rcR" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="24" id="79r-qd-rrI"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="3Vf-rt-rcR" secondAttribute="trailing" id="Qoh-hR-E6X"/>
-                            <constraint firstItem="3Vf-rt-rcR" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="fCC-lQ-3hX"/>
-                            <constraint firstItem="3Vf-rt-rcR" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" id="rl6-8C-DhV"/>
+                            <constraint firstItem="3Vf-rt-rcR" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" id="79r-qd-rrI"/>
+                            <constraint firstAttribute="trailing" secondItem="3Vf-rt-rcR" secondAttribute="trailing" id="Qoh-hR-E6X"/>
+                            <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="3Vf-rt-rcR" secondAttribute="bottom" id="TJQ-NY-778"/>
+                            <constraint firstItem="3Vf-rt-rcR" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="rl6-8C-DhV"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="mediaView" destination="3Vf-rt-rcR" id="eOh-SV-xes"/>
                     </connections>

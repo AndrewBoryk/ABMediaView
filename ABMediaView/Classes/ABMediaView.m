@@ -22,6 +22,17 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self updatePlayerFrame];
+    
+    [self.track updateBuffer];
+    [self.track updateBarBackground];
+    [self.track updateProgress];
+}
+
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
     
@@ -43,7 +54,7 @@
     }
     
     if (![ABUtils notNull:self.track]) {
-        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 100.0f)];
+        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
         [self.track.progressView setBackgroundColor: self.themeColor];
         self.track.delegate = self;
@@ -117,7 +128,7 @@
                                                                   toItem:nil
                                                                attribute: NSLayoutAttributeNotAnAttribute
                                                               multiplier:1
-                                                                constant:100.0f]];
+                                                                constant:60.0f]];
         
         [self.track layoutIfNeeded];
     }
@@ -513,7 +524,7 @@
 
 - (void) updatePlayerFrame {
     if ([ABUtils notNull:self.playerLayer]) {
-        self.playerLayer.frame = self.frame;
+        self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     }
 }
 
@@ -756,6 +767,10 @@
         CMTime timeCM = CMTimeMakeWithSeconds(time, timeScale);
         [self.player seekToTime:timeCM toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
 }
 
 @end

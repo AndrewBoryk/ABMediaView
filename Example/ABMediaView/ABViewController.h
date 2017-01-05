@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <ABMediaView/ABMediaView.h>
 
-@interface ABViewController : UIViewController
+@interface ABViewController : UIViewController <ABMediaViewDelegate>
 
 @property (strong, nonatomic) IBOutlet ABMediaView *mediaView;
 
