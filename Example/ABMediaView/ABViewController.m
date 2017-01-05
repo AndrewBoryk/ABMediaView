@@ -42,7 +42,7 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.mediaView setImageURL:@"https://i.ytimg.com/vi/jkHI1hGvWRY/maxresdefault.jpg" withCompletion:^(UIImage *image, NSError *error) {
+    [self.mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
         
     }];
     
