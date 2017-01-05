@@ -51,7 +51,7 @@
         
         [self addShadow:self.currentTimeLabel];
         
-        self.currentTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.currentTimeLabel.font = [UIFont systemFontOfSize:12.0f];
         self.currentTimeLabel.text = @"0:00";
         self.currentTimeLabel.alpha = 0;
         [self addSubview:self.currentTimeLabel];
@@ -60,7 +60,7 @@
         self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
         self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
         [self addShadow:self.totalTimeLabel];
-        self.totalTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.totalTimeLabel.font = [UIFont systemFontOfSize:12.0f];
         self.totalTimeLabel.text = @"0:00";
         self.totalTimeLabel.alpha = 0;
         [self addSubview:self.totalTimeLabel];
@@ -101,7 +101,7 @@
         self.currentTimeLabel.textAlignment = NSTextAlignmentLeft;
         self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
         [self addShadow:self.currentTimeLabel];
-        self.currentTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.currentTimeLabel.font = [UIFont fontWithName:@"Helvetica-Nueue" size:10.0f];
         self.currentTimeLabel.text = @"0:00";
         self.currentTimeLabel.alpha = 0;
         [self addSubview:self.currentTimeLabel];
@@ -110,7 +110,7 @@
         self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
         self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
         [self addShadow:self.totalTimeLabel];
-        self.totalTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.totalTimeLabel.font = [UIFont fontWithName:@"Helvetica-Nueue" size:10.0f];
         self.totalTimeLabel.text = @"0:00";
         self.totalTimeLabel.alpha = 0;
         [self addSubview:self.totalTimeLabel];
@@ -160,6 +160,7 @@
 }
 
 - (void) updateProgress {
+    
     if ([ABUtils notNull:self.progress]) {
         CGFloat prog = self.progress.floatValue;
         

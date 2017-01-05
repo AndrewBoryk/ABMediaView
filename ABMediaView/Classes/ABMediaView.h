@@ -18,7 +18,7 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
 @protocol ABMediaViewDelegate;
 
-@interface ABMediaView : UIImageView <UIGestureRecognizerDelegate>
+@interface ABMediaView : UIImageView <VideoTrackDelegate>
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
 

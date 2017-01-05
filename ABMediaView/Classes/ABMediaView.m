@@ -43,9 +43,10 @@
     }
     
     if (![ABUtils notNull:self.track]) {
-        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 4)];
+        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 100.0f)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
         [self.track.progressView setBackgroundColor: self.themeColor];
+        self.track.delegate = self;
     }
     
     self.track.hidden = YES;
@@ -116,7 +117,7 @@
                                                                   toItem:nil
                                                                attribute: NSLayoutAttributeNotAnAttribute
                                                               multiplier:1
-                                                                constant:2]];
+                                                                constant:100.0f]];
         
         [self.track layoutIfNeeded];
     }
@@ -621,11 +622,6 @@
 //
 //}
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
-
 - (void) addPlayGesture {
     //initializes gestures
     if (![ABUtils notNull:self.playRecognizer]) {
@@ -754,5 +750,12 @@
     
 }
 
+- (void) seekToTime:(float)time {
+    if ([ABUtils notNull:self.player]) {
+        int32_t timeScale = self.player.currentItem.asset.duration.timescale;
+        CMTime timeCM = CMTimeMakeWithSeconds(time, timeScale);
+        [self.player seekToTime:timeCM toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    }
+}
 
 @end

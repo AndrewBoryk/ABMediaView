@@ -30,7 +30,7 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.mediaView setImageURL:@"http://cdn3-www.cattime.com/assets/uploads/2011/08/best-kitten-names-1.jpg" withCompletion:^(UIImage *image, NSError *error) {
+    [self.mediaView setImageURL:@"https://i.ytimg.com/vi/jkHI1hGvWRY/maxresdefault.jpg" withCompletion:^(UIImage *image, NSError *error) {
         
     }];
     
@@ -40,9 +40,9 @@
     
     [self.mediaView setAllowLooping:YES];
     
-    self.mediaView.contentMode = UIViewContentModeScaleAspectFit;
+    self.mediaView.contentMode = UIViewContentModeScaleAspectFill;
     
-    [self.mediaView setVideoURL:@"http://techslides.com/demos/sample-videos/small.mp4"];
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
 
 }
 @end

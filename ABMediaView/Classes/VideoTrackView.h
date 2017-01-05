@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "ABUtils.h"
+#import <QuartzCore/QuartzCore.h>
 
 @protocol VideoTrackDelegate;
 
@@ -22,7 +23,7 @@
 /// View which shows how much of the video has loaded
 @property (strong, nonatomic) UIView *bufferView;
 
-/// View which shows progress of watching the video
+/// View which shows progress of watchineg the video
 @property (strong, nonatomic) UIView *progressView;
 
 /// View which shows background for bars
