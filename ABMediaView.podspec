@@ -29,9 +29,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'ABMediaView/Classes/**/*'
-  
+
   # s.resource_bundles = {
-  #   'ABMediaView' => ['ABMediaView/Assets/*.png']
+  #   'ABMediaView' => ['ABMediaView/Assets/PlayVideoButton.png']
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'

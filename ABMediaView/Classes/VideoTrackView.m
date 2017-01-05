@@ -23,71 +23,280 @@
     
     if (self) {
         self.frame = frame;
-        self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
+        self.backgroundColor = [UIColor clearColor];
         
-        self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.frame.size.height)];
+        _barHeight = 2.0f;
+        self.buffer = @0;
+        
+        self.barBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight)];
+        self.barBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
+        
+        [self addShadow];
+        
+        [self addSubview:self.barBackgroundView];
+        
+        self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
         self.bufferView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.25f];
         
         [self addSubview:self.bufferView];
         
-        self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, self.frame.size.height)];
-        self.progressView.backgroundColor = [UIColor colorWithRed:48.0f/255.0f green:207.0f/255.0f blue:210.0f/255.0f alpha:1];
+        self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
+        self.progressView.backgroundColor = [UIColor cyanColor];
         
         [self addSubview:self.progressView];
+        
+        self.currentTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
+        self.currentTimeLabel.textAlignment = NSTextAlignmentLeft;
+        self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+        
+        [self addShadow:self.currentTimeLabel];
+        
+        self.currentTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.currentTimeLabel.text = @"0:00";
+        self.currentTimeLabel.alpha = 0;
+        [self addSubview:self.currentTimeLabel];
+        
+        self.totalTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
+        self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
+        self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+        [self addShadow:self.totalTimeLabel];
+        self.totalTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.totalTimeLabel.text = @"0:00";
+        self.totalTimeLabel.alpha = 0;
+        [self addSubview:self.totalTimeLabel];
+        
+        
     }
     
     return self;
 }
 
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        
+        _barHeight = 2.0f;
+        self.buffer = @0;
+        
+        self.barBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight)];
+        self.barBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
+        
+        [self addShadow];
+        
+        [self addSubview:self.barBackgroundView];
+        
+        self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
+        self.bufferView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.25f];
+        
+        [self addSubview:self.bufferView];
+        
+        self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
+        self.progressView.backgroundColor = [UIColor cyanColor];
+        
+        [self addSubview:self.progressView];
+        
+        self.currentTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f)];
+        self.currentTimeLabel.textAlignment = NSTextAlignmentLeft;
+        self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+        [self addShadow:self.currentTimeLabel];
+        self.currentTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.currentTimeLabel.text = @"0:00";
+        self.currentTimeLabel.alpha = 0;
+        [self addSubview:self.currentTimeLabel];
+        
+        self.totalTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f)];
+        self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
+        self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+        [self addShadow:self.totalTimeLabel];
+        self.totalTimeLabel.font = [UIFont fontWithName:@"PTSans-Regular" size:12.0f];
+        self.totalTimeLabel.text = @"0:00";
+        self.totalTimeLabel.alpha = 0;
+        [self addSubview:self.totalTimeLabel];
+    }
+    
+    return self;
+}
+
+- (void) addShadow {
+    self.barBackgroundView.layer.masksToBounds = NO;
+    self.barBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.barBackgroundView.layer.shadowOffset = CGSizeMake(0, 2);
+    self.barBackgroundView.layer.shadowOpacity = 0.8f;
+    self.barBackgroundView.layer.shadowRadius = 4.0f;
+}
+
 - (void) setProgress:(NSNumber *)progress withDuration: (CGFloat) duration {
     _progress = progress;
+    _duration = duration;
     
+    [self updateProgress];
+    
+    int trackInt = 0;
+    if ([ABUtils notNull:progress]) {
+        trackInt = progress.intValue;
+    }
+    
+    int minutes = trackInt/60;
+    int seconds = trackInt%60;
+    
+    int doneMinutes = (int)duration/60;
+    int doneSeconds = (int)duration%60;
+    
+    if (seconds < 10) {
+        self.currentTimeLabel.text = [NSString stringWithFormat:@"%i:0%i", minutes, seconds];
+    }
+    else {
+        self.currentTimeLabel.text = [NSString stringWithFormat:@"%i:%i", minutes, seconds];
+    }
+    
+    if (doneSeconds < 10) {
+        self.totalTimeLabel.text = [NSString stringWithFormat:@"%i:0%i", doneMinutes, doneSeconds];
+    }
+    else {
+        self.totalTimeLabel.text = [NSString stringWithFormat:@"%i:%i", doneMinutes, doneSeconds];
+    }
+}
+
+- (void) updateProgress {
     if ([ABUtils notNull:self.progress]) {
         CGFloat prog = self.progress.floatValue;
         
         if (prog == 0) {
-            self.progressView.frame = CGRectMake(0, 0, 0, self.frame.size.height);
+            self.progressView.frame = CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight);
         }
         else {
-            if (isnan(duration)) {
-                duration = 15.0f;
+            if (isnan(self.duration)) {
+                self.duration = 15.0f;
             }
             
-            CGFloat timeElapsedRatio = prog/ (duration - 0.5f);
+            CGFloat timeElapsedRatio = prog/ (self.duration - 0.5f);
             CGFloat width = timeElapsedRatio * self.frame.size.width;
             
             [UIView animateWithDuration:0.01f animations:^{
-                self.progressView.frame = CGRectMake(0, 0, width, self.frame.size.height);
+                self.progressView.frame = CGRectMake(0, self.frame.size.height - _barHeight, width, _barHeight);
             }];
         }
     }
 }
 
 - (void) setBuffer:(NSNumber *)buffer withDuration: (CGFloat) duration {
-    _buffer = buffer;
     
+    _buffer = buffer;
+    _duration = duration;
+    
+    [self updateBuffer];
+    
+}
+
+- (void) updateBuffer {
     if ([ABUtils notNull:self.buffer]) {
         CGFloat buff = self.buffer.floatValue;
         
         if (buff == 0) {
-            self.bufferView.frame = CGRectMake(0, 0, 0, self.frame.size.height);
+            self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight);
         }
         else {
-            if (isnan(duration)) {
-                duration = 15.0f;
+            if (isnan(self.duration)) {
+                self.duration = 15.0f;
             }
             
-            CGFloat timeElapsedRatio = buff/duration;
+            CGFloat timeElapsedRatio = buff/self.duration;
             CGFloat width = timeElapsedRatio * self.frame.size.width;
             
             [UIView animateWithDuration:0.1f animations:^{
-                self.bufferView.frame = CGRectMake(0, 0, width, self.frame.size.height);
+                self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, width, _barHeight);
             }];
         }
     }
     else {
-        self.bufferView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight);
     }
 }
 
+- (void) updateBarBackground {
+    [UIView animateWithDuration:0.1f animations:^{
+        self.barBackgroundView.frame = CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight);
+        self.currentTimeLabel.frame = CGRectMake(8, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f);
+        self.totalTimeLabel.frame = CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f);
+    }];
+}
+
+- (void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    self.barHeight = 6.0f;
+    
+    if (self.progressView.frame.size.height == 6.0f) {
+        UITouch *touch = [[event allTouches] anyObject];
+        CGPoint touchLocation = [touch locationInView:self];
+        
+        [self seekToPoint:touchLocation.x];
+    }
+    else {
+        [UIView animateWithDuration:0.2f animations:^{
+            self.currentTimeLabel.alpha = 1;
+            self.totalTimeLabel.alpha = 1;
+            [self updateProgress];
+            [self updateBuffer];
+            [self updateBarBackground];
+        } completion:^(BOOL finished) {
+            [self performSelector:@selector(turnOnSeek) withObject:nil afterDelay:0.3f];
+        }];
+    }
+    
+    [self.hideTimer invalidate];
+}
+
+- (void) touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (self.progressView.frame.size.height == 6.0f) {
+        UITouch *touch = [[event allTouches] anyObject];
+        CGPoint touchLocation = [touch locationInView:self];
+        
+        [self seekToPoint:touchLocation.x];
+    }
+    
+    [self.hideTimer invalidate];
+}
+
+- (void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.hideTimer invalidate];
+    
+    self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.barHeight = 2.0f;
+        self.canSeek = NO;
+        [UIView animateWithDuration:0.4f animations:^{
+            self.currentTimeLabel.alpha = 0;
+            self.totalTimeLabel.alpha = 0;
+            [self updateProgress];
+            [self updateBuffer];
+            [self updateBarBackground];
+        }];
+    }];
+}
+
+- (void) seekToPoint: (float) point {
+    if (point <= self.bufferView.frame.size.width && self.canSeek) {
+        float ratio = point/self.frame.size.width;
+        
+        if (!isnan(_duration)) {
+            float seekTime = ratio * _duration;
+            
+            if ([self.delegate respondsToSelector:@selector(seekToTime:)]) {
+                [self.delegate seekToTime:seekTime];
+            }
+        }
+    }
+}
+
+- (void) turnOnSeek {
+    self.canSeek = YES;
+}
+
+- (void) addShadow: (UIView *) view {
+    view.layer.masksToBounds = NO;
+    view.layer.shadowColor = [ABUtils colorWithHexString:@"B7B7B7"].CGColor;
+    view.layer.shadowOffset = CGSizeMake(0, 2);
+    view.layer.shadowOpacity = 0.5f;
+    view.layer.shadowRadius = 2.0f;
+}
 @end

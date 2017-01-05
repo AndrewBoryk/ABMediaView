@@ -31,6 +31,9 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 /// URL endpoint for video
 @property (strong, nonatomic) NSString *videoURL;
 
+/// Theme color
+@property (strong, nonatomic) UIColor *themeColor;
+
 /// Open video player in aspect fit mode
 @property BOOL videoAspectFit;
 
@@ -66,6 +69,8 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
 /// Timer for animating the video loader
 @property (strong, nonatomic) NSTimer *animateTimer;
+
+- (void) changeVideoForAspectFit: (BOOL) videoAspectFit;
 
 /// Load post image, set to cache, and give completion
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion;

@@ -23,6 +23,8 @@
 }
 
 - (void) commonInit {
+    self.themeColor = [UIColor cyanColor];
+    
     if (![ABUtils notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -32,7 +34,8 @@
     }
     
     if (![ABUtils notNull:self.videoIndicator]) {
-        self.videoIndicator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PlayVideoButton"]];
+        
+        self.videoIndicator = [[UIImageView alloc] initWithImage: [self imageForPlayButton]];
         self.videoIndicator.contentMode = UIViewContentModeScaleAspectFit;
         self.videoIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         [self.videoIndicator sizeToFit];
@@ -42,6 +45,7 @@
     if (![ABUtils notNull:self.track]) {
         self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 4)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.track.progressView setBackgroundColor: self.themeColor];
     }
     
     self.track.hidden = YES;
@@ -50,6 +54,8 @@
         self.videoIndicator.alpha = 0;
         
         [self addSubview:self.videoIndicator];
+        
+        [self bringSubviewToFront:self.videoIndicator];
         
         [self addConstraint:
          [NSLayoutConstraint constraintWithItem:self
@@ -114,6 +120,13 @@
         
         [self.track layoutIfNeeded];
     }
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(orientationChanged:)
+     name:UIDeviceOrientationDidChangeNotification
+     object:[UIDevice currentDevice]];
+
     
     //    if (![self.subviews containsObject:self.loadingIndicator]) {
     //
@@ -287,107 +300,83 @@
         if ([ABUtils notNull:self.videoURL]) {
             [self removeObservers];
             
-            NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:self.videoURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                if (data)
-                {
-                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                    NSString *documentsDirectory = [paths objectAtIndex:0];
-                    
-                    NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, self.videoURL];
-                    
-                    //saving is done on main thread
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [data writeToFile:filePath atomically:YES];
-                        
-                        AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:filePath] options:nil];
-                        
-                        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
-                        
-                        self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
-                        
-                        
-                        if ([ABUtils notNull:self.player]) {
-                            
-                            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-                            
-                            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                     selector:@selector(playerItemDidReachEnd:)
-                                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                                       object:[self.player currentItem]];
-                            
-                            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-                            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-                            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-                            if (_videoAspectFit) {
-                                self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-                            }
-                            self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-                            
-                            [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
-                            
-                            if (play) {
-                                if ([self.player respondsToSelector:@selector(playVideo)]) {
-                                    [self.player play];
-                                }
-                            }
-                            
-                            
-                            [self.player addObserver:self
-                                          forKeyPath:@"currentItem.loadedTimeRanges"
-                                             options:NSKeyValueObservingOptionNew
-                                             context:nil];
-                            
-                            [self.player addObserver:self
-                                          forKeyPath:@"playbackBufferEmpty"
-                                             options:NSKeyValueObservingOptionNew
-                                             context:nil];
-                            
-                            [self.player addObserver:self
-                                          forKeyPath:@"playbackLikelyToKeepUp"
-                                             options:NSKeyValueObservingOptionNew
-                                             context:nil];
-                            
-                            [self.player addObserver:self
-                                          forKeyPath:@"playbackBufferFull"
-                                             options:NSKeyValueObservingOptionNew
-                                             context:nil];
-                            
-                            CMTime interval = CMTimeMake(10.0, NSEC_PER_SEC);
-                            
-                            __weak __typeof(self)weakSelf = self;
-                            [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-                                //                        float pTime = CMTimeGetSeconds(time);
-                                
-                                if ([ABUtils notNull: weakSelf.player.currentItem]) {
-                                    if (weakSelf.showTrack) {
-                                        weakSelf.track.hidden = NO;
-                                    }
-                                    else {
-                                        weakSelf.track.hidden = YES;
-                                    }
-                                    
-                                    CGFloat progress = CMTimeGetSeconds(time);
-                                    
-                                    if (progress != 0 && [self.animateTimer isValid]) {
-                                        weakSelf.isLoadingVideo = false;
-                                        [weakSelf stopVideoAnimate];
-                                        [weakSelf hideVideoAnimated: NO];
-                                    }
-                                    
-                                    [weakSelf.track setProgress: [NSNumber numberWithFloat:CMTimeGetSeconds(time)] withDuration: CMTimeGetSeconds(weakSelf.player.currentItem.duration)];
-                                }
-                                
-                            }];
-                            
-                        }
-                        
-                    });
+            AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+            
+            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
+            
+            self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+            
+            
+            if ([ABUtils notNull:self.player]) {
+                
+                self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+                
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(playerItemDidReachEnd:)
+                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                           object:[self.player currentItem]];
+                
+                self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+                self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+                self.playerLayer.videoGravity = [self getVideoGravity];
+                
+                self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+                
+                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+                
+                if (play) {
+                    [self.player play];
                 }
                 
-            }];
-            
-            [task resume];
-            
+                
+                [self.player addObserver:self
+                              forKeyPath:@"currentItem.loadedTimeRanges"
+                                 options:NSKeyValueObservingOptionNew
+                                 context:nil];
+                
+                [self.player addObserver:self
+                              forKeyPath:@"playbackBufferEmpty"
+                                 options:NSKeyValueObservingOptionNew
+                                 context:nil];
+                
+                [self.player addObserver:self
+                              forKeyPath:@"playbackLikelyToKeepUp"
+                                 options:NSKeyValueObservingOptionNew
+                                 context:nil];
+                
+                [self.player addObserver:self
+                              forKeyPath:@"playbackBufferFull"
+                                 options:NSKeyValueObservingOptionNew
+                                 context:nil];
+                
+                CMTime interval = CMTimeMake(10.0, NSEC_PER_SEC);
+                
+                __weak __typeof(self)weakSelf = self;
+                [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                    //                        float pTime = CMTimeGetSeconds(time);
+                    
+                    if ([ABUtils notNull: weakSelf.player.currentItem]) {
+                        if (weakSelf.showTrack) {
+                            weakSelf.track.hidden = NO;
+                        }
+                        else {
+                            weakSelf.track.hidden = YES;
+                        }
+                        
+                        CGFloat progress = CMTimeGetSeconds(time);
+                        
+                        if (progress != 0 && [self.animateTimer isValid]) {
+                            weakSelf.isLoadingVideo = false;
+                            [weakSelf stopVideoAnimate];
+                            [weakSelf hideVideoAnimated: NO];
+                        }
+                        
+                        [weakSelf.track setProgress: [NSNumber numberWithFloat:CMTimeGetSeconds(time)] withDuration: CMTimeGetSeconds(weakSelf.player.currentItem.duration)];
+                    }
+                    
+                }];
+                
+            }
             
             
             
@@ -672,6 +661,97 @@
     }
     
     return NO;
+}
+
+- (UIImage *) imageForPlayButton {
+    static UIImage *playCircle = nil;
+    
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(80.f, 80.0f), NO, 0.0f);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    
+    CGRect rect = CGRectMake(0, 0, 80.0f, 80.0f);
+    UIColor *color = self.themeColor;
+    
+    CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
+    CGContextFillEllipseInRect(ctx, rect);
+    
+    CGFloat inset = 20.0f;
+    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+    [bezierPath moveToPoint:(CGPoint){27.5f, inset}];
+    [bezierPath addLineToPoint:(CGPoint){ 80.0f - inset, 80.0f/2.f}];
+    [bezierPath addLineToPoint:(CGPoint){27.5f, 80.0f - inset}];
+    [bezierPath closePath];
+    
+    CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.8f].CGColor;
+    CGContextSetFillColorWithColor(ctx, col);
+    CGContextSetStrokeColorWithColor(ctx, col);
+    CGContextSetLineWidth(ctx, 0);
+    CGContextSetLineJoin(ctx, kCGLineJoinRound);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
+    CGContextAddPath(ctx, bezierPath.CGPath);
+    CGContextStrokePath(ctx);
+    CGContextAddPath(ctx, bezierPath.CGPath);
+    CGContextFillPath(ctx);
+    
+    CGContextRestoreGState(ctx);
+    playCircle = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return playCircle;
+}
+
+- (void) setThemeColor:(UIColor *)themeColor {
+    _themeColor = themeColor;
+    
+    self.videoIndicator.image = [self imageForPlayButton];
+    [self.track.progressView setBackgroundColor: self.themeColor];
+}
+
+- (void) changeVideoForAspectFit:(BOOL)videoAspectFit {
+    if (self.videoAspectFit != videoAspectFit) {
+        self.videoAspectFit = videoAspectFit;
+        
+        if ([ABUtils notNull:self.playerLayer]) {
+            self.playerLayer.videoGravity = [self getVideoGravity];
+        }
+    }
+    
+  
+    
+}
+
+- (NSString *) getVideoGravity {
+    if (self.videoAspectFit) {
+        return AVLayerVideoGravityResizeAspect;
+    }
+    else {
+        if (self.contentMode == UIViewContentModeScaleAspectFit) {
+            return AVLayerVideoGravityResizeAspect;
+        }
+        else {
+            return AVLayerVideoGravityResizeAspectFill;
+        }
+        
+        
+    }
+}
+
+- (void) orientationChanged:(NSNotification *)note
+{
+    
+    // When rotation is enabled, then the positioning of the imageview which holds the AVPlayerLayer must be adjusted to accomodate this change.
+    
+    [self updatePlayerFrame];
+
+    if ([ABUtils notNull:self.videoURL]) {
+        [self.track updateBuffer];
+        [self.track updateProgress];
+        [self.track updateBarBackground];
+    }
+    
+    [self layoutIfNeeded];
+    
 }
 
 
