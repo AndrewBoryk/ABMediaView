@@ -22,15 +22,24 @@
     
     self.mediaView.backgroundColor = [UIColor blackColor];
     
-    /// Changing the theme color changes the color of the play indicator as well as the progress track
+    // Changing the theme color changes the color of the play indicator as well as the progress track
     [self.mediaView setThemeColor:[UIColor redColor]];
     
+    // Enable progress track to show at the bottom of the view
     [self.mediaView setShowTrack:YES];
     
+    // Allow video to loop once reaching the end
     [self.mediaView setAllowLooping:YES];
     
+    // Setting the contentMode to aspectFit will set the videoGravity to aspect as well
     self.mediaView.contentMode = UIViewContentModeScaleAspectFit;
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    /// If you desire to have the image to fill the view, however you would like the videoGravity to be aspect fit, then you can implement this functionality
+//    self.mediaView.contentMode = UIViewContentModeScaleAspectFill;
+//    [self.mediaView changeVideoToAspectFit: YES];
+    
+    
+    
 }
 
 - (void)didReceiveMemoryWarning

@@ -715,7 +715,7 @@
     [self.track.progressView setBackgroundColor: self.themeColor];
 }
 
-- (void) changeVideoForAspectFit:(BOOL)videoAspectFit {
+- (void) changeVideoToAspectFit:(BOOL)videoAspectFit {
     if (self.videoAspectFit != videoAspectFit) {
         self.videoAspectFit = videoAspectFit;
         

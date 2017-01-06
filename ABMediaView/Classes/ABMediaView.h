@@ -70,7 +70,7 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 /// Timer for animating the video loader
 @property (strong, nonatomic) NSTimer *animateTimer;
 
-- (void) changeVideoForAspectFit: (BOOL) videoAspectFit;
+- (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 
 /// Load post image, set to cache, and give completion
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion;
