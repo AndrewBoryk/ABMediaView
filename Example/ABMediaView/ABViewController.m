@@ -41,6 +41,8 @@
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     self.mediaView.imageViewNotReused = YES;
     
+    self.mediaView.frame = self.view.frame;
+    
 }
 
 - (void)didReceiveMemoryWarning

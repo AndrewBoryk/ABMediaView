@@ -10,6 +10,12 @@
 
 @implementation ABMediaView {
     float bufferTime;
+    
+    /// Recognizer to record user swiping
+    UIPanGestureRecognizer *swipeRecognizer;
+    
+    /// Position of the swipe
+    CGFloat ySwipePosition;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -59,6 +65,15 @@
         [self.track.progressView setBackgroundColor: self.themeColor];
         self.track.delegate = self;
     }
+    
+    if (![ABUtils notNull:swipeRecognizer]) {
+        swipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+        swipeRecognizer.delegate = self;
+        swipeRecognizer.delaysTouchesBegan = YES;
+        swipeRecognizer.cancelsTouchesInView = YES;
+    }
+    
+    [self addGestureRecognizer:swipeRecognizer];
     
     self.track.hidden = YES;
     
@@ -770,5 +785,47 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
+
+- (void) handleSwipe: (UIGestureRecognizer *) gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Touches Began");
+        ySwipePosition = [gesture locationInView:self].y;
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged) {
+//        NSLog(@"Touches Moved");
+        
+        CGRect frame = [self convertRect:self.frame toView:self.superview];
+        
+        NSLog(@"x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+        
+        CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
+        
+        frame.origin = CGPointMake(frame.origin.x, frame.origin.y + difference);
+        
+        if ([gesture locationInView:self].y > ySwipePosition) {
+            if (frame.origin.y > self.superview.frame.size.height - 100) {
+                frame.origin = CGPointMake(frame.origin.x, self.superview.frame.size.height - 100);
+            }
+        }
+        else if ([gesture locationInView:self].y < ySwipePosition) {
+            if (frame.origin.y < 0) {
+                frame.origin = CGPointMake(frame.origin.x, 0);
+            }
+        }
+        
+        self.frame = frame;
+        
+        ySwipePosition = [gesture locationInView:self].y;
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed ||
+             gesture.state == UIGestureRecognizerStateCancelled) {
+        NSLog(@"Touches Ended");
+        
+        ySwipePosition = 0.0f;
+    }
+}
+
+
 
 @end
