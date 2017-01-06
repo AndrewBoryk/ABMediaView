@@ -739,8 +739,6 @@
         else {
             return AVLayerVideoGravityResizeAspectFill;
         }
-        
-        
     }
 }
 
