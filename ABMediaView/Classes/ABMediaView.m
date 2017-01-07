@@ -19,6 +19,10 @@
     
     /// Variable tracking offset of video
     CGFloat offset;
+    
+    /// Determines if video is minimized
+    BOOL isMinimized;
+    
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -425,55 +429,79 @@
 - (void) playVideoWithoutScroll:(BOOL)scroll {
     ////if the cell that is selected already has a video playing then its paused and if not then play that video
     
-    if ([ABUtils notNull:self.player]) {
-        if ((self.player.rate != 0) && (self.player.error == nil)) {
-            [self stopVideoAnimate];
-            self.isLoadingVideo = false;
-            [UIView animateWithDuration:0.15f animations:^{
-                self.videoIndicator.alpha = 1.0f;
-            }];
+    if (isMinimized) {
+        self.userInteractionEnabled = YES;
+        [UIView animateWithDuration:0.25f animations:^{
+            self.frame = self.superview.frame;
             
+            [self layoutSubviews];
             
-            [self.player pause];
+            [self updatePlayerFrame];
+            [self.track updateBuffer];
+            [self.track updateProgress];
+            [self.track updateBarBackground];
             
-            if ([self.delegate respondsToSelector:@selector(pauseVideo)]) {
-                [self.delegate pauseVideo];
+        } completion:^(BOOL finished) {
+            
+            isMinimized = NO;
+            offset = self.frame.origin.y;
+            
+            self.userInteractionEnabled = YES;
+            
+        }];
+    }
+    else {
+        if ([ABUtils notNull:self.player]) {
+            if ((self.player.rate != 0) && (self.player.error == nil)) {
+                [self stopVideoAnimate];
+                self.isLoadingVideo = false;
+                [UIView animateWithDuration:0.15f animations:^{
+                    self.videoIndicator.alpha = 1.0f;
+                }];
+                
+                
+                [self.player pause];
+                
+                if ([self.delegate respondsToSelector:@selector(pauseVideo)]) {
+                    [self.delegate pauseVideo];
+                }
+                
             }
-            
-        }
-        else if (!self.isLoadingVideo) {
-            [self stopVideoAnimate];
-            [self hideVideoAnimated:NO];
-            
-            [self.player play];
-            
-            if (!scroll) {
-                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                    [self.delegate playVideo];
+            else if (!self.isLoadingVideo) {
+                [self stopVideoAnimate];
+                [self hideVideoAnimated:NO];
+                
+                [self.player play];
+                
+                if (!scroll) {
+                    if ([self.delegate respondsToSelector:@selector(playVideo)]) {
+                        [self.delegate playVideo];
+                    }
+                }
+                
+            }
+            else {
+                [self loadVideoAnimate];
+                
+                [self.player play];
+                
+                if (!scroll) {
+                    if ([self.delegate respondsToSelector:@selector(playVideo)]) {
+                        [self.delegate playVideo];
+                    }
                 }
             }
+        }
+        //if the video hasn't been loaded to disk then load it from backend and save it and then play it
+        else if (!self.isLoadingVideo){
+            [self loadVideoWithPlay:YES andScroll:!scroll withCompletion:nil];
             
         }
-        else {
-            [self loadVideoAnimate];
-            
-            [self.player play];
-            
-            if (!scroll) {
-                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                    [self.delegate playVideo];
-                }
-            }
+        else if (self.isLoadingVideo) {
+            [self stopVideoAnimate];
         }
     }
-    //if the video hasn't been loaded to disk then load it from backend and save it and then play it
-    else if (!self.isLoadingVideo){
-        [self loadVideoWithPlay:YES andScroll:!scroll withCompletion:nil];
-        
-    }
-    else if (self.isLoadingVideo) {
-        [self stopVideoAnimate];
-    }
+    
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
@@ -691,21 +719,21 @@
 - (UIImage *) imageForPlayButton {
     static UIImage *playCircle = nil;
     
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(80.f, 80.0f), NO, 0.0f);
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(ctx);
     
-    CGRect rect = CGRectMake(0, 0, 80.0f, 80.0f);
+    CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
     UIColor *color = self.themeColor;
     
     CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
     CGContextFillEllipseInRect(ctx, rect);
     
-    CGFloat inset = 20.0f;
+    CGFloat inset = 15.0f;
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
-    [bezierPath moveToPoint:(CGPoint){27.5f, inset}];
-    [bezierPath addLineToPoint:(CGPoint){ 80.0f - inset, 80.0f/2.f}];
-    [bezierPath addLineToPoint:(CGPoint){27.5f, 80.0f - inset}];
+    [bezierPath moveToPoint:(CGPoint){20.625f, inset}];
+    [bezierPath addLineToPoint:(CGPoint){60.0f - inset, 60.0f/2.0f}];
+    [bezierPath addLineToPoint:(CGPoint){20.625f, 60.0f - inset}];
     [bezierPath closePath];
     
     CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.8f].CGColor;
@@ -807,35 +835,48 @@
 //        
         CGFloat maxViewOffset = self.superview.frame.size.height - 100;
         CGFloat minViewWidth = self.superview.frame.size.width * 0.4f;
-        CGFloat minViewHeight = minViewHeight * (9/16);
+        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         CGFloat tempOffset = offset + difference;
         CGFloat offsetPercentage = tempOffset / maxViewOffset;
+        CGFloat testOrigin = offsetPercentage * maxViewOffset;
         
-        if (origin.y > maxViewOffset) {
+        if (testOrigin >= maxViewOffset) {
             origin.y = maxViewOffset;
             size.width = minViewWidth;
             size.height = minViewHeight;
-            
+            origin.x = self.superview.frame.size.width - size.width;
             offset = maxViewOffset;
         }
-        else if (origin.y < 0) {
+        else if (testOrigin <= 0) {
             origin.y = 0;
             size.width = self.superview.frame.size.width;
             size.height = self.superview.frame.size.height;
+            origin.x = 0;
             offset = 0.0f;
         }
         else {
-            origin.y = offsetPercentage * maxViewOffset;
+            origin.y = testOrigin;
             size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
             size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
+            origin.x = self.superview.frame.size.width - size.width;
             offset+= difference;
         }
         
         frame.origin = origin;
         frame.size = size;
-        self.frame = frame;
+        
+        [UIView animateWithDuration:0.0f animations:^{
+            self.frame = frame;
+            [self layoutSubviews];
+            
+            [self updatePlayerFrame];
+            [self.track updateBuffer];
+            [self.track updateProgress];
+            [self.track updateBarBackground];
+        }];
+        
         
         ySwipePosition = [gesture locationInView:self].y;
     }
@@ -844,28 +885,42 @@
              gesture.state == UIGestureRecognizerStateCancelled) {
         NSLog(@"Touches Ended");
         
-        swipeRecognizer.enabled = NO;
+        self.userInteractionEnabled = NO;
         
         BOOL minimize = false;
         CGFloat maxViewOffset = (self.superview.frame.size.height - 100);
+        CGFloat minViewWidth = self.superview.frame.size.width * 0.4f;
+        
+        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
         CGFloat offsetPercentage = offset / maxViewOffset;
         
-        if (offsetPercentage > 0.5f) {
+        if (offsetPercentage >= 0.45f) {
             minimize = true;
         }
         
         [UIView animateWithDuration:0.25f animations:^{
             if (minimize) {
-                self.frame = CGRectMake(0, maxViewOffset, self.frame.size.width, self.frame.size.height);
+                self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth, maxViewOffset, minViewWidth, minViewHeight);
             }
             else {
                 self.frame = self.superview.frame;
             }
             
+            [self layoutSubviews];
+            
+            [self updatePlayerFrame];
+            [self.track updateBuffer];
+            [self.track updateProgress];
+            [self.track updateBarBackground];
+            
         } completion:^(BOOL finished) {
+            
+            isMinimized = minimize;
+
+           
             offset = self.frame.origin.y;
             
-            swipeRecognizer.enabled = YES;
+            self.userInteractionEnabled = YES;
             
         }];
         
