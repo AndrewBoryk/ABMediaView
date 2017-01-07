@@ -189,6 +189,7 @@
     
     self.backgroundColor = [ABUtils colorWithHexString:@"EFEFF4"];
     self.clipsToBounds = YES;
+    
 }
 - (id)initWithFrame:(CGRect)aRect
 {
@@ -356,7 +357,9 @@
                 
                 self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
                 
-                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+                [(AVPlayerLayer *)self.layer setPlayer:self.player];
+                
+//                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
                 
                 if (play) {
                     [self.player play];
@@ -793,8 +796,37 @@
     
     // When rotation is enabled, then the positioning of the imageview which holds the AVPlayerLayer must be adjusted to accomodate this change.
     
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    CGFloat width = self.frame.size.width;
+    CGFloat height = self.frame.size.height;
+    
+    if (UIDeviceOrientationIsPortrait(orientation)) {
+        
+        if (height < width) {
+            CGFloat tempFloat = width;
+            width = height;
+            height = tempFloat;
+        }
+        
+        self.frame = CGRectMake(0, 0, width, height);
+    }
+    else {
+        
+        if (height > width) {
+            CGFloat tempFloat = width;
+            width = height;
+            height = tempFloat;
+        }
+        
+        self.frame = CGRectMake(0, 0, width, height);
+    }
+    
+    
+    
     [self updatePlayerFrame];
 
+    
     if ([ABUtils notNull:self.videoURL]) {
         [self.track updateBuffer];
         [self.track updateProgress];
@@ -833,9 +865,9 @@
 //        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
 //        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 //        
-        CGFloat maxViewOffset = self.superview.frame.size.height - 100;
-        CGFloat minViewWidth = self.superview.frame.size.width * 0.4f;
+        CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
         CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+        CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         CGFloat tempOffset = offset + difference;
@@ -888,13 +920,13 @@
         self.userInteractionEnabled = NO;
         
         BOOL minimize = false;
-        CGFloat maxViewOffset = (self.superview.frame.size.height - 100);
-        CGFloat minViewWidth = self.superview.frame.size.width * 0.4f;
-        
+        CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
         CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+        CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+        
         CGFloat offsetPercentage = offset / maxViewOffset;
         
-        if (offsetPercentage >= 0.45f) {
+        if (offsetPercentage >= 0.40f) {
             minimize = true;
         }
         
@@ -916,8 +948,6 @@
         } completion:^(BOOL finished) {
             
             isMinimized = minimize;
-
-           
             offset = self.frame.origin.y;
             
             self.userInteractionEnabled = YES;
@@ -927,6 +957,10 @@
     }
 }
 
++ (Class)layerClass
+{
+    return [AVPlayerLayer class];
+}
 
 
 @end
