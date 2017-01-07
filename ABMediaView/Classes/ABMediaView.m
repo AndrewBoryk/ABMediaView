@@ -793,29 +793,48 @@
     if (gesture.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Touches Began");
         ySwipePosition = [gesture locationInView:self].y;
+        offset = self.frame.origin.y;
     }
     else if (gesture.state == UIGestureRecognizerStateChanged) {
 //        NSLog(@"Touches Moved");
         
         CGRect frame = self.frame;
+        CGPoint origin = self.frame.origin;
+        CGSize size = self.frame.size;
         
-        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
-        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-        
-        CGFloat comp = self.superview.frame.size.height - 100;
+//        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
+//        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+//        
+        CGFloat maxViewOffset = self.superview.frame.size.height - 100;
+        CGFloat minViewWidth = self.superview.frame.size.width * 0.4f;
+        CGFloat minViewHeight = minViewHeight * (9/16);
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
+        CGFloat tempOffset = offset + difference;
+        CGFloat offsetPercentage = tempOffset / maxViewOffset;
         
-        frame.origin = CGPointMake(frame.origin.x, frame.origin.y + difference);
-        
-        NSLog(@"Comp %f", comp);
-        if (frame.origin.y > comp) {
-            frame.origin = CGPointMake(frame.origin.x, comp);
+        if (origin.y > maxViewOffset) {
+            origin.y = maxViewOffset;
+            size.width = minViewWidth;
+            size.height = minViewHeight;
+            
+            offset = maxViewOffset;
         }
-        else if (frame.origin.y < 0) {
-            frame.origin = CGPointMake(frame.origin.x, 0);
+        else if (origin.y < 0) {
+            origin.y = 0;
+            size.width = self.superview.frame.size.width;
+            size.height = self.superview.frame.size.height;
+            offset = 0.0f;
+        }
+        else {
+            origin.y = offsetPercentage * maxViewOffset;
+            size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
+            size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
+            offset+= difference;
         }
         
+        frame.origin = origin;
+        frame.size = size;
         self.frame = frame;
         
         ySwipePosition = [gesture locationInView:self].y;
@@ -825,13 +844,29 @@
              gesture.state == UIGestureRecognizerStateCancelled) {
         NSLog(@"Touches Ended");
         
-        ySwipePosition = 0.0f;
-        
         swipeRecognizer.enabled = NO;
+        
+        BOOL minimize = false;
+        CGFloat maxViewOffset = (self.superview.frame.size.height - 100);
+        CGFloat offsetPercentage = offset / maxViewOffset;
+        
+        if (offsetPercentage > 0.5f) {
+            minimize = true;
+        }
+        
         [UIView animateWithDuration:0.25f animations:^{
-            self.frame = self.superview.frame;
+            if (minimize) {
+                self.frame = CGRectMake(0, maxViewOffset, self.frame.size.width, self.frame.size.height);
+            }
+            else {
+                self.frame = self.superview.frame;
+            }
+            
         } completion:^(BOOL finished) {
+            offset = self.frame.origin.y;
+            
             swipeRecognizer.enabled = YES;
+            
         }];
         
     }
