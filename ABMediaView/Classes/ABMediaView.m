@@ -16,6 +16,9 @@
     
     /// Position of the swipe
     CGFloat ySwipePosition;
+    
+    /// Variable tracking offset of video
+    CGFloat offset;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -794,23 +797,23 @@
     else if (gesture.state == UIGestureRecognizerStateChanged) {
 //        NSLog(@"Touches Moved");
         
-        CGRect frame = [self convertRect:self.frame toView:self.superview];
+        CGRect frame = self.frame;
         
-        NSLog(@"x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
+        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+        
+        CGFloat comp = self.superview.frame.size.height - 100;
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         
         frame.origin = CGPointMake(frame.origin.x, frame.origin.y + difference);
         
-        if ([gesture locationInView:self].y > ySwipePosition) {
-            if (frame.origin.y > self.superview.frame.size.height - 100) {
-                frame.origin = CGPointMake(frame.origin.x, self.superview.frame.size.height - 100);
-            }
+        NSLog(@"Comp %f", comp);
+        if (frame.origin.y > comp) {
+            frame.origin = CGPointMake(frame.origin.x, comp);
         }
-        else if ([gesture locationInView:self].y < ySwipePosition) {
-            if (frame.origin.y < 0) {
-                frame.origin = CGPointMake(frame.origin.x, 0);
-            }
+        else if (frame.origin.y < 0) {
+            frame.origin = CGPointMake(frame.origin.x, 0);
         }
         
         self.frame = frame;
@@ -823,6 +826,14 @@
         NSLog(@"Touches Ended");
         
         ySwipePosition = 0.0f;
+        
+        swipeRecognizer.enabled = NO;
+        [UIView animateWithDuration:0.25f animations:^{
+            self.frame = self.superview.frame;
+        } completion:^(BOOL finished) {
+            swipeRecognizer.enabled = YES;
+        }];
+        
     }
 }
 
