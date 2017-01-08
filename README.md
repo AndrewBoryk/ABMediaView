@@ -16,6 +16,9 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
+* Requires iOS 8.0 or later
+* Requires Automatic Reference Counting (ARC)
+
 ## Installation
 
 ABMediaView is available through [CocoaPods](http://cocoapods.org). To install
