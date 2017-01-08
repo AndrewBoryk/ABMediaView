@@ -18,8 +18,14 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     /// Recognizer to record user swiping
     UIPanGestureRecognizer *swipeRecognizer;
     
-    /// Position of the swipe
+    /// Recognizer to record a user swiping right to dismiss a minimize video
+    UIPanGestureRecognizer *dismissRecognizer;
+    
+    /// Position of the swipe vertically
     CGFloat ySwipePosition;
+    
+    /// Position of the swipe horizontally
+    CGFloat xSwipePosition;
     
     /// Variable tracking offset of video
     CGFloat offset;
@@ -875,85 +881,50 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     return YES;
 }
 
-- (void) handleSwipe: (UIGestureRecognizer *) gesture {
+- (void) handleSwipe: (UIPanGestureRecognizer *) gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Touches Began");
         [self stopVideoAnimate];
         
         ySwipePosition = [gesture locationInView:self].y;
+        xSwipePosition = [gesture locationInView:self].x;
         offset = self.frame.origin.y;
     }
     else if (gesture.state == UIGestureRecognizerStateChanged) {
-//        NSLog(@"Touches Moved");
+        //        NSLog(@"Touches Moved");
         
-        CGRect frame = self.frame;
-        CGPoint origin = self.frame.origin;
-        CGSize size = self.frame.size;
-        
-//        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
-//        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-//        
         CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
         CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
         CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
         
-        CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
-        CGFloat tempOffset = offset + difference;
-        CGFloat offsetPercentage = tempOffset / maxViewOffset;
-        CGFloat testOrigin = offsetPercentage * maxViewOffset;
-        
-        if (testOrigin >= maxViewOffset) {
-            origin.y = maxViewOffset;
-            size.width = minViewWidth;
-            size.height = minViewHeight;
-            origin.x = self.superview.frame.size.width - size.width - 12.0f;
-            offset = maxViewOffset;
-            self.layer.cornerRadius = 1.5f;
-            
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
-                self.videoIndicator.alpha = 0;
+        if (isMinimized && offset == maxViewOffset) {
+            CGPoint vel = [gesture velocityInView:self];
+            if (self.frame.origin.x > (self.superview.frame.size.width - (minViewWidth + 12.0f))) {
+                [self handleDismissingForRecognizer: gesture];
             }
-        }
-        else if (testOrigin <= 0) {
-            origin.y = 0;
-            size.width = self.superview.frame.size.width;
-            size.height = self.superview.frame.size.height;
-            origin.x = 0;
-            offset = 0.0f;
-            self.layer.cornerRadius = 0;
-            
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
-                self.videoIndicator.alpha = 1;
+            else {
+                // User dragged towards the right
+                if (vel.x > 0)
+                {
+                    if (vel.y < 0 && fabsf(vel.y) > vel.x) {
+                        // User dragged towards the right, however, he draged upwards more than he dragged right
+                        [self handleMinimizingForRecognizer:gesture];
+                    }
+                    else {
+                        [self handleDismissingForRecognizer: gesture];
+                    }
+                }
+                else {
+                    [self handleMinimizingForRecognizer:gesture];
+                }
             }
+            
+            
         }
         else {
-            origin.y = testOrigin;
-            size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
-            size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
-            origin.x = self.superview.frame.size.width - size.width - (offsetPercentage * 12.0f);
-            offset+= difference;
-            self.layer.cornerRadius = 1.5f * offsetPercentage;
-            
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
-                self.videoIndicator.alpha = (1-offsetPercentage);
-            }
+            // The view is not in fully minimized form, and thus can't be dismissed
+            [self handleMinimizingForRecognizer:gesture];
         }
-        
-        frame.origin = origin;
-        frame.size = size;
-        
-        [UIView animateWithDuration:0.0f animations:^{
-            self.frame = frame;
-            [self layoutSubviews];
-            
-            [self updatePlayerFrame];
-            [self.track updateBuffer];
-            [self.track updateProgress];
-            [self.track updateBarBackground];
-        }];
-        
-        
-        ySwipePosition = [gesture locationInView:self].y;
     }
     else if (gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed ||
@@ -973,47 +944,204 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             minimize = true;
         }
         
-        [UIView animateWithDuration:0.25f animations:^{
-            if (minimize) {
-                self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
-                self.videoIndicator.alpha = 0;
+        BOOL shouldDismiss = false;
+        
+        if (self.alpha < 0.6f) {
+            shouldDismiss = true;
+        }
+        
+        if (shouldDismiss) {
+            [UIView animateWithDuration:0.25f animations:^{
+                self.frame = CGRectMake(self.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
+                self.alpha = 0;
                 self.layer.cornerRadius = 1.5f;
-            }
-            else {
-                self.frame = self.superview.frame;
                 
-                if (![self isPlayingVideo] || self.isLoadingVideo) {
-                    self.videoIndicator.alpha = 1.0f;
+            } completion:^(BOOL finished) {
+                
+                self.player = nil;
+                [self removeFromSuperview];
+            }];
+        }
+        else {
+            [UIView animateWithDuration:0.25f animations:^{
+                if (minimize) {
+                    self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
+                    self.videoIndicator.alpha = 0;
+                    self.layer.cornerRadius = 1.5f;
+                }
+                else {
+                    self.frame = self.superview.frame;
+                    
+                    if (![self isPlayingVideo] || self.isLoadingVideo) {
+                        self.videoIndicator.alpha = 1.0f;
+                    }
+                    
+                    self.layer.cornerRadius = 0.0f;
                 }
                 
-                self.layer.cornerRadius = 0.0f;
-            }
-            
-            [self layoutSubviews];
-            
-            [self updatePlayerFrame];
-            [self.track updateBuffer];
-            [self.track updateProgress];
-            [self.track updateBarBackground];
-            
-            
-        } completion:^(BOOL finished) {
-            
-            isMinimized = minimize;
-            
-            self.track.userInteractionEnabled = !isMinimized;
-            offset = self.frame.origin.y;
-            
-            self.userInteractionEnabled = YES;
-            
-            if (self.isLoadingVideo) {
-                [self loadVideoAnimate];
-            }
-        }];
+                self.alpha = 1;
+                
+                [self layoutSubviews];
+                
+                [self updatePlayerFrame];
+                [self.track updateBuffer];
+                [self.track updateProgress];
+                [self.track updateBarBackground];
+                
+                
+            } completion:^(BOOL finished) {
+                
+                isMinimized = minimize;
+                
+                self.track.userInteractionEnabled = !isMinimized;
+                offset = self.frame.origin.y;
+                
+                self.userInteractionEnabled = YES;
+                
+                if (self.isLoadingVideo) {
+                    [self loadVideoAnimate];
+                }
+            }];
+        }
+        
         
     }
+    
+    
+    
 }
 
+- (void) handleDismissingForRecognizer: (UIPanGestureRecognizer *) gesture {
+    CGRect frame = self.frame;
+    CGPoint origin = self.frame.origin;
+    
+    //        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
+    //        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    
+    CGFloat superviewWidth = self.superview.frame.size.width;
+    CGFloat minViewWidth = superviewWidth * 0.5f;
+    CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+    CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+    
+    NSLog(@"Location X %f", [gesture locationInView:self].x);
+    NSLog(@"XSwipePosition %f", xSwipePosition);
+    
+    CGFloat difference = [gesture locationInView:self].x - xSwipePosition;
+    NSLog(@"Difference %f", difference);
+    
+    NSLog(@"X Origin %f", self.frame.origin.x);
+    CGFloat tempOffset = self.frame.origin.x + difference;
+    NSLog(@"TempOffset %f", tempOffset);
+    NSLog(@"First Value %f", (tempOffset - (superviewWidth - minViewWidth - 12.0f)));
+    NSLog(@"Second Value %f", (minViewWidth - 12.0f));
+    
+    CGFloat offsetPercentage = (tempOffset - (superviewWidth - minViewWidth - 12.0f)) / (minViewWidth - 12.0f);
+    NSLog(@"Offset Percentage %f", offsetPercentage);
+    
+    if (offsetPercentage >= 1) {
+        origin.y = maxViewOffset;
+        origin.x = superviewWidth;
+        offset = maxViewOffset;
+        self.alpha = 0;
+    }
+    else if (offsetPercentage < 0) {
+        origin.y = maxViewOffset;
+        origin.x = superviewWidth - (minViewWidth + 12.0f);
+        offset = maxViewOffset;
+        self.alpha = 1;
+    }
+    else {
+        origin.y = maxViewOffset;
+        origin.x += difference;
+        offset = maxViewOffset;
+        self.alpha = (1 - offsetPercentage);
+    }
+    
+    frame.origin = origin;
+    
+    [UIView animateWithDuration:0.0f animations:^{
+        self.frame = frame;
+        [self layoutSubviews];
+    }];
+    
+    
+    ySwipePosition = [gesture locationInView:self].y;
+    xSwipePosition = [gesture locationInView:self].x;
+}
+
+- (void) handleMinimizingForRecognizer: (UIPanGestureRecognizer *) gesture {
+    
+    CGRect frame = self.frame;
+    CGPoint origin = self.frame.origin;
+    CGSize size = self.frame.size;
+    
+    //        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
+    //        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    //
+    CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
+    CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+    CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+    
+    CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
+    CGFloat tempOffset = offset + difference;
+    CGFloat offsetPercentage = tempOffset / maxViewOffset;
+    CGFloat testOrigin = offsetPercentage * maxViewOffset;
+    
+    if (testOrigin >= maxViewOffset) {
+        origin.y = maxViewOffset;
+        size.width = minViewWidth;
+        size.height = minViewHeight;
+        origin.x = self.superview.frame.size.width - size.width - 12.0f;
+        offset = maxViewOffset;
+        self.layer.cornerRadius = 1.5f;
+        
+        if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            self.videoIndicator.alpha = 0;
+        }
+    }
+    else if (testOrigin <= 0) {
+        origin.y = 0;
+        size.width = self.superview.frame.size.width;
+        size.height = self.superview.frame.size.height;
+        origin.x = 0;
+        offset = 0.0f;
+        self.layer.cornerRadius = 0;
+        
+        if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            self.videoIndicator.alpha = 1;
+        }
+    }
+    else {
+        origin.y = testOrigin;
+        size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
+        size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
+        origin.x = self.superview.frame.size.width - size.width - (offsetPercentage * 12.0f);
+        offset+= difference;
+        self.layer.cornerRadius = 1.5f * offsetPercentage;
+        
+        if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            self.videoIndicator.alpha = (1-offsetPercentage);
+        }
+    }
+    
+    frame.origin = origin;
+    frame.size = size;
+    
+    [UIView animateWithDuration:0.0f animations:^{
+        self.frame = frame;
+        [self layoutSubviews];
+        
+        [self updatePlayerFrame];
+        [self.track updateBuffer];
+        [self.track updateProgress];
+        [self.track updateBarBackground];
+    }];
+    
+    
+    ySwipePosition = [gesture locationInView:self].y;
+    xSwipePosition = [gesture locationInView:self].x;
+    
+}
 + (Class)layerClass
 {
     return [AVPlayerLayer class];
@@ -1049,4 +1177,5 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         swipeRecognizer.enabled = self.isMinimizable;
     }
 }
+
 @end
