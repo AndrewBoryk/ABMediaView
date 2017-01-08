@@ -1322,4 +1322,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     self.layer.borderColor = [[ABUtils colorWithHexString:@"95a5a6"] colorWithAlphaComponent:alpha].CGColor;
 }
 
+- (void) setTrackFont:(UIFont *)font {
+    if ([ABUtils notNull:font]) {
+        [self.track setTrackFont:font];
+    }
+}
 @end

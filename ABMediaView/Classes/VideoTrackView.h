@@ -76,6 +76,9 @@
 
 /// Minimize the progress track
 - (void) hideTrack;
+
+/// Set font for track labels
+- (void) setTrackFont: (UIFont *) font;
 @end
 
 @protocol VideoTrackDelegate <NSObject>

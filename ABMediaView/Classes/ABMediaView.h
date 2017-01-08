@@ -135,6 +135,9 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
 - (void) dismissMediaView;
+
+/// Change font for track labels
+- (void) setTrackFont: (UIFont *) font;
 @end
 
 @protocol ABMediaViewDelegate <NSObject>

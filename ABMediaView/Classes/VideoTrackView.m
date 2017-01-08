@@ -292,10 +292,10 @@
 
 - (void) addShadow: (UIView *) view {
     view.layer.masksToBounds = NO;
-    view.layer.shadowColor = [ABUtils colorWithHexString:@"B7B7B7"].CGColor;
-    view.layer.shadowOffset = CGSizeMake(0, 2);
-    view.layer.shadowOpacity = 0.5f;
-    view.layer.shadowRadius = 2.0f;
+    view.layer.shadowColor = [UIColor blackColor].CGColor;
+    view.layer.shadowOffset = CGSizeMake(0, 0);
+    view.layer.shadowOpacity = 0.8f;
+    view.layer.shadowRadius = 1.0f;
 }
 
 - (void) handleScrub: (UIGestureRecognizer *) gesture {

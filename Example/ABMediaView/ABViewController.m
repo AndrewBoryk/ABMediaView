@@ -76,6 +76,9 @@
     // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to keep scrolling which the mediaView sits there. Video continues to play if already playing. The user can also swipe right
     [mediaView setCanMinimize: YES];
     
+    /// Change the font for the labels on the track
+    [mediaView setTrackFont:[UIFont fontWithName:@"STHeitiTC-Medium" size:12.0f]];
+    
     // Setting the contentMode to aspectFit will set the videoGravity to aspect as well
     mediaView.contentMode = UIViewContentModeScaleAspectFit;
     
@@ -86,10 +89,12 @@
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     mediaView.imageViewNotReused = YES;
     
+    /// Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
     [mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
         
     }];
     
+    /// Set the url for the video that will be shown in the mediaView
     [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
     
     if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
