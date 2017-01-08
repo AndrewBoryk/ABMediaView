@@ -514,7 +514,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }];
     }
     else {
-        if (self.shouldDisplayFullscreen) {
+        if (self.shouldDisplayFullscreen && !self.isFullScreen) {
             if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
                 [[ABMediaView sharedManager] queueMediaView:self];
                 
