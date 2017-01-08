@@ -13,7 +13,7 @@
 
 @protocol VideoTrackDelegate;
 
-@interface VideoTrackView : UIView
+@interface VideoTrackView : UIView <UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) id<VideoTrackDelegate> delegate;
 
@@ -52,6 +52,10 @@
 
 /// Recognizes when a user is trying to scrub through video
 @property (strong, nonatomic) UIPanGestureRecognizer *scrubRecognizer;
+
+/// Recognizes when a user taps the track
+@property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
+
 /// Update progress for the streaming video
 - (void) setProgress:(NSNumber *)progress withDuration: (CGFloat) duration;
 

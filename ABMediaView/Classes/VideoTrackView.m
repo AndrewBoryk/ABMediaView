@@ -65,7 +65,22 @@
         self.totalTimeLabel.alpha = 0;
         [self addSubview:self.totalTimeLabel];
         
+        self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
+        self.scrubRecognizer.delegate = self;
+        self.scrubRecognizer.delaysTouchesBegan = YES;
+        self.scrubRecognizer.cancelsTouchesInView = YES;
+        self.scrubRecognizer.maximumNumberOfTouches = 1;
         
+        [self addGestureRecognizer:self.scrubRecognizer];
+        
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(trackTap:)];
+        self.tapRecognizer.cancelsTouchesInView = YES;
+        self.tapRecognizer.delaysTouchesBegan = YES;
+        self.tapRecognizer.delegate = self;
+        self.tapRecognizer.numberOfTapsRequired = 1;
+        self.tapRecognizer.numberOfTouchesRequired = 1;
+        
+        [self addGestureRecognizer:self.tapRecognizer];
     }
     
     return self;
@@ -114,6 +129,23 @@
         self.totalTimeLabel.text = @"0:00";
         self.totalTimeLabel.alpha = 0;
         [self addSubview:self.totalTimeLabel];
+        
+        self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
+        self.scrubRecognizer.delegate = self;
+        self.scrubRecognizer.delaysTouchesBegan = YES;
+        self.scrubRecognizer.cancelsTouchesInView = YES;
+        self.scrubRecognizer.maximumNumberOfTouches = 1;
+        
+        [self addGestureRecognizer:self.scrubRecognizer];
+        
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(trackTap:)];
+        self.tapRecognizer.cancelsTouchesInView = YES;
+        self.tapRecognizer.delaysTouchesBegan = YES;
+        self.tapRecognizer.delegate = self;
+        self.tapRecognizer.numberOfTapsRequired = 1;
+        self.tapRecognizer.numberOfTouchesRequired = 1;
+        
+        [self addGestureRecognizer:self.tapRecognizer];
     }
     
     return self;
@@ -225,54 +257,15 @@
 }
 
 - (void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    self.barHeight = 6.0f;
     
-    if (self.progressView.frame.size.height == 6.0f) {
-        UITouch *touch = [[event allTouches] anyObject];
-        CGPoint touchLocation = [touch locationInView:self];
-        
-        [self seekToPoint:touchLocation.x];
-    }
-    else {
-        [UIView animateWithDuration:0.2f animations:^{
-            self.currentTimeLabel.alpha = 1;
-            self.totalTimeLabel.alpha = 1;
-            [self updateProgress];
-            [self updateBuffer];
-            [self updateBarBackground];
-        } completion:^(BOOL finished) {
-            [self performSelector:@selector(turnOnSeek) withObject:nil afterDelay:0.3f];
-        }];
-    }
-    
-    [self.hideTimer invalidate];
 }
 
 - (void) touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (self.progressView.frame.size.height == 6.0f) {
-        UITouch *touch = [[event allTouches] anyObject];
-        CGPoint touchLocation = [touch locationInView:self];
-        
-        [self seekToPoint:touchLocation.x];
-    }
     
-    [self.hideTimer invalidate];
 }
 
 - (void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.hideTimer invalidate];
     
-    self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f repeats:NO block:^(NSTimer * _Nonnull timer) {
-        self.barHeight = 2.0f;
-        self.canSeek = NO;
-        [UIView animateWithDuration:0.4f animations:^{
-            self.currentTimeLabel.alpha = 0;
-            self.totalTimeLabel.alpha = 0;
-            [self updateProgress];
-            [self updateBuffer];
-            [self updateBarBackground];
-        }];
-    }];
 }
 
 - (void) seekToPoint: (float) point {
@@ -299,5 +292,88 @@
     view.layer.shadowOffset = CGSizeMake(0, 2);
     view.layer.shadowOpacity = 0.5f;
     view.layer.shadowRadius = 2.0f;
+}
+
+- (void) handleScrub: (UIGestureRecognizer *) gesture {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        self.barHeight = 6.0f;
+        
+        if (self.progressView.frame.size.height == 6.0f) {
+            
+            [self seekToPoint:[gesture locationInView:self].x];
+        }
+        else {
+            [UIView animateWithDuration:0.2f animations:^{
+                self.currentTimeLabel.alpha = 1;
+                self.totalTimeLabel.alpha = 1;
+                [self updateProgress];
+                [self updateBuffer];
+                [self updateBarBackground];
+            } completion:^(BOOL finished) {
+                [self performSelector:@selector(turnOnSeek) withObject:nil afterDelay:0.3f];
+            }];
+        }
+        
+        [self.hideTimer invalidate];
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged) {
+        if (self.progressView.frame.size.height == 6.0f) {
+            
+            [self seekToPoint:[gesture locationInView:self].x];
+        }
+        
+        [self.hideTimer invalidate];
+    }
+    else if (gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed ||
+             gesture.state == UIGestureRecognizerStateCancelled) {
+        [self.hideTimer invalidate];
+        
+        self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f repeats:NO block:^(NSTimer * _Nonnull timer) {
+            self.barHeight = 2.0f;
+            self.canSeek = NO;
+            [UIView animateWithDuration:0.4f animations:^{
+                self.currentTimeLabel.alpha = 0;
+                self.totalTimeLabel.alpha = 0;
+                [self updateProgress];
+                [self updateBuffer];
+                [self updateBarBackground];
+            }];
+        }];
+    }
+}
+
+- (void) trackTap: (UIGestureRecognizer *) gesture {
+    self.barHeight = 6.0f;
+    
+    if (self.progressView.frame.size.height == 6.0f) {
+        
+        [self seekToPoint:[gesture locationInView:self].x];
+    }
+    else {
+        [UIView animateWithDuration:0.2f animations:^{
+            self.currentTimeLabel.alpha = 1;
+            self.totalTimeLabel.alpha = 1;
+            [self updateProgress];
+            [self updateBuffer];
+            [self updateBarBackground];
+        } completion:^(BOOL finished) {
+            [self performSelector:@selector(turnOnSeek) withObject:nil afterDelay:0.3f];
+        }];
+    }
+    
+    [self.hideTimer invalidate];
+    
+    self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f repeats:NO block:^(NSTimer * _Nonnull timer) {
+        self.barHeight = 2.0f;
+        self.canSeek = NO;
+        [UIView animateWithDuration:0.4f animations:^{
+            self.currentTimeLabel.alpha = 0;
+            self.totalTimeLabel.alpha = 0;
+            [self updateProgress];
+            [self updateBuffer];
+            [self updateBarBackground];
+        }];
+    }];
 }
 @end

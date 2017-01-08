@@ -72,21 +72,25 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         
     }
     
-    if (![ABUtils notNull:self.track]) {
-        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
-        self.track.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.track.progressView setBackgroundColor: self.themeColor];
-        self.track.delegate = self;
-    }
-    
     if (![ABUtils notNull:swipeRecognizer]) {
         swipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
         swipeRecognizer.delegate = self;
         swipeRecognizer.delaysTouchesBegan = YES;
         swipeRecognizer.cancelsTouchesInView = YES;
+        swipeRecognizer.maximumNumberOfTouches = 1;
     }
     
     [self addGestureRecognizer:swipeRecognizer];
+    
+    if (![ABUtils notNull:self.track]) {
+        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
+        self.track.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.track.progressView setBackgroundColor: self.themeColor];
+        self.track.delegate = self;
+        
+        [swipeRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
+        [swipeRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
+    }
     
     self.track.hidden = YES;
     
@@ -319,6 +323,16 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     //initializes gestures
     [self addPlayGesture];
+    
+    if ([ABUtils notNull:self.track]) {
+        if ([ABUtils notNull:self.track.scrubRecognizer]) {
+            [self.playRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
+        }
+        
+        if ([ABUtils notNull:self.track.tapRecognizer]) {
+            [self.playRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
+        }
+    }
     
     //    if ([self stableWiFiConnection]) {
     //        [self loadVideoWithPlay:NO andScroll:NO withCompletion:nil];
@@ -696,7 +710,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     if (![ABUtils notNull:self.playRecognizer]) {
         self.playRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playVideoWithoutScroll:)];
         self.playRecognizer.numberOfTapsRequired = 1;
-        
+        self.playRecognizer.delegate = self;
     }
     
     self.userInteractionEnabled = YES;
@@ -987,4 +1001,5 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotate:) name:ABMediaViewWillRotateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:ABMediaViewDidRotateNotification object:nil];
 }
+
 @end
