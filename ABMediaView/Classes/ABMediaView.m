@@ -195,11 +195,11 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         [self.track layoutIfNeeded];
     }
     
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(orientationChanged:)
-     name:UIDeviceOrientationDidChangeNotification
-     object:[UIDevice currentDevice]];
+//    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+//    [[NSNotificationCenter defaultCenter]
+//     addObserver:self selector:@selector(orientationChanged:)
+//     name:UIDeviceOrientationDidChangeNotification
+//     object:[UIDevice currentDevice]];
 
     
     
@@ -852,8 +852,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
-    CGFloat width = self.frame.size.width;
-    CGFloat height = self.frame.size.height;
+    CGFloat width = self.superview.frame.size.width;
+    CGFloat height = self.superview.frame.size.height;
     
     if (UIDeviceOrientationIsPortrait(orientation)) {
         
@@ -873,10 +873,22 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             height = tempFloat;
         }
         
+        isMinimized = NO;
         self.frame = CGRectMake(0, 0, width, height);
+        
+        if (![self isPlayingVideo] || self.isLoadingVideo) {
+            self.videoIndicator.alpha = 1.0f;
+        }
+        
+        self.track.userInteractionEnabled = YES;
+        self.userInteractionEnabled = YES;
         
         self.layer.cornerRadius = 0.0f;
         [self setBorderAlpha:0.0f];
+        
+        if (self.isLoadingVideo) {
+            [self loadVideoAnimate];
+        }
     }
     
     
@@ -1177,7 +1189,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 
 - (void) willRotate: (NSNotification *) notification {
     NSLog(@"Rotation began");
-//    [self orientationChanged:nil];
+    [self orientationChanged:nil];
     
 }
 
