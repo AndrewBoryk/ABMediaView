@@ -7,7 +7,7 @@
 
 ## Screenshots
 
-![alt tag](https://github.com/AndrewBoryk/ABMediaView/blob/master/ABMediaViewDemo.gif?raw=true)
+![alt tag](ABMediaViewDemo.gif)
 
 ## Example
 
