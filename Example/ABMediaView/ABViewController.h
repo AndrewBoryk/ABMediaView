@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <ABMediaView/ABMediaView.h>
+#import <ABMediaView/ABMediaViewController.h>
 
 @interface ABViewController : UIViewController <ABMediaViewDelegate>
 

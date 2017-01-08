@@ -7,21 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */ = {isa = PBXBuildFile; fileRef = EC7AA0250DAC78111DB8F88E7BDDF05E /* ABMediaView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		17F6E9E2AB640A538AAF71A26C284FA6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
-		23EB1F004C688CC24061A9AF937D9B33 /* ABUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = A3CD4EA9241DD3A9914DF76B396CE819 /* ABUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1F78FE39370E8574EAC21D9BC71FDEE9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		257A5337C65A09F112F5CCB03105DF74 /* Pods-ABMediaView_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		28ED9791CC2E7958ADE772165C7521CB /* ABMediaView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5700059CD8F6E82F23A70A1CDA280001 /* ABUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FD78BB5B0A6B1C6E1761F5D19846882E /* ABUtils.m */; };
+		337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
 		5D53BCC2949DD8548383FACADBBAE863 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
-		7193995382E7E84B01014B32DB07C5E7 /* ABMediaView.h in Headers */ = {isa = PBXBuildFile; fileRef = 24942E5AF8DCA49AE2A882942368655D /* ABMediaView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		77F356EED17EC88F7EC3375C7F8DCD1E /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
 		7DDF517DBAD72F29544850EA073D0C83 /* Pods-ABMediaView_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F8F880349FE6ECF6AFA3E08C722368 /* Pods-ABMediaView_Example-dummy.m */; };
-		9B99E40F5D427A4D93484DF4B129F47A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
-		B70B997667D782AB1673FEB43CE156C8 /* VideoTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DBBB7192210AB7E2699919A78F8EB4 /* VideoTrackView.m */; };
+		84A3651C77982797C777561E41C233E8 /* ABUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4581F26823B69E946067E82873DBFE69 /* ABUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		891A6829DA4F37A11EFA90E1B5DE049F /* ABMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */; };
+		896A7678C8E2F67FEC8DF43908D27DC2 /* VideoTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A023380458885D30A16E28353C60935 /* VideoTrackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9F4291863A44DD71D96EFBA38EA05E9F /* VideoTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */; };
 		D204C06016C1059C3CC2005DA9DB8DA1 /* Pods-ABMediaView_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 55733B9933C33F895B55373353749226 /* Pods-ABMediaView_Tests-dummy.m */; };
-		EC4900FF21FBC44DBDB6B5A7ABFC01D9 /* VideoTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F1DCC8CC4BF6BD02837FA5E16091249 /* VideoTrackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D5AD45D47EB6E702BE1763E4F7097619 /* ABUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F927730E1DCD2F8375E76A40A78DEE1 /* ABUtils.m */; };
 		F4FE2DE830C3601029C9840EF4A985BA /* Pods-ABMediaView_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E19391C502C17A39AD7EAF5B195C75BC /* Pods-ABMediaView_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FE61F74F79A08124E7860D7F1408C4FC /* ABMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FCEF8B344CDA72BA6D1C0A150A544DC /* ABMediaView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +29,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9C6C31E80BD9AC76D7087E7260F2645F;
+			remoteGlobalIDString = A3002B0D774EDDB00D083B954F2F2A9C;
 			remoteInfo = ABMediaView;
 		};
 /* End PBXContainerItemProxy section */
@@ -38,30 +38,30 @@
 		088153BFDE46DC28C3A303D3B0047168 /* Pods-ABMediaView_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Tests-resources.sh"; sourceTree = "<group>"; };
 		1B0B801098B63BAE57DED975A99907E4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2226A379F32A992A7C83D39EE0582BB4 /* Pods-ABMediaView_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ABMediaView_Tests.modulemap"; sourceTree = "<group>"; };
-		24942E5AF8DCA49AE2A882942368655D /* ABMediaView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ABMediaView.h; sourceTree = "<group>"; };
-		30DBBB7192210AB7E2699919A78F8EB4 /* VideoTrackView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = VideoTrackView.m; sourceTree = "<group>"; };
 		34F8F880349FE6ECF6AFA3E08C722368 /* Pods-ABMediaView_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ABMediaView_Example-dummy.m"; sourceTree = "<group>"; };
 		417BF06B15201C58C0C1D9D40CC9057C /* Pods-ABMediaView_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Example-frameworks.sh"; sourceTree = "<group>"; };
+		4581F26823B69E946067E82873DBFE69 /* ABUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ABUtils.h; sourceTree = "<group>"; };
 		4919760FC8F10ADB4D56AA2DA0A02B2A /* Pods-ABMediaView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4C025123E37568A1D42A9663DB47DD21 /* ABMediaView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ABMediaView-prefix.pch"; sourceTree = "<group>"; };
 		4EC7228C84537130D06D125671D4AC85 /* Pods-ABMediaView_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ABMediaView_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		4F1DCC8CC4BF6BD02837FA5E16091249 /* VideoTrackView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = VideoTrackView.h; sourceTree = "<group>"; };
 		52762235C6571D1EFDC2D6064C553289 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		54D610C8306303CFD7FF66F4F1693BA3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55733B9933C33F895B55373353749226 /* Pods-ABMediaView_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ABMediaView_Tests-dummy.m"; sourceTree = "<group>"; };
 		590BA9F8B8BA40336382BA812C7FA4F0 /* ABMediaView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ABMediaView.xcconfig; sourceTree = "<group>"; };
 		5C9C31F7679E37F62AA8CB0C4BFAD99F /* Pods-ABMediaView_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Example-resources.sh"; sourceTree = "<group>"; };
+		74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ABMediaView.m; sourceTree = "<group>"; };
 		770233456A6115FB138DC42FC58F14DA /* Pods-ABMediaView_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ABMediaView_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		7BDF655D3B164B844CC191924DB4A44C /* ABMediaView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ABMediaView.modulemap; sourceTree = "<group>"; };
+		7F927730E1DCD2F8375E76A40A78DEE1 /* ABUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ABUtils.m; sourceTree = "<group>"; };
 		876E0EC985A204AF6CE8DB31949EF1EA /* ABMediaView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ABMediaView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8FCEF8B344CDA72BA6D1C0A150A544DC /* ABMediaView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ABMediaView.m; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		982359C74882CC0544D159916F1D2628 /* Pods-ABMediaView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		A3CD4EA9241DD3A9914DF76B396CE819 /* ABUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ABUtils.h; sourceTree = "<group>"; };
+		9A023380458885D30A16E28353C60935 /* VideoTrackView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = VideoTrackView.h; sourceTree = "<group>"; };
 		A45C42D1F1571B191EAE8817C73102EC /* Pods-ABMediaView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A5DA0BF1F7247E87A4DA103F56D778B7 /* Pods-ABMediaView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ABMediaView_Tests-umbrella.h"; sourceTree = "<group>"; };
 		B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ABMediaView-umbrella.h"; sourceTree = "<group>"; };
+		B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = VideoTrackView.m; sourceTree = "<group>"; };
 		B962F5F9DCA1D1F3FDC6C16F28B63A44 /* Pods-ABMediaView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ABMediaView_Example.modulemap"; sourceTree = "<group>"; };
 		BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ABMediaView-dummy.m"; sourceTree = "<group>"; };
 		BC528D0F0F3432D8A98955B2ACC0736C /* Pods-ABMediaView_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ABMediaView_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -70,8 +70,8 @@
 		D0303F9F0C235335772E8E5792871B89 /* Pods_ABMediaView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABMediaView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E19391C502C17A39AD7EAF5B195C75BC /* Pods-ABMediaView_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ABMediaView_Example-umbrella.h"; sourceTree = "<group>"; };
 		E7420D61127FEF6A1F382DC7ED24D1FB /* Pods-ABMediaView_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ABMediaView_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		EC7AA0250DAC78111DB8F88E7BDDF05E /* ABMediaView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ABMediaView.h; sourceTree = "<group>"; };
 		F5E4F83D9A59B9C218B0CC05BD489373 /* Pods-ABMediaView_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Tests-frameworks.sh"; sourceTree = "<group>"; };
-		FD78BB5B0A6B1C6E1761F5D19846882E /* ABUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ABUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,11 +83,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		78406EBBE1D12D2CB5FAEF85B713DA50 /* Frameworks */ = {
+		4708105B8CFDA3BE6C4EB72C3FA456D3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B99E40F5D427A4D93484DF4B129F47A /* Foundation.framework in Frameworks */,
+				1F78FE39370E8574EAC21D9BC71FDEE9 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,35 +123,6 @@
 				9E5FE9C11428414F82675719A7231BB9 /* Pods-ABMediaView_Tests */,
 			);
 			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		455AA61C1E1DA74800F7596E /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				A3CD4EA9241DD3A9914DF76B396CE819 /* ABUtils.h */,
-				FD78BB5B0A6B1C6E1761F5D19846882E /* ABUtils.m */,
-			);
-			name = Utils;
-			sourceTree = "<group>";
-		};
-		464B53AA62B592C78AC1A9FAF2EF0BD5 /* ABMediaView */ = {
-			isa = PBXGroup;
-			children = (
-				6C6E9C1311D9C713210B670BE1787A4D /* Classes */,
-			);
-			path = ABMediaView;
-			sourceTree = "<group>";
-		};
-		6C6E9C1311D9C713210B670BE1787A4D /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				455AA61C1E1DA74800F7596E /* Utils */,
-				24942E5AF8DCA49AE2A882942368655D /* ABMediaView.h */,
-				8FCEF8B344CDA72BA6D1C0A150A544DC /* ABMediaView.m */,
-				4F1DCC8CC4BF6BD02837FA5E16091249 /* VideoTrackView.h */,
-				30DBBB7192210AB7E2699919A78F8EB4 /* VideoTrackView.m */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		7531C8F8DE19F1AA3C8A7AC97A91DC29 /* iOS */ = {
@@ -194,11 +165,24 @@
 		A1F8804DFBEF5B2BC4E4E5B9D00F8E22 /* ABMediaView */ = {
 			isa = PBXGroup;
 			children = (
-				464B53AA62B592C78AC1A9FAF2EF0BD5 /* ABMediaView */,
+				E9C4284E7C19051CED5B2B53AA174FE3 /* ABMediaView */,
 				30042B778A98D3FE8FEE6C09B2F955F7 /* Support Files */,
 			);
 			name = ABMediaView;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		BAF4C2207E13BFE2EFDA558286DA76F7 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				EC7AA0250DAC78111DB8F88E7BDDF05E /* ABMediaView.h */,
+				74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */,
+				4581F26823B69E946067E82873DBFE69 /* ABUtils.h */,
+				7F927730E1DCD2F8375E76A40A78DEE1 /* ABUtils.m */,
+				9A023380458885D30A16E28353C60935 /* VideoTrackView.h */,
+				B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
@@ -245,6 +229,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E9C4284E7C19051CED5B2B53AA174FE3 /* ABMediaView */ = {
+			isa = PBXGroup;
+			children = (
+				BAF4C2207E13BFE2EFDA558286DA76F7 /* Classes */,
+			);
+			path = ABMediaView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -256,22 +248,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2D592D3D0C02706E596483A77D6DDD3B /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				28ED9791CC2E7958ADE772165C7521CB /* ABMediaView-umbrella.h in Headers */,
-				7193995382E7E84B01014B32DB07C5E7 /* ABMediaView.h in Headers */,
-				23EB1F004C688CC24061A9AF937D9B33 /* ABUtils.h in Headers */,
-				EC4900FF21FBC44DBDB6B5A7ABFC01D9 /* VideoTrackView.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		6E7CD4487C095D56AA96C2EA3BFCB109 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F4FE2DE830C3601029C9840EF4A985BA /* Pods-ABMediaView_Example-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD39331CBAF4564858CB65FE184B546D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */,
+				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
+				84A3651C77982797C777561E41C233E8 /* ABUtils.h in Headers */,
+				896A7678C8E2F67FEC8DF43908D27DC2 /* VideoTrackView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,13 +288,13 @@
 			productReference = D0303F9F0C235335772E8E5792871B89 /* Pods_ABMediaView_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		9C6C31E80BD9AC76D7087E7260F2645F /* ABMediaView */ = {
+		A3002B0D774EDDB00D083B954F2F2A9C /* ABMediaView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DA70BA9DFF31F5CF5DD1B0938100F267 /* Build configuration list for PBXNativeTarget "ABMediaView" */;
+			buildConfigurationList = 8B7477AE63490DA0DBC14CAD98018AFE /* Build configuration list for PBXNativeTarget "ABMediaView" */;
 			buildPhases = (
-				1747E574CADE9894B4BD76C91AC6ED06 /* Sources */,
-				78406EBBE1D12D2CB5FAEF85B713DA50 /* Frameworks */,
-				2D592D3D0C02706E596483A77D6DDD3B /* Headers */,
+				FF723BAFBB4B714CC34B80B6F6D54E1E /* Sources */,
+				4708105B8CFDA3BE6C4EB72C3FA456D3 /* Frameworks */,
+				AD39331CBAF4564858CB65FE184B546D /* Headers */,
 			);
 			buildRules = (
 			);
@@ -351,7 +343,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9C6C31E80BD9AC76D7087E7260F2645F /* ABMediaView */,
+				A3002B0D774EDDB00D083B954F2F2A9C /* ABMediaView */,
 				2B9E073E53FC24A51F60694387ADFE45 /* Pods-ABMediaView_Example */,
 				E30CC05C29572F6BB3F452038678AA05 /* Pods-ABMediaView_Tests */,
 			);
@@ -367,22 +359,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1747E574CADE9894B4BD76C91AC6ED06 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77F356EED17EC88F7EC3375C7F8DCD1E /* ABMediaView-dummy.m in Sources */,
-				FE61F74F79A08124E7860D7F1408C4FC /* ABMediaView.m in Sources */,
-				5700059CD8F6E82F23A70A1CDA280001 /* ABUtils.m in Sources */,
-				B70B997667D782AB1673FEB43CE156C8 /* VideoTrackView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DD2E5EF9F078AD8FEF4C59313860045E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7DDF517DBAD72F29544850EA073D0C83 /* Pods-ABMediaView_Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF723BAFBB4B714CC34B80B6F6D54E1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */,
+				891A6829DA4F37A11EFA90E1B5DE049F /* ABMediaView.m in Sources */,
+				D5AD45D47EB6E702BE1763E4F7097619 /* ABUtils.m in Sources */,
+				9F4291863A44DD71D96EFBA38EA05E9F /* VideoTrackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,13 +384,13 @@
 		C3D2D87F8D19F6F1D1BF83763F5CC9EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ABMediaView;
-			target = 9C6C31E80BD9AC76D7087E7260F2645F /* ABMediaView */;
+			target = A3002B0D774EDDB00D083B954F2F2A9C /* ABMediaView */;
 			targetProxy = B73F73CA8984256538664F2A44625925 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		4F2E5FDF24D28F285DFB53A68BAC56D0 /* Debug */ = {
+		16BE959789707E980349EA5BD2A2547A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 590BA9F8B8BA40336382BA812C7FA4F0 /* ABMediaView.xcconfig */;
 			buildSettings = {
@@ -428,6 +420,37 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
+		};
+		245B7936E6C39FB5BF09E93691AC80F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 590BA9F8B8BA40336382BA812C7FA4F0 /* ABMediaView.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/ABMediaView/ABMediaView-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/ABMediaView/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/ABMediaView/ABMediaView.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = ABMediaView;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		80CA9493C9AB6CF1AAD30BF11C0AF875 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -536,37 +559,6 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = "${SRCROOT}/../build";
 				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		927A535FF5A984DB73EC9A42B26A5A8A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 590BA9F8B8BA40336382BA812C7FA4F0 /* ABMediaView.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/ABMediaView/ABMediaView-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/ABMediaView/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/ABMediaView/ABMediaView.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = ABMediaView;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -705,11 +697,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DA70BA9DFF31F5CF5DD1B0938100F267 /* Build configuration list for PBXNativeTarget "ABMediaView" */ = {
+		8B7477AE63490DA0DBC14CAD98018AFE /* Build configuration list for PBXNativeTarget "ABMediaView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4F2E5FDF24D28F285DFB53A68BAC56D0 /* Debug */,
-				927A535FF5A984DB73EC9A42B26A5A8A /* Release */,
+				16BE959789707E980349EA5BD2A2547A /* Debug */,
+				245B7936E6C39FB5BF09E93691AC80F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

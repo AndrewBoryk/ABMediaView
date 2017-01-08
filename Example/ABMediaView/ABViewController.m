@@ -65,4 +65,23 @@
 - (void) playVideo {
     self.mediaView.image = nil;
 }
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
+    
+    // best call super just in case
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    // will execute before rotation
+    
+    [coordinator animateAlongsideTransition:^(id  _Nonnull context) {
+        
+        // Notifies the ABMediaView that the device is about to rotate, that way any ABMediaViews can adjust their frames for the new size. Is especially helpful when users are watching landscape videos and rotate their devices between portrait and landscape
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewWillRotateNotification object:nil];
+        
+    } completion:^(id  _Nonnull context) {
+        
+        // Notifies the ABMediaView that the device just finised rotating, that way any ABMediaViews can adjust their frames for the new size. Is especially helpful when users are watching landscape videos and rotate their devices between portrait and landscape
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewDidRotateNotification object:nil];
+    }];
+}
 @end

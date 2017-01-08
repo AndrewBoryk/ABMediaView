@@ -12,15 +12,22 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ABUtils.h"
 #import "VideoTrackView.h"
+#import "ABMediaViewController.h"
 
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
 @protocol ABMediaViewDelegate;
 
+extern const NSNotificationName ABMediaViewWillRotateNotification;
+extern const NSNotificationName ABMediaViewDidRotateNotification;
+
 @interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
+
+//@property (strong, nonatomic) NSString *ABMediaViewWillRotateNotification;
+//@property (strong, nonatomic) NSString *ABMediaViewDidRotateNotification;
 
 /// Track which show video progress
 @property (strong, nonatomic) VideoTrackView *track;
@@ -118,4 +125,4 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
 - (void) openContent;
 
-@end
+@end\

@@ -8,6 +8,10 @@
 
 #import "ABMediaView.h"
 
+const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
+const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
+
+
 @implementation ABMediaView {
     float bufferTime;
     
@@ -48,6 +52,8 @@
 
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
+    
+    [self registerForRotation];
     
     if (![ABUtils notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -162,6 +168,7 @@
      object:[UIDevice currentDevice]];
 
     
+    
     //    if (![self.subviews containsObject:self.loadingIndicator]) {
     //
     //
@@ -190,6 +197,7 @@
     self.backgroundColor = [ABUtils colorWithHexString:@"EFEFF4"];
     self.clipsToBounds = YES;
     
+    ABMediaViewController *abmvc = [[ABMediaViewController alloc] init];
 }
 - (id)initWithFrame:(CGRect)aRect
 {
@@ -236,6 +244,8 @@
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self registerForRotation];
     
     _videoURL = nil;
     _imageURL = imageURL;
@@ -962,5 +972,20 @@
     return [AVPlayerLayer class];
 }
 
+- (void) willRotate: (NSNotification *) notification {
+    NSLog(@"Rotation began");
+//    [self orientationChanged:nil];
+    
+}
 
+- (void) didRotate: (NSNotification *) notification {
+    NSLog(@"Rotation complete");
+    [self orientationChanged:nil];
+    
+}
+
+- (void) registerForRotation {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotate:) name:ABMediaViewWillRotateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:ABMediaViewDidRotateNotification object:nil];
+}
 @end
