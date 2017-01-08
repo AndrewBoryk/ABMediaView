@@ -36,6 +36,10 @@ it, simply add the following line to your Podfile:
 pod "ABMediaView"
 ```
 
+## Usage
+### Calling the manager
+As a singleton class, the manager can be accessed from anywhere within your app via the + sharedInstance function:
+
 ## Author
 
 Andrew Boryk, andrewcboryk@gmail.com
