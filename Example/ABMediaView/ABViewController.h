@@ -12,6 +12,9 @@
 
 @interface ABViewController : UIViewController <ABMediaViewDelegate>
 
-@property (strong, nonatomic) IBOutlet ABMediaView *mediaView;
+/// Button to add a mediaView to the queue
+@property (strong, nonatomic) IBOutlet UIButton *showMediaViewButton;
 
+/// Adds a mediaView to the queue
+- (IBAction)showMediaViewAction:(id)sender;
 @end

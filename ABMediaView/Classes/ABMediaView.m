@@ -32,7 +32,25 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     /// Determines if video is minimized
     BOOL isMinimized;
+}
+
++ (id)sharedManager {
+    static ABMediaView *sharedMyManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedMyManager = [[self alloc] init];
+    });
+    return sharedMyManager;
+}
+
+- (instancetype) init {
+    self = [super init];
     
+    if (self) {
+        self.mediaViewQueue = [[NSMutableArray alloc] init];
+    }
+    
+    return self;
 }
 
 - (void) drawRect:(CGRect)rect {
@@ -55,6 +73,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     [self.track updateBarBackground];
     [self.track updateProgress];
 }
+
+
 
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
@@ -354,8 +374,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self loadVideoAnimate];
             self.isLoadingVideo = true;
             
-            if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                [self.delegate playVideo];
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                [self.delegate mediaViewDidPlayVideo:self];
             }
             
         }
@@ -500,8 +520,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 [self.player pause];
                 
-                if ([self.delegate respondsToSelector:@selector(pauseVideo)]) {
-                    [self.delegate pauseVideo];
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPauseVideo:)]) {
+                    [self.delegate mediaViewDidPauseVideo:self];
                 }
                 
             }
@@ -511,8 +531,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 [self.player play];
                 
-                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                    [self.delegate playVideo];
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                    [self.delegate mediaViewDidPlayVideo:self];
                 }
                 
             }
@@ -521,8 +541,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 [self.player play];
                 
-                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                    [self.delegate playVideo];
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                    [self.delegate mediaViewDidPlayVideo: self];
                 }
             }
         }
@@ -951,16 +971,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }
         
         if (shouldDismiss) {
-            [UIView animateWithDuration:0.25f animations:^{
-                self.frame = CGRectMake(self.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
-                self.alpha = 0;
-                self.layer.cornerRadius = 1.5f;
-                
-            } completion:^(BOOL finished) {
-                
-                self.player = nil;
-                [self removeFromSuperview];
-            }];
+            [self dismissMediaView];
         }
         else {
             [UIView animateWithDuration:0.25f animations:^{
@@ -1176,6 +1187,105 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     if ([ABUtils notNull:swipeRecognizer]) {
         swipeRecognizer.enabled = self.isMinimizable;
     }
+}
+
+- (void) queueMediaView: (ABMediaView *) mediaView {
+    if ([ABUtils notNull:mediaView]) {
+        [self.mediaViewQueue addObject:mediaView];
+        
+        if (self.mediaViewQueue.count == 1) {
+            [[ABMediaView sharedManager] presentMediaView:mediaView];
+        }
+    }
+}
+
+- (void) showNextMediaView {
+    if (self.mediaViewQueue.count) {
+        self.userInteractionEnabled = NO;
+        
+        ABMediaView *mediaView = self.mediaViewQueue.firstObject;
+        
+        CGFloat minViewWidth = mediaView.superview.frame.size.width * 0.5f;
+        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+        CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f));
+        
+        [UIView animateWithDuration:0.25f animations:^{
+            mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
+            mediaView.alpha = 0;
+            mediaView.layer.cornerRadius = 1.5f;
+            
+        } completion:^(BOOL finished) {
+            
+            [[ABMediaView sharedManager] removeFromQueue:mediaView];
+            [mediaView.player pause];
+            [mediaView.playerLayer removeFromSuperlayer];
+            mediaView.playerLayer = nil;
+            mediaView.player = nil;
+            [mediaView removeFromSuperview];
+            
+            self.userInteractionEnabled = YES;
+            if (self.mediaViewQueue.count) {
+                [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
+            }
+            else {
+                NSLog(@"No mediaView in queue");
+            }
+        }];
+        
+        
+        
+    }
+    else {
+        NSLog(@"No mediaView in queue");
+    }
+}
+
+- (void) presentMediaView:(ABMediaView *) mediaView {
+    self.mainWindow = [[UIApplication sharedApplication] keyWindow];
+    [self.mainWindow makeKeyAndVisible];
+    
+    mediaView.alpha = 0;
+    [self.mainWindow addSubview:mediaView];
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        mediaView.alpha = 1;
+    } completion:^(BOOL finished) {
+//        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
+//            [mediaView.delegate mediaViewDidShow:self];
+//        }
+    }];
+}
+
+- (void) removeFromQueue:(ABMediaView *) mediaView {
+    if ([ABUtils notNull:mediaView] && self.mediaViewQueue.count) {
+        [self.mediaViewQueue removeObject:mediaView];
+    }
+}
+
+- (void) dismissMediaView {
+    self.userInteractionEnabled = NO;
+    
+    CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
+    CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+    CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+    
+    [UIView animateWithDuration:0.25f animations:^{
+        self.frame = CGRectMake(self.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
+        self.alpha = 0;
+        self.layer.cornerRadius = 1.5f;
+        
+    } completion:^(BOOL finished) {
+        
+        [[ABMediaView sharedManager] removeFromQueue:self];
+        [self.player pause];
+        [self.playerLayer removeFromSuperlayer];
+        self.playerLayer = nil;
+        self.player = nil;
+        [self removeFromSuperview];
+        
+        self.userInteractionEnabled = YES;
+    }];
+    
 }
 
 @end

@@ -21,16 +21,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Vf-rt-rcR" customClass="ABMediaView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyz-3g-968">
+                                <rect key="frame" x="129" y="60" width="116" height="30"/>
+                                <state key="normal" title="Show MediaView"/>
+                                <connections>
+                                    <action selector="showMediaViewAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="59c-Zc-LFl"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
+                            <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
+                        </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
-                        <outlet property="mediaView" destination="3Vf-rt-rcR" id="eOh-SV-xes"/>
+                        <outlet property="showMediaViewButton" destination="qyz-3g-968" id="195-Lz-9Es"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>

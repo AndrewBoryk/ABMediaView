@@ -25,8 +25,14 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
 
-//@property (strong, nonatomic) NSString *ABMediaViewWillRotateNotification;
-//@property (strong, nonatomic) NSString *ABMediaViewDidRotateNotification;
+/// Shared Manager, which keeps track of mediaViews
++ (id)sharedManager;
+
+/// Queue which holds an array of mediaViews to be displayed
+@property (strong, nonatomic) NSMutableArray *mediaViewQueue;
+
+/// Main window which the mediaView will be added to
+@property (strong, nonatomic) UIWindow *mainWindow;
 
 /// Track which shows the progress of the video being played
 @property (strong, nonatomic) VideoTrackView *track;
@@ -115,20 +121,32 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Determines whether the mediaView can be minimized into the bottom right corner, and then dismissed
 - (void) setCanMinimize: (BOOL) canMinimize;
 
+/// Add a mediaView to the queue of mediaViews that will be displayed. If no mediaView is currently showing, this will display that new mediaView
+- (void) queueMediaView: (ABMediaView *) mediaView;
+
+/// Will remove the currently displaying mediaView and then display the next in the queue
+- (void) showNextMediaView;
+
+/// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown
+- (void) presentMediaView:(ABMediaView *) mediaView;
+
+/// Remove a mediaView from the queue
+- (void) removeFromQueue:(ABMediaView *) mediaView;
+
+/// Dismiss the mediaView by moving it offscreen and removing it from the queue
+- (void) dismissMediaView;
 @end
 
 @protocol ABMediaViewDelegate <NSObject>
 
 @optional
 
-- (void) selection;
+- (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
 
-- (void) playVideo;
+- (void) mediaViewDidStopVideo: (ABMediaView *) mediaView;
 
-- (void) stopVideo;
+- (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
 
-- (void) pauseVideo;
-
-- (void) openContent;
+- (void) openContentFromMediaView: (ABMediaView *) mediaView;
 
 @end\
