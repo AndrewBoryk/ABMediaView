@@ -368,17 +368,7 @@
     
     [self.hideTimer invalidate];
     
-    self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f repeats:NO block:^(NSTimer * _Nonnull timer) {
-        self.barHeight = 2.0f;
-        self.canSeek = NO;
-        [UIView animateWithDuration:0.4f animations:^{
-            self.currentTimeLabel.alpha = 0;
-            self.totalTimeLabel.alpha = 0;
-            [self updateProgress];
-            [self updateBuffer];
-            [self updateBarBackground];
-        }];
-    }];
+    self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f target:self selector:@selector(hideTrack) userInfo:nil repeats:NO];
 }
 
 - (void) setTrackFont: (UIFont *) font {
@@ -386,5 +376,17 @@
         self.totalTimeLabel.font = font;
         self.currentTimeLabel.font = font;
     }
+}
+
+- (void) hideTrack {
+    self.barHeight = 2.0f;
+    self.canSeek = NO;
+    [UIView animateWithDuration:0.4f animations:^{
+        self.currentTimeLabel.alpha = 0;
+        self.totalTimeLabel.alpha = 0;
+        [self updateProgress];
+        [self updateBuffer];
+        [self updateBarBackground];
+    }];
 }
 @end

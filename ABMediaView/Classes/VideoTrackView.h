@@ -74,6 +74,8 @@
 /// Update UI for bar background
 - (void) updateBarBackground;
 
+/// Minimize the progress track
+- (void) hideTrack;
 @end
 
 @protocol VideoTrackDelegate <NSObject>

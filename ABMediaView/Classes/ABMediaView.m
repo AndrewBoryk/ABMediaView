@@ -79,6 +79,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
     
+    [self setBorderAlpha:0.0f];
+    self.layer.borderWidth = 1.0f;
+    
     [self registerForRotation];
     
     if (![ABUtils notNull:self.loadingIndicator]) {
@@ -497,6 +500,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self.track updateBarBackground];
             
             self.layer.cornerRadius = 0.0f;
+            [self setBorderAlpha:0.0f];
             
         } completion:^(BOOL finished) {
             
@@ -872,6 +876,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.frame = CGRectMake(0, 0, width, height);
         
         self.layer.cornerRadius = 0.0f;
+        [self setBorderAlpha:0.0f];
     }
     
     
@@ -905,6 +910,13 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     if (gesture.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Touches Began");
         [self stopVideoAnimate];
+        
+        if ([ABUtils notNull:self.track]) {
+            if ([ABUtils notNull:self.track.hideTimer]) {
+                [self.track.hideTimer invalidate];
+                [self.track hideTrack];
+            }
+        }
         
         ySwipePosition = [gesture locationInView:self].y;
         xSwipePosition = [gesture locationInView:self].x;
@@ -979,6 +991,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                     self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
                     self.videoIndicator.alpha = 0;
                     self.layer.cornerRadius = 1.5f;
+                    [self setBorderAlpha:1.0f];
                 }
                 else {
                     self.frame = self.superview.frame;
@@ -988,6 +1001,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                     }
                     
                     self.layer.cornerRadius = 0.0f;
+                    [self setBorderAlpha:0.0f];
                 }
                 
                 self.alpha = 1;
@@ -1105,6 +1119,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         origin.x = self.superview.frame.size.width - size.width - 12.0f;
         offset = maxViewOffset;
         self.layer.cornerRadius = 1.5f;
+        [self setBorderAlpha:1.0f];
         
         if (![self isPlayingVideo] || self.isLoadingVideo)  {
             self.videoIndicator.alpha = 0;
@@ -1117,6 +1132,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         origin.x = 0;
         offset = 0.0f;
         self.layer.cornerRadius = 0;
+        [self setBorderAlpha:0.0f];
         
         if (![self isPlayingVideo] || self.isLoadingVideo)  {
             self.videoIndicator.alpha = 1;
@@ -1129,6 +1145,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         origin.x = self.superview.frame.size.width - size.width - (offsetPercentage * 12.0f);
         offset+= difference;
         self.layer.cornerRadius = 1.5f * offsetPercentage;
+        [self setBorderAlpha:offsetPercentage];
         
         if (![self isPlayingVideo] || self.isLoadingVideo)  {
             self.videoIndicator.alpha = (1-offsetPercentage);
@@ -1273,6 +1290,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.frame = CGRectMake(self.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
         self.alpha = 0;
         self.layer.cornerRadius = 1.5f;
+        [self setBorderAlpha:0.0f];
         
     } completion:^(BOOL finished) {
         
@@ -1286,6 +1304,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.userInteractionEnabled = YES;
     }];
     
+}
+
+- (void) setBorderAlpha: (CGFloat) alpha {
+    self.layer.borderColor = [[ABUtils colorWithHexString:@"95a5a6"] colorWithAlphaComponent:alpha].CGColor;
 }
 
 @end
