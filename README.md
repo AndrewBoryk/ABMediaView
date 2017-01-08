@@ -135,6 +135,13 @@ mediaView.contentMode = UIViewContentModeScaleAspectFill;
 ```
 
 
+If the ABMediaView is not a fullscreen view that was presented from the queue, the functionality can be enabled that would allow the ABMediaView to open up in fullscreen when selected.
+
+```objective-c
+[mediaView setShouldDisplayFullscreen:YES];
+```
+
+
 One can specify whether or not the ABMediaView is going to be displayed in a reusable view, which will allow for better UI transition performance for ABMediaView's that are not going to be reused.
 ```objective-c
 mediaView.imageViewNotReused = YES;
