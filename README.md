@@ -1,7 +1,6 @@
 <p align="center">
   <img src="https://github.com/AndrewBoryk/ABMediaView/blob/master/ABMediaViewLogo.png?raw=true" alt="ABMediaView custom logo"/>
 </p>
-
 [![CI Status](http://img.shields.io/travis/Andrew Boryk/ABMediaView.svg?style=flat)](https://travis-ci.org/Andrew Boryk/ABMediaView)
 [![Version](https://img.shields.io/cocoapods/v/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 [![License](https://img.shields.io/cocoapods/l/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
