@@ -108,6 +108,9 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Returns whether the view is already playing video
 - (BOOL) isPlayingVideo;
 
+/// Toggle functionality for remaining time to show on right track label rather than showing total time
+- (void) setShowRemainingTime: (BOOL) showRemainingTime;
+
 @end
 
 @protocol ABMediaViewDelegate <NSObject>

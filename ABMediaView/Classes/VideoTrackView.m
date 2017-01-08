@@ -132,7 +132,6 @@
         
         self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
         self.scrubRecognizer.delegate = self;
-        self.scrubRecognizer.delaysTouchesBegan = YES;
         self.scrubRecognizer.cancelsTouchesInView = YES;
         self.scrubRecognizer.maximumNumberOfTouches = 1;
         
@@ -175,6 +174,11 @@
     
     int doneMinutes = (int)duration/60;
     int doneSeconds = (int)duration%60;
+    
+    if (self.showRemainingTime) {
+        doneMinutes = (int)(duration - trackInt)/60;
+        doneSeconds = (int)(duration - trackInt)%60;
+    }
     
     if (seconds < 10) {
         self.currentTimeLabel.text = [NSString stringWithFormat:@"%i:0%i", minutes, seconds];
@@ -375,5 +379,12 @@
             [self updateBarBackground];
         }];
     }];
+}
+
+- (void) setTrackFont: (UIFont *) font {
+    if ([ABUtils notNull:font]) {
+        self.totalTimeLabel.font = font;
+        self.currentTimeLabel.font = font;
+    }
 }
 @end

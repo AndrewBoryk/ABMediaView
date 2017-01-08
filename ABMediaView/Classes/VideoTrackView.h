@@ -47,6 +47,9 @@
 /// Determines whether seeking is allowed
 @property BOOL canSeek;
 
+/// Toggles to functionality to show the video's remaining time on the right side of the track, instead of total time
+@property BOOL showRemainingTime;
+
 /// Current buffer for streaming video
 @property (strong, nonatomic) NSNumber *buffer;
 

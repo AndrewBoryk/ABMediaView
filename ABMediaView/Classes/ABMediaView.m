@@ -1002,4 +1002,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:ABMediaViewDidRotateNotification object:nil];
 }
 
+- (void) setShowRemainingTime: (BOOL) showRemainingTime {
+    if ([ABUtils notNull:self.track]) {
+        self.track.showRemainingTime = showRemainingTime;
+    }
+}
 @end

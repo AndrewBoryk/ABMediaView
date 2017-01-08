@@ -42,7 +42,9 @@
     self.mediaView.imageViewNotReused = YES;
     
     self.mediaView.frame = self.view.frame;
-    
+
+    /// Allows the user to enable funtionality which would show remaining time instead of total time on the right label on the track
+    [self.mediaView setShowRemainingTime:YES];
 }
 
 - (void)didReceiveMemoryWarning
