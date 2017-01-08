@@ -12,7 +12,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ABUtils.h"
 #import "VideoTrackView.h"
-#import "ABMediaViewController.h"
 
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);

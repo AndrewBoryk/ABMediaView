@@ -50,6 +50,8 @@
 /// Current buffer for streaming video
 @property (strong, nonatomic) NSNumber *buffer;
 
+/// Recognizes when a user is trying to scrub through video
+@property (strong, nonatomic) UIPanGestureRecognizer *scrubRecognizer;
 /// Update progress for the streaming video
 - (void) setProgress:(NSNumber *)progress withDuration: (CGFloat) duration;
 
@@ -64,6 +66,7 @@
 
 /// Update UI for bar background
 - (void) updateBarBackground;
+
 @end
 
 @protocol VideoTrackDelegate <NSObject>

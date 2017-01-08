@@ -11,7 +11,6 @@
 #endif
 
 #import "ABMediaView.h"
-#import "ABMediaViewController.h"
 #import "ABUtils.h"
 #import "VideoTrackView.h"
 

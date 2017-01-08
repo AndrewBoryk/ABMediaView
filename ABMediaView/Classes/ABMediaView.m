@@ -197,7 +197,6 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     self.backgroundColor = [ABUtils colorWithHexString:@"EFEFF4"];
     self.clipsToBounds = YES;
     
-    ABMediaViewController *abmvc = [[ABMediaViewController alloc] init];
 }
 - (id)initWithFrame:(CGRect)aRect
 {

@@ -8,7 +8,7 @@
 
 #import "VideoTrackView.h"
 
-@implementation VideoTrackView
+@implementation VideoTrackView 
 
 /*
  // Only override drawRect: if you perform custom drawing.
