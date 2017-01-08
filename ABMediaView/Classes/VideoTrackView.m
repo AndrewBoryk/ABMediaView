@@ -260,18 +260,6 @@
     }];
 }
 
-- (void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
-}
-
-- (void) touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
-}
-
-- (void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
-}
-
 - (void) seekToPoint: (float) point {
     if (point <= self.bufferView.frame.size.width && self.canSeek) {
         float ratio = point/self.frame.size.width;
