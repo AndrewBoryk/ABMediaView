@@ -19,6 +19,14 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 * Requires iOS 8.0 or later
 * Requires Automatic Reference Counting (ARC)
 
+## Features
+
+* Display for image and video
+* Easy Lazy-loading for images and video
+* Fullscreen display with minimization
+* Queue for presenting mediaViews in fullscreen
+* Track for buffer, progress, and scrubbing 
+
 ## Installation
 
 ABMediaView is available through [CocoaPods](http://cocoapods.org). To install
