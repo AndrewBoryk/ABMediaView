@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'ABMediaView'
   s.version          = '0.1.1'
-  s.summary          = 'UIImageView subclass which can display and load images & videos from the web, and has functionality to display in fullscreen and minimized mode.'
+  s.summary          = 'UIImageView subclass which can display and load images & videos from the web, with fullscreen and minimized mode functionality.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
