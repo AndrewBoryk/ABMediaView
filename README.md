@@ -1,4 +1,4 @@
-# ABMediaView
+![alt tag](ABMediaViewLogo.png)
 
 [![CI Status](http://img.shields.io/travis/Andrew Boryk/ABMediaView.svg?style=flat)](https://travis-ci.org/Andrew Boryk/ABMediaView)
 [![Version](https://img.shields.io/cocoapods/v/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
