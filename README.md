@@ -44,6 +44,7 @@ As a singleton class, the manager can be accessed from anywhere within your app 
 [ABMediaView sharedManager]
 ```
 
+***
 ### Initialization
 An ABMediaView can be initilized programmatically, or by subclassing a UIImageView in the interface builder.
 
@@ -85,7 +86,7 @@ ABMediaView comes with Lazy-loading functionality, where all that is needed to b
 }
 ```
 
-
+***
 ### Customization
 ABMediaView also comes with an option for toggling the functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits minimized. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
 
@@ -147,6 +148,17 @@ One can specify whether or not the ABMediaView is going to be displayed in a reu
 mediaView.imageViewNotReused = YES;
 ```
 
+***
+### Delegate
+There is a delegate with optional methods to determine when the ABMediaView has played or paused the video in its AVPlayer.
+
+```objective-c
+/// When the mediaView begins playing a video
+- (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
+
+/// When the mediaView pauses a video
+- (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
+```
 
 ## Author
 
