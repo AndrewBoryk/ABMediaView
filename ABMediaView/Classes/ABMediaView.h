@@ -64,6 +64,12 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Determines whether the mediaView can be minimized into the bottom right corner, and then dismissed by swiping right on the minimized version
 @property BOOL isMinimizable;
 
+/// Determines whether the video occupies the full screen when displayed
+@property BOOL shouldDisplayFullscreen;
+
+/// (DON'T MODIFY) Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
+@property BOOL isFullScreen;
+
 /// Recognizer which keeps track of whether the user taps the view to play or pause the video
 @property (strong, nonatomic) UITapGestureRecognizer *playRecognizer;
 
@@ -138,18 +144,17 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// Change font for track labels
 - (void) setTrackFont: (UIFont *) font;
+
 @end
 
 @protocol ABMediaViewDelegate <NSObject>
 
 @optional
 
+/// When the mediaView begins playing a video
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
 
-- (void) mediaViewDidStopVideo: (ABMediaView *) mediaView;
-
+/// When the mediaView pauses a video
 - (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
 
-- (void) openContentFromMediaView: (ABMediaView *) mediaView;
-
-@end\
+@end
