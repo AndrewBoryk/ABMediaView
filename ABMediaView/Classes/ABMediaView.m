@@ -863,7 +863,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             height = tempFloat;
         }
         
-        self.frame = CGRectMake(0, 0, width, height);
+        swipeRecognizer.enabled = self.isMinimizable;
     }
     else {
         
@@ -874,23 +874,31 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }
         
         isMinimized = NO;
-        self.frame = CGRectMake(0, 0, width, height);
         
-        if (![self isPlayingVideo] || self.isLoadingVideo) {
-            self.videoIndicator.alpha = 1.0f;
-        }
+        swipeRecognizer.enabled = NO;
         
-        self.track.userInteractionEnabled = YES;
-        self.userInteractionEnabled = YES;
-        
-        self.layer.cornerRadius = 0.0f;
-        [self setBorderAlpha:0.0f];
-        
-        if (self.isLoadingVideo) {
-            [self loadVideoAnimate];
-        }
     }
     
+    self.frame = CGRectMake(0, 0, width, height);
+    self.layer.cornerRadius = 0.0f;
+    [self setBorderAlpha:0.0f];
+    self.userInteractionEnabled = YES;
+    self.track.userInteractionEnabled = YES;
+    
+    if (![self isPlayingVideo] || self.isLoadingVideo) {
+        self.videoIndicator.alpha = 1.0f;
+    }
+    
+    self.track.userInteractionEnabled = YES;
+    self.userInteractionEnabled = YES;
+    
+    self.layer.cornerRadius = 0.0f;
+    [self setBorderAlpha:0.0f];
+    
+    if (self.isLoadingVideo) {
+        [self stopVideoAnimate];
+        [self loadVideoAnimate];
+    }
     
     
     [self updatePlayerFrame];
