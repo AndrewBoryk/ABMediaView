@@ -1018,7 +1018,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                     // User dragged towards the right
                     if (vel.x > 0)
                     {
-                        if (vel.y < 0 && fabsf(vel.y) > vel.x) {
+                        if (vel.y < 0 && fabs(vel.y) > vel.x) {
                             // User dragged towards the right, however, he draged upwards more than he dragged right
                             [self handleMinimizingForRecognizer:gesture];
                         }
