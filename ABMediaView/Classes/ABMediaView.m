@@ -470,6 +470,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self.track updateProgress];
             [self.track updateBarBackground];
             
+            self.layer.cornerRadius = 0.0f;
+            
         } completion:^(BOOL finished) {
             
             isMinimized = NO;
@@ -842,6 +844,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }
         
         self.frame = CGRectMake(0, 0, width, height);
+        
+        self.layer.cornerRadius = 0.0f;
     }
     
     
@@ -902,8 +906,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             origin.y = maxViewOffset;
             size.width = minViewWidth;
             size.height = minViewHeight;
-            origin.x = self.superview.frame.size.width - size.width;
+            origin.x = self.superview.frame.size.width - size.width - 12.0f;
             offset = maxViewOffset;
+            self.layer.cornerRadius = 1.5f;
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 0;
@@ -915,6 +920,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             size.height = self.superview.frame.size.height;
             origin.x = 0;
             offset = 0.0f;
+            self.layer.cornerRadius = 0;
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 1;
@@ -924,8 +930,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             origin.y = testOrigin;
             size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
             size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
-            origin.x = self.superview.frame.size.width - size.width;
+            origin.x = self.superview.frame.size.width - size.width - (offsetPercentage * 12.0f);
             offset+= difference;
+            self.layer.cornerRadius = 1.5f * offsetPercentage;
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = (1-offsetPercentage);
@@ -968,8 +975,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         
         [UIView animateWithDuration:0.25f animations:^{
             if (minimize) {
-                self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth, maxViewOffset, minViewWidth, minViewHeight);
+                self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
                 self.videoIndicator.alpha = 0;
+                self.layer.cornerRadius = 1.5f;
             }
             else {
                 self.frame = self.superview.frame;
@@ -977,6 +985,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 if (![self isPlayingVideo] || self.isLoadingVideo) {
                     self.videoIndicator.alpha = 1.0f;
                 }
+                
+                self.layer.cornerRadius = 0.0f;
             }
             
             [self layoutSubviews];
