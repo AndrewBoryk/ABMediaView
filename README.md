@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 [![Platform](https://img.shields.io/cocoapods/p/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 
+## Screenshots
+
+![alt tag](https://raw.githubusercontent.com/andrewboryk/ABMediaView/ABMediaViewDemo.gif)
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
