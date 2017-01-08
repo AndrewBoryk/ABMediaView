@@ -31,20 +31,24 @@
     // Allow video to loop once reaching the end
     [self.mediaView setAllowLooping:YES];
     
+    // Allows toggling for funtionality which would show remaining time instead of total time on the right label on the track
+    [self.mediaView setShowRemainingTime:YES];
+
+    // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to keep scrolling which the mediaView sits there. Video continues to play if already playing. The user can also swipe right
+    [self.mediaView setCanMinimize: YES];
+    
     // Setting the contentMode to aspectFit will set the videoGravity to aspect as well
     self.mediaView.contentMode = UIViewContentModeScaleAspectFit;
     
-    /// If you desire to have the image to fill the view, however you would like the videoGravity to be aspect fit, then you can implement this functionality
-//    self.mediaView.contentMode = UIViewContentModeScaleAspectFill;
-//    [self.mediaView changeVideoToAspectFit: YES];
+    // If you desire to have the image to fill the view, however you would like the videoGravity to be aspect fit, then you can implement this functionality
+    //    self.mediaView.contentMode = UIViewContentModeScaleAspectFill;
+    //    [self.mediaView changeVideoToAspectFit: YES];
     
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     self.mediaView.imageViewNotReused = YES;
     
     self.mediaView.frame = self.view.frame;
 
-    /// Allows the user to enable funtionality which would show remaining time instead of total time on the right label on the track
-    [self.mediaView setShowRemainingTime:YES];
 }
 
 - (void)didReceiveMemoryWarning

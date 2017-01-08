@@ -78,6 +78,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         swipeRecognizer.delaysTouchesBegan = YES;
         swipeRecognizer.cancelsTouchesInView = YES;
         swipeRecognizer.maximumNumberOfTouches = 1;
+        swipeRecognizer.enabled = NO;
     }
     
     [self addGestureRecognizer:swipeRecognizer];
@@ -335,11 +336,11 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
     
     //    if ([self stableWiFiConnection]) {
-    //        [self loadVideoWithPlay:NO andScroll:NO withCompletion:nil];
+    //        [self loadVideoWithPlay:NO withCompletion:nil];
     //    }
 }
 
-- (void) loadVideoWithPlay: (BOOL)play andScroll: (BOOL) scroll withCompletion: (VideoDataCompletionBlock) completion {
+- (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion {
     
     if ([ABUtils notNull:_videoURL]) {
         
@@ -347,10 +348,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self loadVideoAnimate];
             self.isLoadingVideo = true;
             
-            if (scroll) {
-                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                    [self.delegate playVideo];
-                }
+            if ([self.delegate respondsToSelector:@selector(playVideo)]) {
+                [self.delegate playVideo];
             }
             
         }
@@ -452,13 +451,17 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
 }
 
-- (void) playVideoWithoutScroll:(BOOL)scroll {
+- (void) playVideoFromRecognizer {
     ////if the cell that is selected already has a video playing then its paused and if not then play that video
     
     if (isMinimized) {
         self.userInteractionEnabled = YES;
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = self.superview.frame;
+            
+            if (![self isPlayingVideo] || self.isLoadingVideo) {
+                self.videoIndicator.alpha = 1.0f;
+            }
             
             [self layoutSubviews];
             
@@ -470,6 +473,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         } completion:^(BOOL finished) {
             
             isMinimized = NO;
+            self.track.userInteractionEnabled = !isMinimized;
             offset = self.frame.origin.y;
             
             self.userInteractionEnabled = YES;
@@ -499,10 +503,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 [self.player play];
                 
-                if (!scroll) {
-                    if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                        [self.delegate playVideo];
-                    }
+                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
+                    [self.delegate playVideo];
                 }
                 
             }
@@ -511,17 +513,14 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 [self.player play];
                 
-                if (!scroll) {
-                    if ([self.delegate respondsToSelector:@selector(playVideo)]) {
-                        [self.delegate playVideo];
-                    }
+                if ([self.delegate respondsToSelector:@selector(playVideo)]) {
+                    [self.delegate playVideo];
                 }
             }
         }
         //if the video hasn't been loaded to disk then load it from backend and save it and then play it
         else if (!self.isLoadingVideo){
-            [self loadVideoWithPlay:YES andScroll:!scroll withCompletion:nil];
-            
+            [self loadVideoWithPlay:YES withCompletion:nil];
         }
         else if (self.isLoadingVideo) {
             [self stopVideoAnimate];
@@ -708,7 +707,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) addPlayGesture {
     //initializes gestures
     if (![ABUtils notNull:self.playRecognizer]) {
-        self.playRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playVideoWithoutScroll:)];
+        self.playRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playVideoFromRecognizer)];
         self.playRecognizer.numberOfTapsRequired = 1;
         self.playRecognizer.delegate = self;
     }
@@ -875,6 +874,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) handleSwipe: (UIGestureRecognizer *) gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
         NSLog(@"Touches Began");
+        [self stopVideoAnimate];
+        
         ySwipePosition = [gesture locationInView:self].y;
         offset = self.frame.origin.y;
     }
@@ -903,6 +904,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             size.height = minViewHeight;
             origin.x = self.superview.frame.size.width - size.width;
             offset = maxViewOffset;
+            
+            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+                self.videoIndicator.alpha = 0;
+            }
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
@@ -910,6 +915,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             size.height = self.superview.frame.size.height;
             origin.x = 0;
             offset = 0.0f;
+            
+            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+                self.videoIndicator.alpha = 1;
+            }
         }
         else {
             origin.y = testOrigin;
@@ -917,6 +926,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
             origin.x = self.superview.frame.size.width - size.width;
             offset+= difference;
+            
+            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+                self.videoIndicator.alpha = (1-offsetPercentage);
+            }
         }
         
         frame.origin = origin;
@@ -956,9 +969,14 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         [UIView animateWithDuration:0.25f animations:^{
             if (minimize) {
                 self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth, maxViewOffset, minViewWidth, minViewHeight);
+                self.videoIndicator.alpha = 0;
             }
             else {
                 self.frame = self.superview.frame;
+                
+                if (![self isPlayingVideo] || self.isLoadingVideo) {
+                    self.videoIndicator.alpha = 1.0f;
+                }
             }
             
             [self layoutSubviews];
@@ -968,13 +986,19 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self.track updateProgress];
             [self.track updateBarBackground];
             
+            
         } completion:^(BOOL finished) {
             
             isMinimized = minimize;
+            
+            self.track.userInteractionEnabled = !isMinimized;
             offset = self.frame.origin.y;
             
             self.userInteractionEnabled = YES;
             
+            if (self.isLoadingVideo) {
+                [self loadVideoAnimate];
+            }
         }];
         
     }
@@ -1005,6 +1029,14 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) setShowRemainingTime: (BOOL) showRemainingTime {
     if ([ABUtils notNull:self.track]) {
         self.track.showRemainingTime = showRemainingTime;
+    }
+}
+
+- (void) setCanMinimize:(BOOL)canMinimize {
+    self.isMinimizable = canMinimize;
+    
+    if ([ABUtils notNull:swipeRecognizer]) {
+        swipeRecognizer.enabled = self.isMinimizable;
     }
 }
 @end
