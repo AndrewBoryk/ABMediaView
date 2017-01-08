@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ABMediaView'
-  s.version          = '0.1.0'
-  s.summary          = 'ABMediaView provides a view that can display an image and play a video.'
+  s.version          = '0.1.1'
+  s.summary          = 'UIImageView subclass which can display and load images & videos from the web, and has functionality to display in fullscreen and minimized mode.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -17,7 +17,9 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.description      = 'With ABMediaView, one can drop in a view that is able to display images or videos. The image lazy-loading is by the view, or can be implemented view datasource. The same applies for videos. In addition, videos contain a player with timeline and scrubbing.'
+  s.description      = <<-DESC
+ABMediaView can display images or videos. It subclasses UIImageView, and can also lazy-load images from the web. In addition, it can also display videos, downloaded via URL from disk or web. In addition, videos contain a player with timeline and scrubbing. A major added functionality is that this mediaView has a queue and can present mediaViews in fullscreen mode. There is functionality which allows the view to be minimized by swiping, where it sits in the bottom right corner as a thumbnail. Videos can continue playing and be heard from this position. The user can choose to swipe the view away to dismiss. There various different functionality that can be toggled on and off to customize the view to one's choosing.
+DESC
 
   s.homepage         = 'https://github.com/andrewboryk/ABMediaView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'

@@ -275,18 +275,23 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
 }
 
-- (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
-    
+- (void) resetVariables {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [self registerForRotation];
     
+    _imageURL = nil;
+    _imageCache = nil;
+    _videoCache = nil;
     _videoURL = nil;
-    _imageURL = imageURL;
     
     self.track.hidden = YES;
     
     [self removeObservers];
+    
+    if ([ABUtils notNull:self.player]) {
+        [self.player pause];
+    }
     
     self.player = nil;
     
@@ -298,12 +303,19 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.image = nil;
     }
     
-    
     bufferTime = 0;
     
     self.videoIndicator.alpha = 0;
     
     [self stopVideoAnimate];
+}
+
+- (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
+    _imageURL = imageURL;
+    
+    if (!self.imageViewNotReused) {
+        self.image = nil;
+    }
     
     if ([ABUtils notNull:imageURL]) {
         NSURL *notificationURL = [NSURL URLWithString:imageURL];
@@ -314,24 +326,36 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         //            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgress:) name:progressString object:nil];
         //        }
         
-        NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:notificationURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            if (data) {
-                UIImage *image = [UIImage imageWithData:data];
-                if (image) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        self.image = image;
-                        
-                        //                        [self.loadingIndicator stopLoading];
-                        
-                        if ([ABUtils notNull:completion]) {
-                            completion(image, error);
-                        }
-                    });
-                }
+        if ([ABUtils notNull:self.imageCache]) {
+            self.image = self.imageCache;
+            
+            if ([ABUtils notNull:completion]) {
+                completion(self.imageCache, nil);
             }
-        }];
+        }
+        else {
+            NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:notificationURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                if (data) {
+                    UIImage *image = [UIImage imageWithData:data];
+                    
+                    if (image) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.image = image;
+                            self.imageCache = image;
+                            
+                            //                        [self.loadingIndicator stopLoading];
+                            
+                            if ([ABUtils notNull:completion]) {
+                                completion(image, error);
+                            }
+                        });
+                    }
+                }
+            }];
+            
+            [task resume];
+        }
         
-        [task resume];
         
     }
     else {
@@ -341,6 +365,19 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             completion(nil, nil);
         }
     }
+}
+
+- (void) setImage:(UIImage *)image {
+    super.image = image;
+    
+    if ([ABUtils notNull:image]) {
+        
+        [self registerForRotation];
+        
+        _imageURL = nil;
+        _imageCache = image;
+    }
+    
 }
 
 - (void) setVideoURL:(NSString *)videoURL {
@@ -387,7 +424,15 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         if ([ABUtils notNull:self.videoURL]) {
             [self removeObservers];
             
+            
             AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+            
+            if ([ABUtils notNull:self.videoCache]) {
+                AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
+                if ([ABUtils notNull:cachedVideo]) {
+                    vidAsset = cachedVideo;
+                }
+            }
             
             AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
             
@@ -940,7 +985,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) handleSwipe: (UIPanGestureRecognizer *) gesture {
     if (self.isFullScreen) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
-            NSLog(@"Touches Began");
+//            NSLog(@"Touches Began");
             [self stopVideoAnimate];
             
             self.track.userInteractionEnabled = NO;
@@ -996,7 +1041,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         else if (gesture.state == UIGestureRecognizerStateEnded ||
                  gesture.state == UIGestureRecognizerStateFailed ||
                  gesture.state == UIGestureRecognizerStateCancelled) {
-            NSLog(@"Touches Ended");
+//            NSLog(@"Touches Ended");
             
             self.userInteractionEnabled = NO;
             
@@ -1087,20 +1132,11 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
         CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
         
-        NSLog(@"Location X %f", [gesture locationInView:self].x);
-        NSLog(@"XSwipePosition %f", xSwipePosition);
-        
         CGFloat difference = [gesture locationInView:self].x - xSwipePosition;
-        NSLog(@"Difference %f", difference);
         
-        NSLog(@"X Origin %f", self.frame.origin.x);
         CGFloat tempOffset = self.frame.origin.x + difference;
-        NSLog(@"TempOffset %f", tempOffset);
-        NSLog(@"First Value %f", (tempOffset - (superviewWidth - minViewWidth - 12.0f)));
-        NSLog(@"Second Value %f", (minViewWidth - 12.0f));
         
         CGFloat offsetPercentage = (tempOffset - (superviewWidth - minViewWidth - 12.0f)) / (minViewWidth - 12.0f);
-        NSLog(@"Offset Percentage %f", offsetPercentage);
         
         if (offsetPercentage >= 1) {
             origin.y = maxViewOffset;
@@ -1220,18 +1256,21 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 }
 
 - (void) willRotate: (NSNotification *) notification {
-    NSLog(@"Rotation began");
+//    NSLog(@"Rotation began");
     [self orientationChanged:nil];
     
 }
 
 - (void) didRotate: (NSNotification *) notification {
-    NSLog(@"Rotation complete");
+//    NSLog(@"Rotation complete");
     [self orientationChanged:nil];
     
 }
 
 - (void) registerForRotation {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ABMediaViewWillRotateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ABMediaViewDidRotateNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willRotate:) name:ABMediaViewWillRotateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:ABMediaViewDidRotateNotification object:nil];
 }

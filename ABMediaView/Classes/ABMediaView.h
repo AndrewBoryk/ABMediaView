@@ -40,8 +40,15 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// URL endpoint for image
 @property (strong, nonatomic) NSString *imageURL;
 
+/// Image cached after loading
+@property (strong, nonatomic) UIImage *imageCache;
+
 /// URL endpoint for video
 @property (strong, nonatomic) NSString *videoURL;
+
+/// Video location on disk that was cached after loading
+@property (strong, nonatomic) NSString *videoCache;
+
 
 /// Theme color which will show on the play button and progress track for videos
 @property (strong, nonatomic) UIColor *themeColor;
@@ -145,6 +152,8 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Change font for track labels
 - (void) setTrackFont: (UIFont *) font;
 
+/// Resets variables from mediaView, removing image and video data
+- (void) resetVariables;
 @end
 
 @protocol ABMediaViewDelegate <NSObject>
