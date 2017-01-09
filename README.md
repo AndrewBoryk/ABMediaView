@@ -166,6 +166,13 @@ mediaView.imageViewNotReused = YES;
 ```
 
 
+When a ABMediaView's 'isMinimizable' value is enabled, the size ratio of the minimized view can be customized. The default value for this ratio is the preset ABMediaViewRatioPresetLandscape, which is a landscape 16:9 aspect ratio. There are also preset options for square (ABMediaViewRatioPresetSquare) and portrait 9:16 (ABMediaViewRatioPresetPortrait). 
+
+```objective-c
+// By default, the minimized view is set to a ratio of ABMediaViewRatioPresetLandscape
+mediaView.minimizedRatio = ABMediaViewRatioPresetSquare;
+```
+
 
 ***
 ### Delegate
