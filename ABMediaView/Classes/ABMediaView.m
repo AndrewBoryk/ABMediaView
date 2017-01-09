@@ -661,14 +661,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 self.videoIndicator.alpha = 1.0f;
             }
             
-            if (self.isFullScreen) {
-                if (self.hideCloseButton && self.isMinimizable) {
-                    self.closeButton.alpha = 0;
-                }
-                else {
-                    self.closeButton.alpha = 1;
-                }
-            }
+            [self handleCloseButtonDisplay:self];
             
             [self layoutSubviews];
             
@@ -1087,14 +1080,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.videoIndicator.alpha = 1.0f;
         }
         
-        if (self.isFullScreen) {
-            if (self.hideCloseButton && self.isMinimizable) {
-                self.closeButton.alpha = 0;
-            }
-            else {
-                self.closeButton.alpha = 1;
-            }
-        }
+        [self handleCloseButtonDisplay:self];
         
         if (self.isLoadingVideo) {
             [self stopVideoAnimate];
@@ -1218,14 +1204,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                             self.videoIndicator.alpha = 1.0f;
                         }
                         
-                        if (self.isFullScreen) {
-                            if (self.hideCloseButton && self.isMinimizable) {
-                                self.closeButton.alpha = 0;
-                            }
-                            else {
-                                self.closeButton.alpha = 1;
-                            }
-                        }
+                        [self handleCloseButtonDisplay:self];
                         
                         self.layer.cornerRadius = 0.0f;
                         [self setBorderAlpha:0.0f];
@@ -1370,14 +1349,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 self.videoIndicator.alpha = 1;
             }
             
-            if (self.isFullScreen) {
-                if (self.hideCloseButton && self.isMinimizable) {
-                    self.closeButton.alpha = 0;
-                }
-                else {
-                    self.closeButton.alpha = 1;
-                }
-            }
+            [self handleCloseButtonDisplay:self];
         }
         else {
             origin.y = testOrigin;
@@ -1392,15 +1364,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 self.videoIndicator.alpha = (1-offsetPercentage);
             }
             
-            if (self.isFullScreen) {
-                if (self.hideCloseButton && self.isMinimizable) {
-                    self.closeButton.alpha = 0;
-                }
-                else {
-                    self.closeButton.alpha = (1-offsetPercentage);
-                }
-                
-            }
+            [self handleCloseButtonDisplay:self];
         }
         
         frame.origin = origin;
@@ -1520,12 +1484,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.mainWindow makeKeyAndVisible];
     
     mediaView.isFullScreen = YES;
-    if (mediaView.hideCloseButton && mediaView.isMinimizable) {
-        mediaView.closeButton.alpha = 0;
-    }
-    else {
-        mediaView.closeButton.alpha = 1;
-    }
+    [self handleCloseButtonDisplay:mediaView];
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -1764,16 +1723,23 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 - (void) hideCloseButton:(BOOL)hideButton {
     _hideCloseButton = hideButton;
     
-    if (self.isFullScreen) {
-        if (self.hideCloseButton && self.isMinimizable) {
-            self.closeButton.alpha = 0;
+    [self handleCloseButtonDisplay:self];
+}
+
+- (void) handleCloseButtonDisplay: (ABMediaView *) mediaView {
+    if (mediaView.isFullScreen) {
+        
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        
+        if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
+            mediaView.closeButton.alpha = 0;
         }
         else {
-            self.closeButton.alpha = 1;
+            mediaView.closeButton.alpha = 1;
         }
     }
     else {
-        self.closeButton.alpha = 0;
+        mediaView.closeButton.alpha = 0;
     }
 }
 @end
