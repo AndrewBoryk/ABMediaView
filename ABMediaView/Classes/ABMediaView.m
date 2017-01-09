@@ -121,8 +121,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
     
     playFrame.size = CGSizeMake(playSize, playSize);
-    closeFrame.size = CGSizeMake(closeSize, closeSize);
-    closeFrame.origin = CGPointMake(16.0f, 16.0f);
+    closeFrame.size = CGSizeMake(50.0f, 50.0f);
+    closeFrame.origin = CGPointMake(0, 0);
     
     self.videoIndicator.frame = playFrame;
     self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
@@ -209,7 +209,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     if (![ABUtils notNull:self.closeButton]) {
         
-        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(16.0f, 16.0f, 24.0f, 24.0f)];
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 50.0f)];
         self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.closeButton setImage:[self imageForCloseButton] forState:UIControlStateNormal];
         [self.closeButton addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
@@ -1120,7 +1120,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             self.track.userInteractionEnabled = NO;
             self.playRecognizer.enabled = NO;
-            self.closeButton.enabled = NO;
+            self.closeButton.userInteractionEnabled = NO;
             
             if ([ABUtils notNull:self.track]) {
                 if ([ABUtils notNull:self.track.hideTimer]) {
@@ -1223,7 +1223,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     isMinimized = minimize;
                     
                     self.playRecognizer.enabled = YES;
-                    self.closeButton.enabled = YES;
+                    self.closeButton.userInteractionEnabled = YES;
                     
                     self.track.userInteractionEnabled = !isMinimized;
                     offset = self.frame.origin.y;
@@ -1362,7 +1362,20 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 self.videoIndicator.alpha = (1-offsetPercentage);
             }
             
-            [self handleCloseButtonDisplay:self];
+            if (self.isFullScreen) {
+                
+                UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+                
+                if (self.hideCloseButton && self.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
+                    self.closeButton.alpha = 0;
+                }
+                else {
+                    self.closeButton.alpha = (1-offsetPercentage);
+                }
+            }
+            else {
+                self.closeButton.alpha = 0;
+            }
         }
         
         frame.origin = origin;
@@ -1667,7 +1680,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [rightPath addLineToPoint:(CGPoint){size, 0}];
     [rightPath closePath];
     
-    CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.9f].CGColor;
+    CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
     CGContextSetFillColorWithColor(ctx, col);
     CGContextSetStrokeColorWithColor(ctx, col);
     CGContextSetLineWidth(ctx, 1.5f);
