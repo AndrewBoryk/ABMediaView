@@ -252,6 +252,24 @@ There is a delegate with optional methods to determine when the ABMediaView has 
 - (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
 ```
 
+
+In addition, there are also delegate methods to help determine whether a ABMediaView is about to be shown, has been shown, about to be dismissed, and has been dismissed.
+
+```objective-c
+/// Called when the mediaView has begun the presentation process
+- (void) mediaViewWillPresent: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has been presented
+- (void) mediaViewDidPresent: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has begun the dismissal process
+- (void) mediaViewWillDismiss: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
+- (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
+```
+
+
 ## Author
 
 Andrew Boryk, andrewcboryk@gmail.com
