@@ -11,6 +11,9 @@
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
 
+const CGFloat ABMediaViewRatioPresetPortrait = (16.0f/9.0f);
+const CGFloat ABMediaViewRatioPresetSquare = 1.0f;
+const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 @implementation ABMediaView {
     float bufferTime;
@@ -161,6 +164,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     self.themeColor = [UIColor cyanColor];
     
     [self initializeSizeVariables];
+    
+    self.minimizedRatio = ABMediaViewRatioPresetLandscape;
     
     [self setBorderAlpha:0.0f];
     self.layer.borderWidth = 1.0f;
@@ -1385,7 +1390,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         ABMediaView *mediaView = self.mediaViewQueue.firstObject;
         
         CGFloat minViewWidth = mediaView.superview.frame.size.width * 0.5f;
-        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
+        CGFloat minViewHeight = minViewWidth * mediaView.minimizedRatio;
         CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f + self.bottomBuffer));
         
         [UIView animateWithDuration:0.25f animations:^{
@@ -1425,8 +1430,6 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     mediaView.isFullScreen = YES;
     mediaView.backgroundColor = [UIColor blackColor];
-    
-    [self logFrame:mediaView.originRect withTag:@"Origin"];
     
     if (!CGRectIsEmpty(mediaView.originRect)) {
         if (CGRectIsEmpty(mediaView.originRectConverted)) {
@@ -1548,7 +1551,19 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
     
     minViewWidth = superviewWidth * 0.5f;
-    minViewHeight = minViewWidth * (9.0f/16.0f);
+    minViewHeight = minViewWidth * self.minimizedRatio;
     maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
+}
+
+- (void) setMinimizedRatio:(CGFloat)minimizedRatio {
+    if (minimizedRatio <= 0) {
+        _minimizedRatio = ABMediaViewRatioPresetLandscape;
+    }
+    else {
+        _minimizedRatio = minimizedRatio;
+    }
+    
+    [self initializeSizeVariables];
+    
 }
 @end

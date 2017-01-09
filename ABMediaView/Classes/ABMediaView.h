@@ -21,6 +21,11 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 extern const NSNotificationName ABMediaViewWillRotateNotification;
 extern const NSNotificationName ABMediaViewDidRotateNotification;
 
+/// Preset sizes for the ABMediaView minimized view
+extern const CGFloat ABMediaViewRatioPresetPortrait;
+extern const CGFloat ABMediaViewRatioPresetSquare;
+extern const CGFloat ABMediaViewRatioPresetLandscape;
+
 @interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
@@ -110,6 +115,9 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
 @property CGFloat bottomBuffer;
+
+/// Ratio that the minimized view will be shruken to, can be set to a custom value or one of the available ABMediaViewRatioPresets
+@property CGFloat minimizedRatio;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
