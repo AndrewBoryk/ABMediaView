@@ -26,7 +26,40 @@ extern const CGFloat ABMediaViewRatioPresetPortrait;
 extern const CGFloat ABMediaViewRatioPresetSquare;
 extern const CGFloat ABMediaViewRatioPresetLandscape;
 
-@interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate>
+@interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate> {
+    /// Position of the swipe vertically
+    CGFloat ySwipePosition;
+    
+    /// Position of the swipe horizontally
+    CGFloat xSwipePosition;
+    
+    /// Variable tracking offset of video
+    CGFloat offset;
+    
+    /// Determines if video is minimized
+    BOOL isMinimized;
+    
+    /// The width of the view when minimized
+    CGFloat minViewWidth;
+    
+    /// The height of the view when minimized
+    CGFloat minViewHeight;
+    
+    /// The maximum amount of y offset for the mediaView
+    CGFloat maxViewOffset;
+    
+    /// Keeps track of how much the video has been minimized
+    CGFloat offsetPercentage;
+    
+    /// Width of the mainWindow
+    CGFloat superviewWidth;
+    
+    /// Height of the mainWindow
+    CGFloat superviewHeight;
+    
+    /// Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
+    BOOL isFullscreen;
+}
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
 
@@ -80,8 +113,8 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Determines whether the video occupies the full screen when displayed
 @property BOOL shouldDisplayFullscreen;
 
-/// (DON'T MODIFY) Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
-@property BOOL isFullScreen;
+/// Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
+@property (readonly) BOOL isFullScreen;
 
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
 @property BOOL displayRemainingTime;
@@ -127,6 +160,36 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Ratio of the screen's width that the mediaView's minimized view will stretch across.
 @property (nonatomic) CGFloat minimizedWidthRatio;
+
+/// Variable tracking offset of video
+@property (nonatomic, readonly) CGFloat offset;
+
+/// Position of the swipe vertically
+@property (nonatomic, readonly) CGFloat ySwipePosition;
+
+/// Position of the swipe horizontally
+@property (nonatomic, readonly) CGFloat xSwipePosition;
+
+/// Determines if video is minimized
+@property (readonly)BOOL isMinimized;
+
+/// The width of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewWidth;
+
+/// The height of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewHeight;
+
+/// The maximum amount of y offset for the mediaView
+@property (nonatomic, readonly) CGFloat maxViewOffset;
+
+/// Keeps track of how much the video has been minimized
+@property (nonatomic, readonly) CGFloat offsetPercentage;
+
+/// Width of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewWidth;
+
+/// Height of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewHeight;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
@@ -187,6 +250,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Sets the close button to hidden, only allowed if isMinimizable is true
 - (void) hideCloseButton: (BOOL) hideButton;
+
 @end
 
 @protocol ABMediaViewDelegate <NSObject>

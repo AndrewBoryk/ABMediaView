@@ -24,36 +24,19 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     /// Recognizer to record a user swiping right to dismiss a minimize video
     UIPanGestureRecognizer *dismissRecognizer;
     
-    /// Position of the swipe vertically
-    CGFloat ySwipePosition;
-    
-    /// Position of the swipe horizontally
-    CGFloat xSwipePosition;
-    
-    /// Variable tracking offset of video
-    CGFloat offset;
-    
-    /// Determines if video is minimized
-    BOOL isMinimized;
-    
-    /// The width of the view when minimized
-    CGFloat minViewWidth;
-    
-    /// The height of the view when minimized
-    CGFloat minViewHeight;
-    
-    /// The maximum amount of y offset for the mediaView
-    CGFloat maxViewOffset;
-    
-    /// Keeps track of how much the video has been minimized
-    CGFloat offsetPercentage;
-    
-    /// Width of the mainWindow
-    CGFloat superviewWidth;
-
-    /// Height of the mainWindow
-    CGFloat superviewHeight;
 }
+
+@synthesize superviewWidth = superviewWidth;
+@synthesize superviewHeight = superviewHeight;
+@synthesize isMinimized = isMinimized;
+@synthesize minViewWidth = minViewWidth;
+@synthesize minViewHeight = minViewHeight;
+@synthesize maxViewOffset = maxViewOffset;
+@synthesize offsetPercentage = offsetPercentage;
+@synthesize offset = offset;
+@synthesize ySwipePosition = ySwipePosition;
+@synthesize xSwipePosition = xSwipePosition;
+@synthesize isFullScreen = isFullscreen;
 
 + (id)sharedManager {
     static ABMediaView *sharedMyManager = nil;
@@ -152,7 +135,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.allowLooping = mediaView.allowLooping;
         [self setCanMinimize: mediaView.isMinimizable];
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
-        self.isFullScreen = mediaView.isFullScreen;
+        [self setFullscreen:mediaView.isFullScreen];
         [self hideCloseButton: mediaView.hideCloseButton];
         
         self.originRect = mediaView.originRect;
@@ -1453,32 +1436,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         ABMediaView *mediaView = self.mediaViewQueue.firstObject;
         
-        CGFloat minimumViewWidth = mediaView.superview.frame.size.width * mediaView.minimizedWidthRatio;
-        CGFloat minimumViewHeight = minimumViewWidth * mediaView.minimizedAspectRatio;
-        CGFloat maximumViewOffset = (mediaView.superview.frame.size.height - (minimumViewHeight + 12.0f + self.bottomBuffer));
+        [mediaView dismissMediaView];
         
-        [UIView animateWithDuration:0.25f animations:^{
-            mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maximumViewOffset, minimumViewWidth, minimumViewHeight);
-            mediaView.alpha = 0;
-//            mediaView.layer.cornerRadius = 1.5f;
-            
-        } completion:^(BOOL finished) {
-            
-            [[ABMediaView sharedManager] removeFromQueue:mediaView];
-            [mediaView.player pause];
-            [mediaView.playerLayer removeFromSuperlayer];
-            mediaView.playerLayer = nil;
-            mediaView.player = nil;
-            [mediaView removeFromSuperview];
-            
-            self.userInteractionEnabled = YES;
-            if (self.mediaViewQueue.count) {
-                [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
-            }
-            else {
-                NSLog(@"No mediaView in queue");
-            }
-        }];
+        self.userInteractionEnabled = YES;
+        if (self.mediaViewQueue.count) {
+            [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
+        }
+        else {
+            NSLog(@"No mediaView in queue");
+        }
         
         
         
@@ -1492,7 +1458,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     self.mainWindow = [[UIApplication sharedApplication] keyWindow];
     [self.mainWindow makeKeyAndVisible];
     
-    mediaView.isFullScreen = YES;
+    [mediaView setFullscreen:YES];
     [mediaView handleCloseButtonDisplay:mediaView];
     
     mediaView.backgroundColor = [UIColor blackColor];
@@ -1755,4 +1721,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         mediaView.closeButton.alpha = 0;
     }
 }
+
+- (void) setFullscreen: (BOOL) fullscreen {
+    isFullscreen = fullscreen;
+}
+
+
 @end
