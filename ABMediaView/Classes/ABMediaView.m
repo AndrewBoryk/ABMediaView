@@ -111,13 +111,11 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     CGRect closeFrame = self.closeButton.frame;
     
     CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / superviewHeight));
-    CGFloat closeSize = 12.0f + (12.0f * (self.frame.size.height / superviewHeight));
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
         playSize = 30.0f + (30.0f * (self.frame.size.width / superviewHeight));
-        closeSize = 12.0f + (12.0f * (self.frame.size.width / superviewHeight));
     }
     
     playFrame.size = CGSizeMake(playSize, playSize);
@@ -1495,7 +1493,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.mainWindow makeKeyAndVisible];
     
     mediaView.isFullScreen = YES;
-    [self handleCloseButtonDisplay:mediaView];
+    [mediaView handleCloseButtonDisplay:mediaView];
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -1508,6 +1506,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     if (!CGRectIsEmpty(mediaView.originRectConverted)) {
         mediaView.alpha = 1;
         mediaView.frame = mediaView.originRectConverted;
+        mediaView.closeButton.alpha = 0;
         [mediaView layoutSubviews];
         [self.mainWindow addSubview:mediaView];
         [self.mainWindow bringSubviewToFront:mediaView];
@@ -1515,6 +1514,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.5f animations:^{
 //            mediaView.videoIndicator.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
+            [mediaView handleCloseButtonDisplay:mediaView];
             [mediaView layoutSubviews];
         } completion:^(BOOL finished) {
             
@@ -1529,12 +1529,14 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
     else {
         mediaView.alpha = 0;
+        mediaView.closeButton.alpha = 0;
         mediaView.frame = self.mainWindow.frame;
         [self.mainWindow addSubview:mediaView];
         [self.mainWindow bringSubviewToFront:mediaView];
         
         [UIView animateWithDuration:0.25f animations:^{
             mediaView.alpha = 1;
+            [mediaView handleCloseButtonDisplay:mediaView];
         } completion:^(BOOL finished) {
             if ([ABUtils notNull:mediaView.videoURL]) {
                 [mediaView playVideoFromRecognizer];
