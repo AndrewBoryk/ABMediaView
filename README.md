@@ -149,6 +149,13 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 ```
 
 
+There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up.
+
+```objective-c
+[mediaView hideCloseButton:YES];
+```
+
+
 ABMediaView has functionality to set the frame from which the fullscreen pop-up will originate. This functionality is useful to combine with 'shouldDisplayFullscreen', as it will allow the pop-up to originate from the frame of the mediaView with 'shouldDisplayFullscreen' enabled.
 
 ```objective-c
