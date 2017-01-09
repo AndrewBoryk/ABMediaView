@@ -95,14 +95,13 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.track updateProgress];
     
     if (isnan(superviewHeight) || isnan(superviewWidth) || superviewHeight == 0 || superviewWidth == 0) {
-        UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
-        CGRect windowRect = [mainWindow frame];
-        superviewWidth = windowRect.size.width;
-        superviewHeight = windowRect.size.height;
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        superviewWidth = screenRect.size.width;
+        superviewHeight = screenRect.size.height;
         
         if (superviewWidth > superviewHeight) {
-            superviewWidth = windowRect.size.height;
-            superviewHeight = windowRect.size.width;
+            superviewWidth = screenRect.size.height;
+            superviewHeight = screenRect.size.width;
         }
     }
     
@@ -154,6 +153,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.originRectConverted = mediaView.originRectConverted;
         self.bottomBuffer = mediaView.bottomBuffer;
         
+        self.minimizedAspectRatio = mediaView.minimizedAspectRatio;
+        self.minimizedWidthRatio = mediaView.minimizedWidthRatio;
+        
     }
     
     return self;
@@ -165,7 +167,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self initializeSizeVariables];
     
-    self.minimizedRatio = ABMediaViewRatioPresetLandscape;
+    self.minimizedWidthRatio = 0.5f;
+    self.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
     
     [self setBorderAlpha:0.0f];
     self.layer.borderWidth = 1.0f;
@@ -1000,8 +1003,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     if (self.isFullScreen) {
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         
-        CGFloat width = self.superview.frame.size.width;
-        CGFloat height = self.superview.frame.size.height;
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        
+        CGFloat width = screenRect.size.width;
+        CGFloat height = screenRect.size.height;
         
         if (UIDeviceOrientationIsPortrait(orientation)) {
             
@@ -1389,8 +1394,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         ABMediaView *mediaView = self.mediaViewQueue.firstObject;
         
-        CGFloat minViewWidth = mediaView.superview.frame.size.width * 0.5f;
-        CGFloat minViewHeight = minViewWidth * mediaView.minimizedRatio;
+        CGFloat minViewWidth = mediaView.superview.frame.size.width * mediaView.minimizedWidthRatio;
+        CGFloat minViewHeight = minViewWidth * mediaView.minimizedAspectRatio;
         CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f + self.bottomBuffer));
         
         [UIView animateWithDuration:0.25f animations:^{
@@ -1448,6 +1453,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             mediaView.frame = mediaView.superview.frame;
             [mediaView layoutSubviews];
         } completion:^(BOOL finished) {
+            
+            [mediaView initializeSizeVariables];
             if ([ABUtils notNull:mediaView.videoURL]) {
                 [mediaView playVideoFromRecognizer];
             }
@@ -1540,30 +1547,59 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 }
 
 - (void) initializeSizeVariables {
-    UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
-    CGRect windowRect = [mainWindow frame];
-    superviewWidth = windowRect.size.width;
-    superviewHeight = windowRect.size.height;
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    superviewWidth = screenRect.size.width;
+    superviewHeight = screenRect.size.height;
     
     if (superviewWidth > superviewHeight) {
-        superviewWidth = windowRect.size.height;
-        superviewHeight = windowRect.size.width;
+        superviewWidth = screenRect.size.height;
+        superviewHeight = screenRect.size.width;
     }
     
-    minViewWidth = superviewWidth * 0.5f;
-    minViewHeight = minViewWidth * self.minimizedRatio;
+    minViewWidth = superviewWidth * self.minimizedWidthRatio;
+    minViewHeight = minViewWidth * self.minimizedAspectRatio;
     maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
 }
 
-- (void) setMinimizedRatio:(CGFloat)minimizedRatio {
-    if (minimizedRatio <= 0) {
-        _minimizedRatio = ABMediaViewRatioPresetLandscape;
+- (void) setMinimizedAspectRatio:(CGFloat)minimizedAspectRatio {
+    if (minimizedAspectRatio <= 0) {
+        _minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
     }
     else {
-        _minimizedRatio = minimizedRatio;
+        _minimizedAspectRatio = minimizedAspectRatio;
     }
     
     [self initializeSizeVariables];
-    
 }
+
+- (void) setMinimizedWidthRatio:(CGFloat)minimizedWidthRatio {
+    _minimizedWidthRatio = minimizedWidthRatio;
+    
+    NSLog(@"Minimized width ratio %f", _minimizedWidthRatio);
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    superviewWidth = screenRect.size.width;
+    superviewHeight = screenRect.size.height;
+    
+    if (superviewWidth > superviewHeight) {
+        superviewWidth = screenRect.size.height;
+        superviewHeight = screenRect.size.width;
+    }
+    
+    CGFloat maxWidthRatio = (superviewWidth - 24.0f) / superviewWidth;
+    
+    if (_minimizedWidthRatio < 0.25f) {
+        _minimizedWidthRatio = 0.25f;
+    }
+    else if (_minimizedWidthRatio > maxWidthRatio) {
+        _minimizedWidthRatio = maxWidthRatio;
+    }
+    
+    
+    NSLog(@"Minimized width ratio new %f", _minimizedWidthRatio);
+    
+    
+    [self initializeSizeVariables];
+}
+
 @end

@@ -117,7 +117,10 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property CGFloat bottomBuffer;
 
 /// Ratio that the minimized view will be shruken to, can be set to a custom value or one of the available ABMediaViewRatioPresets
-@property CGFloat minimizedRatio;
+@property CGFloat minimizedAspectRatio;
+
+/// Ratio of the screen's width that the mediaView's minimized view will stretch across.
+@property CGFloat minimizedWidthRatio;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
