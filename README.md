@@ -149,7 +149,7 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 ```
 
 
-There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up.
+There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up. In addition, the close button remains visible when the view is held in landscape orientation, due to minimizing being disabled during landscape.
 
 ```objective-c
 [mediaView hideCloseButton:YES];
