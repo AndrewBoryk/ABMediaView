@@ -120,8 +120,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         closeSize = 12.0f + (12.0f * (self.frame.size.width / superviewHeight));
     }
     
-    NSLog(@"Close size %f", closeSize);
-    
     playFrame.size = CGSizeMake(playSize, playSize);
     closeFrame.size = CGSizeMake(closeSize, closeSize);
     closeFrame.origin = CGPointMake(16.0f, 16.0f);
