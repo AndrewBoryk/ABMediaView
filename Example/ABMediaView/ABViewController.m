@@ -76,8 +76,8 @@
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:mediaView];
     
-    /// Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
-    mediaView.minimizedRatio = ABMediaViewRatioPresetSquare;
+    // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
+    mediaView.minimizedRatio = ABMediaViewRatioPresetLandscape;
     
     // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
     [mediaView setBottomBuffer:8.0f];
