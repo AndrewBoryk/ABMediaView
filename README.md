@@ -61,11 +61,11 @@ There are several functions that can be used to queue, show, and dismiss ABMedia
 Secondly, if one is looking to present an ABMediaView and jump the queue, then this can be done by utilizing the 'presentMediaView' function. Calling this function will dismiss whatever ABMediaView is being currently presented, and will move the provided ABMediaView to the front of the queue.
 
 ```objective-c
-/// Presented with animated
-- (void) presentMediaView:(ABMediaView *) mediaView;
+// Presented with animation
+[[ABMediaView sharedManager] presentMediaView:mediaView];
 
-/// Presented with the option to animate
-- (void) presentMediaView:(ABMediaView *) mediaView animated: (BOOL) animated;
+// Presented with the option to animate
+[[ABMediaView sharedManager] presentMediaView:mediaView animated:NO];
 ```
 
 
