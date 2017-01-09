@@ -97,16 +97,6 @@
     [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
     
     [[ABMediaView sharedManager] presentMediaView:mediaView];
-//    
-//    if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
-//        [[ABMediaView sharedManager] queueMediaView:mediaView];
-//        
-//        [[ABMediaView sharedManager] showNextMediaView];
-//    }
-//    else {
-//        [[ABMediaView sharedManager] queueMediaView:mediaView];
-//    }
-    
 }
 
 - (void) initializeSettingsForMediaView: (ABMediaView *) mediaView {

@@ -648,15 +648,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     else {
         if (self.shouldDisplayFullscreen && !self.isFullScreen) {
             
-            
-            if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
-                [[ABMediaView sharedManager] queueMediaView:[[ABMediaView alloc] initWithMediaView:self]];
-                
-                [[ABMediaView sharedManager] showNextMediaView];
-            }
-            else {
-                [[ABMediaView sharedManager] queueMediaView:[[ABMediaView alloc] initWithMediaView:self]];
-            }
+            [[ABMediaView sharedManager] presentMediaView:[[ABMediaView alloc] initWithMediaView:self]];
         }
         else {
             if ([ABUtils notNull:self.player]) {
@@ -1406,49 +1398,47 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 - (void) queueMediaView: (ABMediaView *) mediaView {
     if ([ABUtils notNull:mediaView]) {
         [self.mediaViewQueue addObject:mediaView];
-        
-        if (self.mediaViewQueue.count == 1) {
-            [[ABMediaView sharedManager] presentMediaView:mediaView];
-        }
     }
 }
 
 - (void) showNextMediaView {
     if (self.mediaViewQueue.count) {
-        self.userInteractionEnabled = NO;
-        
-        
-        [[[ABMediaView sharedManager] currentMediaView] dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
-            self.userInteractionEnabled = YES;
-            if (self.mediaViewQueue.count) {
-                [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
-            }
-            else {
-                NSLog(@"No mediaView in queue");
-            }
-        }];
+        [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
     }
     else {
-        NSLog(@"No mediaView in queue");
+        if ([ABUtils notNull: [[ABMediaView sharedManager] currentMediaView]]) {
+            [[[ABMediaView sharedManager] currentMediaView] dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
+                NSLog(@"No mediaView in queue");
+            }];
+        }
+        else {
+            NSLog(@"No mediaView in queue");
+        }
+        
+        
     }
 }
 
-- (void) presentMediaView:(ABMediaView *) mediaView {
+- (void) presentMediaView:(ABMediaView *)mediaView {
+    [[ABMediaView sharedManager] presentMediaView:mediaView animated:YES];
+}
+
+- (void) presentMediaView:(ABMediaView *) mediaView animated:(BOOL)animated {
     
     if ([ABUtils notNull: [[ABMediaView sharedManager] currentMediaView]]) {
         [[[ABMediaView sharedManager] currentMediaView] dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
             [[ABMediaView sharedManager] removeFromQueue:mediaView];
-            [[ABMediaView sharedManager] handleMediaViewPresentation:mediaView];
+            [[ABMediaView sharedManager] handleMediaViewPresentation:mediaView animated:animated];
         }];
     }
     else {
         [[ABMediaView sharedManager] removeFromQueue:mediaView];
-        [[ABMediaView sharedManager] handleMediaViewPresentation:mediaView];
+        [[ABMediaView sharedManager] handleMediaViewPresentation:mediaView animated:animated];
     }
     
 }
 
-- (void) handleMediaViewPresentation: (ABMediaView *) mediaView {
+- (void) handleMediaViewPresentation: (ABMediaView *) mediaView animated: (BOOL) animated{
     self.mainWindow = [[UIApplication sharedApplication] keyWindow];
     [self.mainWindow makeKeyAndVisible];
     
@@ -1473,7 +1463,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         [[ABMediaView sharedManager] setCurrentMediaView:mediaView];
         
-        [UIView animateWithDuration:0.5f animations:^{
+        float animationTime = 0.0f;
+        if (animated) {
+            animationTime = 0.5f;
+        }
+        
+        [UIView animateWithDuration:animationTime animations:^{
             //            mediaView.videoIndicator.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
             [mediaView handleCloseButtonDisplay:mediaView];
@@ -1498,7 +1493,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self.mainWindow bringSubviewToFront:mediaView];
         
         [[ABMediaView sharedManager] setCurrentMediaView:mediaView];
-        [UIView animateWithDuration:0.25f animations:^{
+        
+        float animationTime = 0.0f;
+        if (animated) {
+            animationTime = 0.25f;
+        }
+        [UIView animateWithDuration:animationTime animations:^{
             mediaView.alpha = 1;
             [mediaView handleCloseButtonDisplay:mediaView];
         } completion:^(BOOL finished) {

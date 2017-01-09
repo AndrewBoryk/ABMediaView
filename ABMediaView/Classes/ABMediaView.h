@@ -225,10 +225,13 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 - (void) queueMediaView: (ABMediaView *) mediaView;
 
 /// Will remove the currently displaying mediaView and then display the next in the queue
-- (void) showNextMediaView;
+- (void) presentNextMediaView;
 
-/// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown
+/// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown.
 - (void) presentMediaView:(ABMediaView *) mediaView;
+
+/// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown. Has an option to decide whether or not presentation should be animated.
+- (void) presentMediaView:(ABMediaView *) mediaView animated: (BOOL) animated;
 
 /// Remove a mediaView from the queue
 - (void) removeFromQueue:(ABMediaView *) mediaView;
