@@ -8,7 +8,7 @@
 
 ## Screenshots
 
-![alt tag](ABMediaViewDemo.gif)
+![alt tag](ABMediaViewScreenshot.gif)
 
 ## Description
 
