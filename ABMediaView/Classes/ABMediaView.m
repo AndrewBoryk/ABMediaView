@@ -112,6 +112,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self setImageURL:mediaView.imageURL withCompletion:nil];
         [self setVideoURL:mediaView.videoURL];
         self.videoCache = mediaView.videoCache;
+        [self setGifURL:mediaView.gifURL];
         
         self.themeColor = mediaView.themeColor;
         
@@ -154,6 +155,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     self.layer.shadowOffset = CGSizeMake(0, 0);
     self.layer.shadowOpacity = 0.0f;
     self.layer.shadowRadius = 1.0f;
+    
+    [self addTapGesture];
     
     if (![ABUtils notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -407,13 +410,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
     
     if ([ABUtils notNull:imageURL]) {
-        NSURL *notificationURL = [NSURL URLWithString:imageURL];
-        //        if ([ABUtils notNull:notificationURL]) {
-        //            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImage) name:notificationURL.relativeString object:nil];
-        //
-        //            NSString *progressString = [NSString stringWithFormat:@"Progress:%@", notificationURL.relativeString];
-        //            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgress:) name:progressString object:nil];
-        //        }
+        NSURL *iURL = [NSURL URLWithString:imageURL];
         
         if ([ABUtils notNull:self.imageCache]) {
             self.image = self.imageCache;
@@ -423,7 +420,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
         }
         else {
-            NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:notificationURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:iURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 if (data) {
                     UIImage *image = [UIImage imageWithData:data];
                     
@@ -475,18 +472,17 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.track setProgress: @0 withDuration: 0];
     [self.track setBuffer: @0 withDuration: 0];
     
-    self.videoIndicator.alpha = 1;
-    
-    //initializes gestures
-    [self addPlayGesture];
+    if ([ABUtils notNull:self.videoURL]) {
+        self.videoIndicator.alpha = 1;
+    }
     
     if ([ABUtils notNull:self.track]) {
         if ([ABUtils notNull:self.track.scrubRecognizer]) {
-            [self.playRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
+            [self.tapRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
         }
         
         if ([ABUtils notNull:self.track.tapRecognizer]) {
-            [self.playRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
+            [self.tapRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
         }
     }
     
@@ -613,7 +609,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
-- (void) playVideoFromRecognizer {
+- (void) handleTapFromRecognizer {
     ////if the cell that is selected already has a video playing then its paused and if not then play that video
     
     if (isMinimized) {
@@ -621,7 +617,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = self.superview.frame;
             
-            if (!self.isPlayingVideo || self.isLoadingVideo) {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
                 self.videoIndicator.alpha = 1.0f;
             }
             
@@ -878,20 +874,20 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //
 //}
 
-- (void) addPlayGesture {
+- (void) addTapGesture {
     //initializes gestures
-    if (![ABUtils notNull:self.playRecognizer]) {
-        self.playRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playVideoFromRecognizer)];
-        self.playRecognizer.numberOfTapsRequired = 1;
-        self.playRecognizer.delegate = self;
+    if (![ABUtils notNull:self.tapRecognizer]) {
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFromRecognizer)];
+        self.tapRecognizer.numberOfTapsRequired = 1;
+        self.tapRecognizer.delegate = self;
     }
     
     self.userInteractionEnabled = YES;
     
-    [self removeGestureRecognizer:self.playRecognizer];
+    [self removeGestureRecognizer:self.tapRecognizer];
     
-    if (![self.gestureRecognizers containsObject:self.playRecognizer]) {
-        [self addGestureRecognizer:self.playRecognizer];
+    if (![self.gestureRecognizers containsObject:self.tapRecognizer]) {
+        [self addGestureRecognizer:self.tapRecognizer];
     }
 }
 
@@ -1030,7 +1026,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.userInteractionEnabled = YES;
         self.track.userInteractionEnabled = YES;
         
-        if (!self.isPlayingVideo || self.isLoadingVideo) {
+        if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
             self.videoIndicator.alpha = 1.0f;
         }
         
@@ -1075,7 +1071,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             [self stopVideoAnimate];
             
             self.track.userInteractionEnabled = NO;
-            self.playRecognizer.enabled = NO;
+            self.tapRecognizer.enabled = NO;
             self.closeButton.userInteractionEnabled = NO;
             
             if ([ABUtils notNull:self.track]) {
@@ -1156,7 +1152,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     else {
                         self.frame = self.superview.frame;
                         
-                        if (!self.isPlayingVideo || self.isLoadingVideo) {
+                        if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
                             self.videoIndicator.alpha = 1.0f;
                         }
                         
@@ -1180,7 +1176,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     
                     isMinimized = minimize;
                     
-                    self.playRecognizer.enabled = YES;
+                    self.tapRecognizer.enabled = YES;
                     self.closeButton.userInteractionEnabled = YES;
                     
                     self.track.userInteractionEnabled = !isMinimized;
@@ -1286,7 +1282,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
-            if (!self.isPlayingVideo || self.isLoadingVideo)  {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
                 self.videoIndicator.alpha = 0;
             }
             
@@ -1301,8 +1297,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.layer.cornerRadius = 0;
             [self setBorderAlpha:0.0f];
             
-            if (!self.isPlayingVideo || self.isLoadingVideo)  {
-                self.videoIndicator.alpha = 1;
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
+                self.videoIndicator.alpha = 1.0f;
             }
             
             [self handleCloseButtonDisplay:self];
@@ -1316,7 +1312,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
             
-            if (!self.isPlayingVideo || self.isLoadingVideo)  {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
                 self.videoIndicator.alpha = (1-offsetPercentage);
             }
             
@@ -1487,7 +1483,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
             
             if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
-                [mediaView playVideoFromRecognizer];
+                [mediaView handleTapFromRecognizer];
             }
         }];
     }
@@ -1513,7 +1509,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
             
             if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
-                [mediaView playVideoFromRecognizer];
+                [mediaView handleTapFromRecognizer];
             }
         }];
     }
@@ -1735,6 +1731,31 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 - (CGFloat) maxViewOffset {
     return (self.superviewHeight - (self.minViewHeight + 12.0f + self.bottomBuffer));
+}
+
+- (void) setGifURL:(NSString *)gifURL {
+    _gifURL = gifURL;
+    
+    if ([ABUtils notNull:self.gifURL]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+            self.gifCache = self.image;
+        });
+    }
+    
+}
+
+
+- (void) setGifData:(NSData *)gifData {
+    _gifData = gifData;
+    
+    if ([ABUtils notNull:self.gifData]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = [UIImage animatedImageWithAnimatedGIFData:gifData];
+            self.gifCache = self.image;
+        });
+    }
+    
 }
 
 @end

@@ -12,6 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ABUtils.h"
 #import "VideoTrackView.h"
+#import "UIImage+animatedGIF.h"
 
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
@@ -80,6 +81,15 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Video location on disk that was cached after loading
 @property (strong, nonatomic) NSString *videoCache;
 
+/// URL endpoint for gif
+@property (strong, nonatomic) NSString *gifURL;
+
+/// Data for gif
+@property (strong, nonatomic) NSData *gifData;
+
+/// Gif cached after loading
+@property (strong, nonatomic) UIImage *gifCache;
+
 /// Theme color which will show on the play button and progress track for videos
 @property (strong, nonatomic) UIColor *themeColor;
 
@@ -120,7 +130,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property (strong, nonatomic) UIFont *trackFont;
 
 /// Recognizer which keeps track of whether the user taps the view to play or pause the video
-@property (strong, nonatomic) UITapGestureRecognizer *playRecognizer;
+@property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
 
 /// Indicator which shows that the video is being loaded
 @property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
@@ -216,7 +226,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 - (void) removeObservers;
 
 /// Selector to play the video from the playRecognizer
-- (void) playVideoFromRecognizer;
+- (void) handleTapFromRecognizer;
 
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
 - (void) setShowRemainingTime: (BOOL) showRemainingTime;

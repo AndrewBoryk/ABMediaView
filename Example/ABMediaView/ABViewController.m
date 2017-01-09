@@ -25,10 +25,10 @@
     [self.mediaView setShouldDisplayFullscreen: YES];
     
     // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
-    self.mediaView.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
+    self.mediaView.minimizedAspectRatio = ABMediaViewRatioPresetSquare;
     
     // Adjust the ratio of the screen that the width of the minimized view will stretch across. The default value for this is 0.5
-    self.mediaView.minimizedWidthRatio = 1.0f;
+    self.mediaView.minimizedWidthRatio = 0.5f;
     
     // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
     [self.mediaView setBottomBuffer:0.0f];
@@ -44,13 +44,15 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    [self.mediaView setGifURL:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"];
+//    self.mediaView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
     /// Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
-    [self.mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
-        
-    }];
+//    [self.mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
+//        
+//    }];
     
     /// Set the url for the video that will be shown in the mediaView
-    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
+//    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
     
     /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
     self.mediaView.originRect = self.mediaView.frame;

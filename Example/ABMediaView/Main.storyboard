@@ -31,10 +31,10 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mWW-nq-RdB" customClass="ABMediaView">
-                                <rect key="frame" x="48" y="254.5" width="279" height="157"/>
+                                <rect key="frame" x="48" y="193.5" width="279" height="279"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="16:9" id="wys-h3-9gn"/>
+                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="1:1" id="wys-h3-9gn"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4o-zf-89b">
