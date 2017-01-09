@@ -37,13 +37,53 @@
                                     <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="16:9" id="wys-h3-9gn"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4o-zf-89b">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="TfZ-eh-2XN"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VvP-eB-0HN">
+                                <rect key="frame" x="0.0" y="666" width="375" height="1"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="83y-ee-4tJ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sCd-An-hHo">
+                                <rect key="frame" x="0.0" y="0.0" width="1" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1" id="Giw-r4-OX1"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DcG-yi-4VF">
+                                <rect key="frame" x="374" y="0.0" width="1" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1" id="lxO-m6-VZL"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="sCd-An-hHo" firstAttribute="bottom" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="0dN-Gk-Vhj"/>
+                            <constraint firstItem="VvP-eB-0HN" firstAttribute="leading" secondItem="C4o-zf-89b" secondAttribute="leading" id="29w-xd-xzy"/>
+                            <constraint firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="2J0-wP-ceE"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="32" id="Bf6-wa-sXD"/>
+                            <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="C13-F5-29s"/>
+                            <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" id="KYO-R8-3Sw"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
+                            <constraint firstItem="DcG-yi-4VF" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="fzu-CN-4b0"/>
+                            <constraint firstItem="sCd-An-hHo" firstAttribute="top" secondItem="C4o-zf-89b" secondAttribute="top" id="hvS-hz-zyW"/>
+                            <constraint firstItem="DcG-yi-4VF" firstAttribute="top" secondItem="C4o-zf-89b" secondAttribute="top" id="qiw-Cn-QTp"/>
+                            <constraint firstItem="sCd-An-hHo" firstAttribute="leading" secondItem="C4o-zf-89b" secondAttribute="leading" id="qwD-Ki-fP2"/>
+                            <constraint firstItem="C4o-zf-89b" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="sih-yD-nNE"/>
+                            <constraint firstItem="VvP-eB-0HN" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="yoR-Ke-bnF"/>
+                            <constraint firstItem="DcG-yi-4VF" firstAttribute="bottom" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="zZo-Cl-Vjt"/>
                             <constraint firstAttribute="trailingMargin" secondItem="mWW-nq-RdB" secondAttribute="trailing" constant="32" id="ze1-TZ-JB2"/>
                         </constraints>
                     </view>
@@ -55,7 +95,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="433"/>
+            <point key="canvasLocation" x="304.80000000000001" y="432.23388305847078"/>
         </scene>
     </scenes>
 </document>
