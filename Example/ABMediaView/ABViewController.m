@@ -85,7 +85,7 @@
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:mediaView];
     
-    /// Hide the close button, that way it does not show up. This functionality is only allowed if isMinimizable is enabled.
+    // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
     [mediaView hideCloseButton:YES];
     
     // Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
