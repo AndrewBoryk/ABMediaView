@@ -55,6 +55,9 @@
     /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
     self.mediaView.originRect = self.mediaView.frame;
     
+    
+    /// This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
+    self.mediaView.autoPlayAfterPresentation = YES;
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {

@@ -113,6 +113,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Toggle functionality for hiding the close button from the fullscreen view. If minimizing is disabled, this functionality is not allowed.
 @property BOOL hideCloseButton;
 
+/// Toggle functionality to have the mediaView autoplay the video associated with it after presentation
+@property BOOL autoPlayAfterPresentation;
+
 /// Change font for track labels
 @property (strong, nonatomic) UIFont *trackFont;
 
@@ -259,5 +262,17 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// When the mediaView pauses a video
 - (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has begun the presentation process
+- (void) mediaViewWillPresent: (ABMediaView *) mediaView;
+
+/// Called when the mediaView presented
+- (void) mediaViewDidPresent: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has begun the dismissal process
+- (void) mediaViewWillDismiss: (ABMediaView *) mediaView;
+
+/// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
+- (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 
 @end

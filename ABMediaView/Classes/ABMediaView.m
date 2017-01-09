@@ -122,6 +122,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         [self setFullscreen:mediaView.isFullScreen];
         [self hideCloseButton: mediaView.hideCloseButton];
+        self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         
         self.originRect = mediaView.originRect;
         self.originRectConverted = mediaView.originRectConverted;
@@ -1438,7 +1439,11 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
 }
 
-- (void) handleMediaViewPresentation: (ABMediaView *) mediaView animated: (BOOL) animated{
+- (void) handleMediaViewPresentation: (ABMediaView *) mediaView animated: (BOOL) animated {
+    if ([self.delegate respondsToSelector:@selector(mediaViewWillPresent:)]) {
+        [self.delegate mediaViewWillPresent:self];
+    }
+    
     self.mainWindow = [[UIApplication sharedApplication] keyWindow];
     [self.mainWindow makeKeyAndVisible];
     
@@ -1476,13 +1481,13 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         } completion:^(BOOL finished) {
             
             
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidPresent:)]) {
+                [self.delegate mediaViewDidPresent:self];
+            }
             
-            if ([ABUtils notNull:mediaView.videoURL]) {
+            if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
                 [mediaView playVideoFromRecognizer];
             }
-            //        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
-            //            [mediaView.delegate mediaViewDidShow:self];
-            //        }
         }];
     }
     else {
@@ -1502,12 +1507,13 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             mediaView.alpha = 1;
             [mediaView handleCloseButtonDisplay:mediaView];
         } completion:^(BOOL finished) {
-            if ([ABUtils notNull:mediaView.videoURL]) {
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidPresent:)]) {
+                [self.delegate mediaViewDidPresent:self];
+            }
+            
+            if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
                 [mediaView playVideoFromRecognizer];
             }
-            //        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
-            //            [mediaView.delegate mediaViewDidShow:self];
-            //        }
         }];
     }
 }
@@ -1519,6 +1525,11 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 - (void) dismissMediaViewAnimated: (BOOL) animated withCompletion:(void (^)(BOOL completed))completion {
     if (self.isFullScreen) {
+        
+        if ([self.delegate respondsToSelector:@selector(mediaViewWillDismiss:)]) {
+            [self.delegate mediaViewWillDismiss:self];
+        }
+        
         self.userInteractionEnabled = NO;
 
         float animationTime = 0.0f;
@@ -1549,6 +1560,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             if ([ABUtils notNull:completion]) {
                 completion(YES);
+            }
+            
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidDismiss:)]) {
+                [self.delegate mediaViewDidDismiss:self];
             }
         }];
     }
