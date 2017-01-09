@@ -59,6 +59,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Queue which holds an array of mediaViews to be displayed
 @property (strong, nonatomic) NSMutableArray *mediaViewQueue;
 
+/// Media view that is currently presented by the manager
+@property (strong, nonatomic) ABMediaView *currentMediaView;
+
 /// Main window which the mediaView will be added to
 @property (strong, nonatomic) UIWindow *mainWindow;
 
@@ -231,7 +234,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 - (void) removeFromQueue:(ABMediaView *) mediaView;
 
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
-- (void) dismissMediaView;
+- (void) dismissMediaViewAnimated:(BOOL) animated withCompletion:(void (^)(BOOL completed))completion;
 
 /// Resets variables from mediaView, removing image and video data
 - (void) resetVariables;

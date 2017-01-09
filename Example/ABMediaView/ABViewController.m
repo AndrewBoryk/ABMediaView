@@ -96,14 +96,16 @@
     // Set the url for the video that will be shown in the mediaView
     [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
     
-    if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
-        [[ABMediaView sharedManager] queueMediaView:mediaView];
-        
-        [[ABMediaView sharedManager] showNextMediaView];
-    }
-    else {
-        [[ABMediaView sharedManager] queueMediaView:mediaView];
-    }
+    [[ABMediaView sharedManager] presentMediaView:mediaView];
+//    
+//    if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
+//        [[ABMediaView sharedManager] queueMediaView:mediaView];
+//        
+//        [[ABMediaView sharedManager] showNextMediaView];
+//    }
+//    else {
+//        [[ABMediaView sharedManager] queueMediaView:mediaView];
+//    }
     
 }
 
