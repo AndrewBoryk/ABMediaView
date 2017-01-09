@@ -1223,15 +1223,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         CGFloat tempOffset = self.frame.origin.x + difference;
         
-        CGFloat offsetPercentage = (tempOffset - (superviewWidth - minViewWidth - 12.0f)) / (minViewWidth - 12.0f);
+        CGFloat offsetRatio = (tempOffset - (superviewWidth - minViewWidth - 12.0f)) / (minViewWidth - 12.0f);
         
-        if (offsetPercentage >= 1) {
+        if (offsetRatio >= 1) {
             origin.y = maxViewOffset;
             origin.x = superviewWidth;
             offset = maxViewOffset;
             self.alpha = 0;
         }
-        else if (offsetPercentage < 0) {
+        else if (offsetRatio < 0) {
             origin.y = maxViewOffset;
             origin.x = superviewWidth - (minViewWidth + 12.0f);
             offset = maxViewOffset;
@@ -1241,7 +1241,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             origin.y = maxViewOffset;
             origin.x += difference;
             offset = maxViewOffset;
-            self.alpha = (1 - offsetPercentage);
+            self.alpha = (1 - offsetRatio);
         }
         
         frame.origin = origin;
@@ -1402,12 +1402,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         ABMediaView *mediaView = self.mediaViewQueue.firstObject;
         
-        CGFloat minViewWidth = mediaView.superview.frame.size.width * mediaView.minimizedWidthRatio;
-        CGFloat minViewHeight = minViewWidth * mediaView.minimizedAspectRatio;
-        CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f + self.bottomBuffer));
+        CGFloat minimumViewWidth = mediaView.superview.frame.size.width * mediaView.minimizedWidthRatio;
+        CGFloat minimumViewHeight = minimumViewWidth * mediaView.minimizedAspectRatio;
+        CGFloat maximumViewOffset = (mediaView.superview.frame.size.height - (minimumViewHeight + 12.0f + self.bottomBuffer));
         
         [UIView animateWithDuration:0.25f animations:^{
-            mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
+            mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maximumViewOffset, minimumViewWidth, minimumViewHeight);
             mediaView.alpha = 0;
 //            mediaView.layer.cornerRadius = 1.5f;
             
@@ -1539,7 +1539,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
-- (void) setBottomBuffer:(CGFloat)bottomBuffer {
+- (void) setBottomBuffer:(float)bottomBuffer {
     _bottomBuffer = bottomBuffer;
     
     if (_bottomBuffer < 0) {
@@ -1571,7 +1571,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
 }
 
-- (void) setMinimizedAspectRatio:(CGFloat)minimizedAspectRatio {
+- (void) setMinimizedAspectRatio:(float)minimizedAspectRatio {
     if (minimizedAspectRatio <= 0) {
         _minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
     }
@@ -1582,7 +1582,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self initializeSizeVariables];
 }
 
-- (void) setMinimizedWidthRatio:(CGFloat)minimizedWidthRatio {
+- (void) setMinimizedWidthRatio:(float)minimizedWidthRatio {
     _minimizedWidthRatio = minimizedWidthRatio;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];

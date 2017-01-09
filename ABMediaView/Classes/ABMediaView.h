@@ -114,13 +114,13 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property CGRect originRectConverted;
 
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
-@property CGFloat bottomBuffer;
+@property float bottomBuffer;
 
 /// Ratio that the minimized view will be shruken to, can be set to a custom value or one of the available ABMediaViewRatioPresets
-@property CGFloat minimizedAspectRatio;
+@property float minimizedAspectRatio;
 
 /// Ratio of the screen's width that the mediaView's minimized view will stretch across.
-@property CGFloat minimizedWidthRatio;
+@property float minimizedWidthRatio;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
