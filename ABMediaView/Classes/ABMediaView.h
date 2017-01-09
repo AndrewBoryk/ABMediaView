@@ -78,6 +78,12 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// (DON'T MODIFY) Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
 @property BOOL isFullScreen;
 
+/// Toggle functionality for remaining time to show on right track label rather than showing total time
+@property BOOL displayRemainingTime;
+
+/// Change font for track labels
+@property (strong, nonatomic) UIFont *trackFont;
+
 /// Recognizer which keeps track of whether the user taps the view to play or pause the video
 @property (strong, nonatomic) UITapGestureRecognizer *playRecognizer;
 
@@ -104,6 +110,7 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
 @property CGFloat bottomBuffer;
+
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 
@@ -157,9 +164,6 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
 - (void) dismissMediaView;
-
-/// Change font for track labels
-- (void) setTrackFont: (UIFont *) font;
 
 /// Resets variables from mediaView, removing image and video data
 - (void) resetVariables;

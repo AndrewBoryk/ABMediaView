@@ -127,12 +127,13 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     if (self) {
         
+        // Transfer over all attributes from the previous mediaView
         self.contentMode = mediaView.contentMode;
         self.backgroundColor = mediaView.backgroundColor;
         
         self.imageViewNotReused = mediaView.imageViewNotReused;
         [self changeVideoToAspectFit:mediaView.videoAspectFit];
-        
+        [self setShowRemainingTime:mediaView.displayRemainingTime];
         self.imageCache = mediaView.imageCache;
         [self setImageURL:mediaView.imageURL withCompletion:nil];
         [self setVideoURL:mediaView.videoURL];
@@ -141,13 +142,14 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.themeColor = mediaView.themeColor;
         
         self.showTrack = mediaView.showTrack;
+        [self setTrackFont:mediaView.trackFont];
         self.allowLooping = mediaView.allowLooping;
         [self setCanMinimize: mediaView.isMinimizable];
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         self.isFullScreen = mediaView.isFullScreen;
         self.originRect = mediaView.originRect;
         self.originRectConverted = mediaView.originRectConverted;
-        
+        self.bottomBuffer = mediaView.bottomBuffer;
         
     }
     
@@ -1339,6 +1341,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 }
 
 - (void) setShowRemainingTime: (BOOL) showRemainingTime {
+    _displayRemainingTime = showRemainingTime;
+    
     if ([ABUtils notNull:self.track]) {
         self.track.showRemainingTime = showRemainingTime;
     }
@@ -1496,6 +1500,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 }
 
 - (void) setTrackFont:(UIFont *)font {
+    _trackFont = font;
+    
     if ([ABUtils notNull:font]) {
         [self.track setTrackFont:font];
     }
