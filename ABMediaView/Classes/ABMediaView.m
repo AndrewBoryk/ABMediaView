@@ -1403,7 +1403,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
-- (void) showNextMediaView {
+- (void) presentNextMediaView {
     if (self.mediaViewQueue.count) {
         [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
     }
