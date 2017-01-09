@@ -172,7 +172,7 @@ When a ABMediaView's 'isMinimizable' value is enabled, the size ratio of the min
 mediaView.minimizedRatio = ABMediaViewRatioPresetLandscape;
 mediaView.minimizedRatio = ABMediaViewRatioPresetSquare;
 mediaView.minimizedRatio = ABMediaViewRatioPresetPortrait;
-mediaView.minimizedRatio = (6.0f/5.0f);
+mediaView.minimizedRatio = (5.0f/6.0f);
 ```
 
 
