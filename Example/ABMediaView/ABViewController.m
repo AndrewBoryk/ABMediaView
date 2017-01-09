@@ -30,6 +30,9 @@
     // Adjust the ratio of the screen that the width of the minimized view will stretch across. The default value for this is 0.5
     self.mediaView.minimizedWidthRatio = 1.0f;
     
+    // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
+    [self.mediaView setBottomBuffer:0.0f];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,8 +85,8 @@
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:mediaView];
     
-    // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
-    [mediaView setBottomBuffer:0.0f];
+    /// Hide the close button, that way it does not show up. This functionality is only allowed if isMinimizable is enabled.
+    [mediaView hideCloseButton:YES];
     
     // Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
     [mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {

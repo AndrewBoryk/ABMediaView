@@ -86,6 +86,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
 @property BOOL displayRemainingTime;
 
+/// Toggle functionality for hiding the close button from the fullscreen view. If minimizing is disabled, this functionality is not allowed.
+@property BOOL hideCloseButton;
+
 /// Change font for track labels
 @property (strong, nonatomic) UIFont *trackFont;
 
@@ -97,6 +100,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Play button imageView which shows in the center of the video, notifies the user that a video can be played
 @property (strong, nonatomic) UIImageView *videoIndicator;
+
+/// Closes the mediaView when in fullscreen mode
+@property (strong, nonatomic) UIButton *closeButton;
 
 /// AVPlayer which will handle video playback
 @property (strong, nonatomic) AVPlayer *player;
@@ -114,13 +120,13 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property CGRect originRectConverted;
 
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
-@property float bottomBuffer;
+@property (nonatomic) CGFloat bottomBuffer;
 
 /// Ratio that the minimized view will be shruken to, can be set to a custom value or one of the available ABMediaViewRatioPresets
-@property float minimizedAspectRatio;
+@property (nonatomic) CGFloat minimizedAspectRatio;
 
 /// Ratio of the screen's width that the mediaView's minimized view will stretch across.
-@property float minimizedWidthRatio;
+@property (nonatomic) CGFloat minimizedWidthRatio;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
@@ -179,6 +185,8 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Resets variables from mediaView, removing image and video data
 - (void) resetVariables;
 
+/// Sets the close button to hidden, only allowed if isMinimizable is true
+- (void) hideCloseButton: (BOOL) hideButton;
 @end
 
 @protocol ABMediaViewDelegate <NSObject>

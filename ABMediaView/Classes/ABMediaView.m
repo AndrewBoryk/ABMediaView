@@ -108,22 +108,28 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
     
     CGRect playFrame = self.videoIndicator.frame;
-    
+    CGRect closeFrame = self.closeButton.frame;
     
     CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / superviewHeight));
+    CGFloat closeSize = 12.0f + (12.0f * (self.frame.size.height / superviewHeight));
+    
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
         playSize = 30.0f + (30.0f * (self.frame.size.width / superviewHeight));
+        closeSize = 12.0f + (12.0f * (self.frame.size.width / superviewHeight));
     }
     
+    NSLog(@"Close size %f", closeSize);
     
     playFrame.size = CGSizeMake(playSize, playSize);
-    
+    closeFrame.size = CGSizeMake(closeSize, closeSize);
+    closeFrame.origin = CGPointMake(16.0f, 16.0f);
     
     self.videoIndicator.frame = playFrame;
     self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
     
+    self.closeButton.frame = closeFrame;
 }
 
 - (instancetype) initWithMediaView: (ABMediaView *) mediaView {
@@ -151,6 +157,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self setCanMinimize: mediaView.isMinimizable];
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         self.isFullScreen = mediaView.isFullScreen;
+        [self hideCloseButton: mediaView.hideCloseButton];
+        
         self.originRect = mediaView.originRect;
         self.originRectConverted = mediaView.originRectConverted;
         self.bottomBuffer = mediaView.bottomBuffer;
@@ -199,6 +207,23 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.videoIndicator.center = self.center;
         [self.videoIndicator sizeToFit];
         
+    }
+    
+    if (![ABUtils notNull:self.closeButton]) {
+        
+        self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(16.0f, 16.0f, 24.0f, 24.0f)];
+        self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.closeButton setImage:[self imageForCloseButton] forState:UIControlStateNormal];
+        [self.closeButton addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    
+    self.closeButton.alpha = 0;
+    
+    if (![self.subviews containsObject:self.closeButton]) {
+        [self addSubview:self.closeButton];
+        
+        [self bringSubviewToFront:self.closeButton];
     }
     
     if (![ABUtils notNull:swipeRecognizer]) {
@@ -405,6 +430,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     bufferTime = 0;
     
     self.videoIndicator.alpha = 0;
+    self.closeButton.alpha = 0;
     
     [self stopVideoAnimate];
 }
@@ -633,6 +659,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             if (![self isPlayingVideo] || self.isLoadingVideo) {
                 self.videoIndicator.alpha = 1.0f;
+            }
+            
+            if (self.isFullScreen) {
+                if (self.hideCloseButton && self.isMinimizable) {
+                    self.closeButton.alpha = 0;
+                }
+                else {
+                    self.closeButton.alpha = 1;
+                }
             }
             
             [self layoutSubviews];
@@ -1052,6 +1087,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.videoIndicator.alpha = 1.0f;
         }
         
+        if (self.isFullScreen) {
+            if (self.hideCloseButton && self.isMinimizable) {
+                self.closeButton.alpha = 0;
+            }
+            else {
+                self.closeButton.alpha = 1;
+            }
+        }
+        
         if (self.isLoadingVideo) {
             [self stopVideoAnimate];
             [self loadVideoAnimate];
@@ -1092,6 +1136,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             self.track.userInteractionEnabled = NO;
             self.playRecognizer.enabled = NO;
+            self.closeButton.enabled = NO;
             
             if ([ABUtils notNull:self.track]) {
                 if ([ABUtils notNull:self.track.hideTimer]) {
@@ -1162,6 +1207,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     if (minimize) {
                         self.frame = CGRectMake(superviewWidth - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
                         self.videoIndicator.alpha = 0;
+                        self.closeButton.alpha = 0;
 //                        self.layer.cornerRadius = 1.5f;
                         [self setBorderAlpha:1.0f];
                     }
@@ -1170,6 +1216,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                         
                         if (![self isPlayingVideo] || self.isLoadingVideo) {
                             self.videoIndicator.alpha = 1.0f;
+                        }
+                        
+                        if (self.isFullScreen) {
+                            if (self.hideCloseButton && self.isMinimizable) {
+                                self.closeButton.alpha = 0;
+                            }
+                            else {
+                                self.closeButton.alpha = 1;
+                            }
                         }
                         
                         self.layer.cornerRadius = 0.0f;
@@ -1191,6 +1246,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     isMinimized = minimize;
                     
                     self.playRecognizer.enabled = YES;
+                    self.closeButton.enabled = YES;
+                    
                     self.track.userInteractionEnabled = !isMinimized;
                     offset = self.frame.origin.y;
                     
@@ -1297,6 +1354,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 0;
             }
+            
+            self.closeButton.alpha = 0;
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
@@ -1310,6 +1369,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 1;
             }
+            
+            if (self.isFullScreen) {
+                if (self.hideCloseButton && self.isMinimizable) {
+                    self.closeButton.alpha = 0;
+                }
+                else {
+                    self.closeButton.alpha = 1;
+                }
+            }
         }
         else {
             origin.y = testOrigin;
@@ -1322,6 +1390,16 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = (1-offsetPercentage);
+            }
+            
+            if (self.isFullScreen) {
+                if (self.hideCloseButton && self.isMinimizable) {
+                    self.closeButton.alpha = 0;
+                }
+                else {
+                    self.closeButton.alpha = (1-offsetPercentage);
+                }
+                
             }
         }
         
@@ -1442,6 +1520,13 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.mainWindow makeKeyAndVisible];
     
     mediaView.isFullScreen = YES;
+    if (mediaView.hideCloseButton && mediaView.isMinimizable) {
+        mediaView.closeButton.alpha = 0;
+    }
+    else {
+        mediaView.closeButton.alpha = 1;
+    }
+    
     mediaView.backgroundColor = [UIColor blackColor];
     
     if (!CGRectIsEmpty(mediaView.originRect)) {
@@ -1539,7 +1624,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
-- (void) setBottomBuffer:(float)bottomBuffer {
+- (void) setBottomBuffer:(CGFloat)bottomBuffer {
     _bottomBuffer = bottomBuffer;
     
     if (_bottomBuffer < 0) {
@@ -1571,7 +1656,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
 }
 
-- (void) setMinimizedAspectRatio:(float)minimizedAspectRatio {
+- (void) setMinimizedAspectRatio:(CGFloat)minimizedAspectRatio {
     if (minimizedAspectRatio <= 0) {
         _minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
     }
@@ -1582,7 +1667,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self initializeSizeVariables];
 }
 
-- (void) setMinimizedWidthRatio:(float)minimizedWidthRatio {
+- (void) setMinimizedWidthRatio:(CGFloat)minimizedWidthRatio {
     _minimizedWidthRatio = minimizedWidthRatio;
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
@@ -1607,4 +1692,88 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self initializeSizeVariables];
 }
 
+- (UIImage *) imageForCloseButton {
+    static UIImage *closeX = nil;
+    
+    CGFloat size = 18.0f;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(size, size), NO, 0.0f);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    
+    UIBezierPath *leftPath = [UIBezierPath bezierPath];
+    [leftPath moveToPoint:(CGPoint){0, 0}];
+    [leftPath addLineToPoint:(CGPoint){size, size}];
+    [leftPath closePath];
+    
+    UIBezierPath *rightPath = [UIBezierPath bezierPath];
+    [rightPath moveToPoint:(CGPoint){0, size}];
+    [rightPath addLineToPoint:(CGPoint){size, 0}];
+    [rightPath closePath];
+    
+    CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.9f].CGColor;
+    CGContextSetFillColorWithColor(ctx, col);
+    CGContextSetStrokeColorWithColor(ctx, col);
+    CGContextSetLineWidth(ctx, 1.5f);
+    CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
+    CGContextSetLineJoin(ctx, kCGLineJoinRound);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
+    CGContextAddPath(ctx, rightPath.CGPath);
+    CGContextStrokePath(ctx);
+    CGContextAddPath(ctx, rightPath.CGPath);
+    CGContextFillPath(ctx);
+    CGContextAddPath(ctx, leftPath.CGPath);
+    CGContextStrokePath(ctx);
+    CGContextAddPath(ctx, leftPath.CGPath);
+    CGContextFillPath(ctx);
+    
+    CGContextRestoreGState(ctx);
+    closeX = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return closeX;
+}
+
+- (void) closeAction {
+    if (self.isFullScreen) {
+        [UIView animateWithDuration:0.20f animations:^{
+            self.alpha = 0;
+            
+        } completion:^(BOOL finished) {
+            
+            [[ABMediaView sharedManager] removeFromQueue:self];
+            [self.player pause];
+            [self.playerLayer removeFromSuperlayer];
+            self.playerLayer = nil;
+            self.player = nil;
+            [self removeFromSuperview];
+            
+            self.userInteractionEnabled = YES;
+            if (self.mediaViewQueue.count) {
+                [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
+            }
+            else {
+                NSLog(@"No mediaView in queue");
+            }
+        }];
+    }
+    else {
+        self.closeButton.alpha = 0;
+    }
+}
+
+- (void) hideCloseButton:(BOOL)hideButton {
+    _hideCloseButton = hideButton;
+    
+    if (self.isFullScreen) {
+        if (self.hideCloseButton && self.isMinimizable) {
+            self.closeButton.alpha = 0;
+        }
+        else {
+            self.closeButton.alpha = 1;
+        }
+    }
+    else {
+        self.closeButton.alpha = 0;
+    }
+}
 @end
