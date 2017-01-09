@@ -26,12 +26,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
 }
 
-@synthesize superviewWidth = superviewWidth;
-@synthesize superviewHeight = superviewHeight;
 @synthesize isMinimized = isMinimized;
-@synthesize minViewWidth = minViewWidth;
-@synthesize minViewHeight = minViewHeight;
-@synthesize maxViewOffset = maxViewOffset;
 @synthesize offsetPercentage = offsetPercentage;
 @synthesize offset = offset;
 @synthesize ySwipePosition = ySwipePosition;
@@ -79,26 +74,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.track updateBarBackground];
     [self.track updateProgress];
     
-    if (isnan(superviewHeight) || isnan(superviewWidth) || superviewHeight == 0 || superviewWidth == 0) {
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        superviewWidth = screenRect.size.width;
-        superviewHeight = screenRect.size.height;
-        
-        if (superviewWidth > superviewHeight) {
-            superviewWidth = screenRect.size.height;
-            superviewHeight = screenRect.size.width;
-        }
-    }
-    
     CGRect playFrame = self.videoIndicator.frame;
     CGRect closeFrame = self.closeButton.frame;
     
-    CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / superviewHeight));
+    CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / self.superviewHeight));
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
-        playSize = 30.0f + (30.0f * (self.frame.size.width / superviewHeight));
+        playSize = 30.0f + (30.0f * (self.frame.size.width / self.superviewHeight));
     }
     
     playFrame.size = CGSizeMake(playSize, playSize);
@@ -153,8 +137,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
-    
-    [self initializeSizeVariables];
     
     self.minimizedWidthRatio = 0.5f;
     self.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
@@ -1031,8 +1013,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 height = tempFloat;
             }
             
-            superviewWidth = width;
-            superviewHeight = height;
             swipeRecognizer.enabled = self.isMinimizable;
         }
         else {
@@ -1116,9 +1096,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
             
-            if (isMinimized && offset == maxViewOffset) {
+            if (isMinimized && offset == self.maxViewOffset) {
                 CGPoint vel = [gesture velocityInView:self];
-                if (self.frame.origin.x > (superviewWidth - (minViewWidth + 12.0f))) {
+                if (self.frame.origin.x > (self.superviewWidth - (self.minViewWidth + 12.0f))) {
                     [self handleDismissingForRecognizer: gesture];
                 }
                 else {
@@ -1170,7 +1150,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             else {
                 [UIView animateWithDuration:0.25f animations:^{
                     if (minimize) {
-                        self.frame = CGRectMake(superviewWidth - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
+                        self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
                         self.videoIndicator.alpha = 0;
                         self.closeButton.alpha = 0;
 //                        self.layer.cornerRadius = 1.5f;
@@ -1238,24 +1218,24 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         CGFloat tempOffset = self.frame.origin.x + difference;
         
-        CGFloat offsetRatio = (tempOffset - (superviewWidth - minViewWidth - 12.0f)) / (minViewWidth - 12.0f);
+        CGFloat offsetRatio = (tempOffset - (self.superviewWidth - self.minViewWidth - 12.0f)) / (self.minViewWidth - 12.0f);
         
         if (offsetRatio >= 1) {
-            origin.y = maxViewOffset;
-            origin.x = superviewWidth;
-            offset = maxViewOffset;
+            origin.y = self.maxViewOffset;
+            origin.x = self.superviewWidth;
+            offset = self.maxViewOffset;
             self.alpha = 0;
         }
         else if (offsetRatio < 0) {
-            origin.y = maxViewOffset;
-            origin.x = superviewWidth - (minViewWidth + 12.0f);
-            offset = maxViewOffset;
+            origin.y = self.maxViewOffset;
+            origin.x = self.superviewWidth - (self.minViewWidth + 12.0f);
+            offset = self.maxViewOffset;
             self.alpha = 1;
         }
         else {
-            origin.y = maxViewOffset;
+            origin.y = self.maxViewOffset;
             origin.x += difference;
-            offset = maxViewOffset;
+            offset = self.maxViewOffset;
             self.alpha = (1 - offsetRatio);
         }
         
@@ -1285,7 +1265,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         CGFloat tempOffset = offset + difference;
-        offsetPercentage = tempOffset / maxViewOffset;
+        offsetPercentage = tempOffset / self.maxViewOffset;
         
         if (offsetPercentage > 1) {
             offsetPercentage = 1;
@@ -1298,14 +1278,14 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             [self.delegate mediaView:self didChangeOffset:offsetPercentage];
         }
         
-        CGFloat testOrigin = offsetPercentage * maxViewOffset;
+        CGFloat testOrigin = offsetPercentage * self.maxViewOffset;
         
-        if (testOrigin >= maxViewOffset) {
-            origin.y = maxViewOffset;
-            size.width = minViewWidth;
-            size.height = minViewHeight;
-            origin.x = superviewWidth - size.width - 12.0f;
-            offset = maxViewOffset;
+        if (testOrigin >= self.maxViewOffset) {
+            origin.y = self.maxViewOffset;
+            size.width = self.minViewWidth;
+            size.height = self.minViewHeight;
+            origin.x = self.superviewWidth - size.width - 12.0f;
+            offset = self.maxViewOffset;
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
@@ -1317,8 +1297,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
-            size.width = superviewWidth;
-            size.height = superviewHeight;
+            size.width = self.superviewWidth;
+            size.height = self.superviewHeight;
             origin.x = 0;
             offset = 0.0f;
             self.layer.cornerRadius = 0;
@@ -1332,9 +1312,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         }
         else {
             origin.y = testOrigin;
-            size.width = superviewWidth - (offsetPercentage * (superviewWidth - minViewWidth));
-            size.height = superviewHeight - (offsetPercentage * (superviewHeight - minViewHeight));
-            origin.x = superviewWidth - size.width - (offsetPercentage * 12.0f);
+            size.width = self.superviewWidth - (offsetPercentage * (self.superviewWidth - self.minViewWidth));
+            size.height = self.superviewHeight - (offsetPercentage * (self.superviewHeight - self.minViewHeight));
+            origin.x = self.superviewWidth - size.width - (offsetPercentage * 12.0f);
             offset+= difference;
 //            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
@@ -1484,7 +1464,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             [mediaView layoutSubviews];
         } completion:^(BOOL finished) {
             
-            [mediaView initializeSizeVariables];
             if ([ABUtils notNull:mediaView.videoURL]) {
                 [mediaView playVideoFromRecognizer];
             }
@@ -1528,7 +1507,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
         
         [UIView animateWithDuration:0.25f animations:^{
-            self.frame = CGRectMake(superviewWidth, maxViewOffset, minViewWidth, minViewHeight);
+            self.frame = CGRectMake(self.superviewWidth, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
             self.alpha = 0;
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:0.0f];
@@ -1572,26 +1551,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.bottomBuffer = 120;
     }
     
-    [self initializeSizeVariables];
-    
 }
 - (void) logFrame: (CGRect) frame withTag: (NSString *) tag {
     NSLog(@"%@ - x: %f  y: %f  width: %f  height: %f", tag, frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-}
-
-- (void) initializeSizeVariables {
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    superviewWidth = screenRect.size.width;
-    superviewHeight = screenRect.size.height;
-    
-    if (superviewWidth > superviewHeight) {
-        superviewWidth = screenRect.size.height;
-        superviewHeight = screenRect.size.width;
-    }
-    
-    minViewWidth = superviewWidth * self.minimizedWidthRatio;
-    minViewHeight = minViewWidth * self.minimizedAspectRatio;
-    maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
 }
 
 - (void) setMinimizedAspectRatio:(CGFloat)minimizedAspectRatio {
@@ -1601,23 +1563,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     else {
         _minimizedAspectRatio = minimizedAspectRatio;
     }
-    
-    [self initializeSizeVariables];
 }
 
 - (void) setMinimizedWidthRatio:(CGFloat)minimizedWidthRatio {
     _minimizedWidthRatio = minimizedWidthRatio;
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    superviewWidth = screenRect.size.width;
-    superviewHeight = screenRect.size.height;
-    
-    if (superviewWidth > superviewHeight) {
-        superviewWidth = screenRect.size.height;
-        superviewHeight = screenRect.size.width;
-    }
-    
-    CGFloat maxWidthRatio = (superviewWidth - 24.0f) / superviewWidth;
+    CGFloat maxWidthRatio = (self.superviewWidth - 24.0f) / self.superviewWidth;
     
     if (_minimizedWidthRatio < 0.25f) {
         _minimizedWidthRatio = 0.25f;
@@ -1625,9 +1576,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     else if (_minimizedWidthRatio > maxWidthRatio) {
         _minimizedWidthRatio = maxWidthRatio;
     }
-    
-    
-    [self initializeSizeVariables];
 }
 
 - (UIImage *) imageForCloseButton {
@@ -1726,5 +1674,40 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     isFullscreen = fullscreen;
 }
 
+- (CGFloat) superviewWidth {
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat width = screenRect.size.width;
+    CGFloat height = screenRect.size.height;
+    
+    if (width > height) {
+        return height;
+    }
+    
+    return width;
+}
+
+- (CGFloat) superviewHeight {
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat width = screenRect.size.width;
+    CGFloat height = screenRect.size.height;
+    
+    if (width > height) {
+        return width;
+    }
+    
+    return height;
+}
+
+- (CGFloat) minViewWidth {
+    return self.superviewWidth * self.minimizedWidthRatio;
+}
+
+- (CGFloat) minViewHeight {
+    return self.minViewWidth * self.minimizedAspectRatio;
+}
+
+- (CGFloat) maxViewOffset {
+    return (self.superviewHeight - (self.minViewHeight + 12.0f + self.bottomBuffer));
+}
 
 @end

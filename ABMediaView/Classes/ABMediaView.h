@@ -39,23 +39,8 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
     /// Determines if video is minimized
     BOOL isMinimized;
     
-    /// The width of the view when minimized
-    CGFloat minViewWidth;
-    
-    /// The height of the view when minimized
-    CGFloat minViewHeight;
-    
-    /// The maximum amount of y offset for the mediaView
-    CGFloat maxViewOffset;
-    
     /// Keeps track of how much the video has been minimized
     CGFloat offsetPercentage;
-    
-    /// Width of the mainWindow
-    CGFloat superviewWidth;
-    
-    /// Height of the mainWindow
-    CGFloat superviewHeight;
     
     /// Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
     BOOL isFullscreen;
