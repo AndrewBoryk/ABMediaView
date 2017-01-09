@@ -59,12 +59,14 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     static ABMediaView *sharedMyManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedMyManager = [[self alloc] init];
+        sharedMyManager = [[self alloc] initManager];
+    
     });
     return sharedMyManager;
 }
 
-- (instancetype) init {
+
+- (instancetype) initManager {
     self = [super init];
     
     if (self) {
@@ -174,6 +176,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     self.layer.borderWidth = 1.0f;
     
     [self registerForRotation];
+    
+    self.layer.masksToBounds = NO;
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOffset = CGSizeMake(0, 0);
+    self.layer.shadowOpacity = 0.0f;
+    self.layer.shadowRadius = 1.0f;
     
     if (![ABUtils notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -321,7 +329,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     //    }
     
     self.backgroundColor = [ABUtils colorWithHexString:@"EFEFF4"];
-    self.clipsToBounds = YES;
+//    self.clipsToBounds = YES;
     
 }
 - (id)initWithFrame:(CGRect)aRect
@@ -1154,7 +1162,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     if (minimize) {
                         self.frame = CGRectMake(superviewWidth - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
                         self.videoIndicator.alpha = 0;
-                        self.layer.cornerRadius = 1.5f;
+//                        self.layer.cornerRadius = 1.5f;
                         [self setBorderAlpha:1.0f];
                     }
                     else {
@@ -1283,7 +1291,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             size.height = minViewHeight;
             origin.x = superviewWidth - size.width - 12.0f;
             offset = maxViewOffset;
-            self.layer.cornerRadius = 1.5f;
+//            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
@@ -1309,7 +1317,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             size.height = superviewHeight - (offsetPercentage * (superviewHeight - minViewHeight));
             origin.x = superviewWidth - size.width - (offsetPercentage * 12.0f);
             offset+= difference;
-            self.layer.cornerRadius = 1.5f * offsetPercentage;
+//            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
             
             if (![self isPlayingVideo] || self.isLoadingVideo)  {
@@ -1401,7 +1409,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.25f animations:^{
             mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
             mediaView.alpha = 0;
-            mediaView.layer.cornerRadius = 1.5f;
+//            mediaView.layer.cornerRadius = 1.5f;
             
         } completion:^(BOOL finished) {
             
@@ -1447,6 +1455,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         mediaView.frame = mediaView.originRectConverted;
         [mediaView layoutSubviews];
         [self.mainWindow addSubview:mediaView];
+        [self.mainWindow bringSubviewToFront:mediaView];
         
         [UIView animateWithDuration:0.5f animations:^{
 //            mediaView.videoIndicator.center = mediaView.center;
@@ -1498,7 +1507,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = CGRectMake(superviewWidth, maxViewOffset, minViewWidth, minViewHeight);
             self.alpha = 0;
-            self.layer.cornerRadius = 1.5f;
+//            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:0.0f];
             
         } completion:^(BOOL finished) {
@@ -1519,6 +1528,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 - (void) setBorderAlpha: (CGFloat) alpha {
     self.layer.borderColor = [[ABUtils colorWithHexString:@"95a5a6"] colorWithAlphaComponent:alpha].CGColor;
+    self.layer.shadowOpacity = alpha;
 }
 
 - (void) setTrackFont:(UIFont *)font {
@@ -1575,8 +1585,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 - (void) setMinimizedWidthRatio:(CGFloat)minimizedWidthRatio {
     _minimizedWidthRatio = minimizedWidthRatio;
     
-    NSLog(@"Minimized width ratio %f", _minimizedWidthRatio);
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     superviewWidth = screenRect.size.width;
     superviewHeight = screenRect.size.height;
@@ -1594,9 +1602,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     else if (_minimizedWidthRatio > maxWidthRatio) {
         _minimizedWidthRatio = maxWidthRatio;
     }
-    
-    
-    NSLog(@"Minimized width ratio new %f", _minimizedWidthRatio);
     
     
     [self initializeSizeVariables];
