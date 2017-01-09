@@ -145,6 +145,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self setBorderAlpha:0.0f];
     self.layer.borderWidth = 1.0f;
+    self.autoPlayAfterPresentation = YES;
     
     [self registerForRotation];
     
