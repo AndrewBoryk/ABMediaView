@@ -140,10 +140,14 @@ ABMediaView also comes with an option for toggling the functionality which would
 ```
 
 
-ABMediaView also comes with an option for toggling whether videos should replay after reaching the end.
+ABMediaView also comes with a few playback options for video. One option, 'allowLooping', toggles whether videos should replay after reaching the end. Another option, 'autoPlayAfterPresentation', toggles whether videos whould play automatically after presenting. By default, videos do not autoPlay after presentation.
 
 ```objective-c
+// Toggle looping functionality
 [mediaView setAllowLooping:YES];
+
+// Toggle functionality to automatically play videos after presenting
+[mediaView setAutoPlayAfterPresentation:YES];
 ```
 
 
