@@ -46,7 +46,7 @@ pod "ABMediaView"
 As a singleton class, the manager can be accessed from anywhere within your app via the + sharedManager function:
 
 ```objective-c
-[ABMediaView sharedManager]
+[ABMediaView sharedManager];
 ```
 
 ***
@@ -148,10 +148,24 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 ```
 
 
+ABMediaView has functionality to set the frame from which the fullscreen pop-up will originate. This functionality is useful to combine with 'shouldDisplayFullscreen', as it will allow the pop-up to originate from the frame of the mediaView with 'shouldDisplayFullscreen' enabled.
+
+```objective-c
+/// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
+self.mediaView.originRect = self.mediaView.frame;
+    
+/// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
+self.mediaView.originRectConverted = self.mediaView.frame;
+```
+
+
 One can specify whether or not the ABMediaView is going to be displayed in a reusable view, which will allow for better UI transition performance for ABMediaView's that are not going to be reused.
+
 ```objective-c
 mediaView.imageViewNotReused = YES;
 ```
+
+
 
 ***
 ### Delegate
