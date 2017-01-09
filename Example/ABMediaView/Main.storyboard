@@ -31,21 +31,20 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mWW-nq-RdB" customClass="ABMediaView">
-                                <rect key="frame" x="76" y="135" width="223" height="396"/>
+                                <rect key="frame" x="48" y="254.5" width="279" height="157"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="9:16" id="wys-h3-9gn"/>
+                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="16:9" id="wys-h3-9gn"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
-                            <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="60" id="Bf6-wa-sXD"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="32" id="Bf6-wa-sXD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
-                            <constraint firstItem="mWW-nq-RdB" firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="9:16" id="T0X-Oo-K1t"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="mWW-nq-RdB" secondAttribute="trailing" constant="60" id="ze1-TZ-JB2"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mWW-nq-RdB" secondAttribute="trailing" constant="32" id="ze1-TZ-JB2"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
