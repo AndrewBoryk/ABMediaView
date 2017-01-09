@@ -25,6 +25,8 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
 
+- (instancetype) initWithMediaView: (ABMediaView *) mediaView;
+
 /// Shared Manager, which keeps track of mediaViews
 + (id)sharedManager;
 
@@ -95,6 +97,12 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Timer for animating the videoIndicator, to show that the video is loading
 @property (strong, nonatomic) NSTimer *animateTimer;
 
+/// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
+@property CGRect originRect;
+
+/// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
+@property CGRect originRectConverted;
+
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 
@@ -154,6 +162,7 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 /// Resets variables from mediaView, removing image and video data
 - (void) resetVariables;
+
 @end
 
 @protocol ABMediaViewDelegate <NSObject>

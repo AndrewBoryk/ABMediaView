@@ -6,6 +6,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -28,15 +30,27 @@
                                     <action selector="showMediaViewAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="59c-Zc-LFl"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mWW-nq-RdB" customClass="ABMediaView">
+                                <rect key="frame" x="76" y="135" width="223" height="396"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="9:16" id="wys-h3-9gn"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="60" id="Bf6-wa-sXD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="9:16" id="T0X-Oo-K1t"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mWW-nq-RdB" secondAttribute="trailing" constant="60" id="ze1-TZ-JB2"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="mediaView" destination="mWW-nq-RdB" id="a6o-5Z-yB0"/>
                         <outlet property="showMediaViewButton" destination="qyz-3g-968" id="195-Lz-9Es"/>
                     </connections>
                 </viewController>

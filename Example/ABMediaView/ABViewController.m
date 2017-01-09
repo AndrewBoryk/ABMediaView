@@ -18,6 +18,12 @@
 {
     [super viewDidLoad];
 
+    // Sets functionality for this demonstration, visit the function to see different functionality
+    [self initializeSettingsForMediaView:self.mediaView];
+    
+    // Setting which determines whether mediaView should pop up and display in full screen mode
+    [self.mediaView setShouldDisplayFullscreen: YES];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -28,9 +34,16 @@
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+
+    /// Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
+    [self.mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
+        
+    }];
     
-
-
+    /// Set the url for the video that will be shown in the mediaView
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
+    
+    self.mediaView.originRect = self.mediaView.frame;
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
@@ -57,8 +70,31 @@
 - (IBAction)showMediaViewAction:(id)sender {
     
     ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
+
+    // Sets functionality for this demonstration, visit the function to see different functionality
+    [self initializeSettingsForMediaView:mediaView];
     
-    mediaView.delegate = self;
+    // Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
+    [mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
+        
+    }];
+    
+    // Set the url for the video that will be shown in the mediaView
+    [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
+    
+    if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
+        [[ABMediaView sharedManager] queueMediaView:mediaView];
+        
+        [[ABMediaView sharedManager] showNextMediaView];
+    }
+    else {
+        [[ABMediaView sharedManager] queueMediaView:mediaView];
+    }
+    
+}
+
+- (void) initializeSettingsForMediaView: (ABMediaView *) mediaView {
+//    mediaView.delegate = self;
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -89,23 +125,5 @@
     
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     mediaView.imageViewNotReused = YES;
-    
-    /// Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
-    [mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
-        
-    }];
-    
-    /// Set the url for the video that will be shown in the mediaView
-    [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
-    
-    if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
-        [[ABMediaView sharedManager] queueMediaView:mediaView];
-        
-        [[ABMediaView sharedManager] showNextMediaView];
-    }
-    else {
-        [[ABMediaView sharedManager] queueMediaView:mediaView];
-    }
-    
 }
 @end

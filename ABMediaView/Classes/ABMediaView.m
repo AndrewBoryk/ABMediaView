@@ -32,7 +32,24 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     
     /// Determines if video is minimized
     BOOL isMinimized;
+    
+    /// The width of the view when minimized
+    CGFloat minViewWidth;
+    
+    /// The height of the view when minimized
+    CGFloat minViewHeight;
+    
+    /// The maximum amount of y offset for the mediaView
+    CGFloat maxViewOffset;
+    
+    /// Keeps track of how much the video has been minimized
+    CGFloat offsetPercentage;
+    
+    /// Width of the mainWindow
+    CGFloat superviewWidth;
 
+    /// Height of the mainWindow
+    CGFloat superviewHeight;
 }
 
 + (id)sharedManager {
@@ -73,12 +90,87 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     [self.track updateBuffer];
     [self.track updateBarBackground];
     [self.track updateProgress];
+    
+    if (isnan(superviewHeight) || isnan(superviewWidth) || superviewHeight == 0 || superviewWidth == 0) {
+        UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
+        CGRect windowRect = [mainWindow frame];
+        superviewWidth = windowRect.size.width;
+        superviewHeight = windowRect.size.height;
+        
+        if (superviewWidth > superviewHeight) {
+            superviewWidth = windowRect.size.height;
+            superviewHeight = windowRect.size.width;
+        }
+    }
+    
+    CGRect playFrame = self.videoIndicator.frame;
+    
+    
+    CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / superviewHeight));
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    if (UIDeviceOrientationIsLandscape(orientation)) {
+        playSize = 30.0f + (30.0f * (self.frame.size.width / superviewHeight));
+    }
+    
+    
+    playFrame.size = CGSizeMake(playSize, playSize);
+    
+    
+    self.videoIndicator.frame = playFrame;
+    self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
+    
 }
 
+- (instancetype) initWithMediaView: (ABMediaView *) mediaView {
+    self = [self initWithFrame:[UIApplication sharedApplication].keyWindow.frame];
+    
+    if (self) {
+        
+        self.contentMode = mediaView.contentMode;
+        self.backgroundColor = mediaView.backgroundColor;
+        
+        self.imageViewNotReused = mediaView.imageViewNotReused;
+        [self changeVideoToAspectFit:mediaView.videoAspectFit];
+        
+        self.imageCache = mediaView.imageCache;
+        [self setImageURL:mediaView.imageURL withCompletion:nil];
+        [self setVideoURL:mediaView.videoURL];
+        self.videoCache = mediaView.videoCache;
+        
+        self.themeColor = mediaView.themeColor;
+        
+        self.showTrack = mediaView.showTrack;
+        self.allowLooping = mediaView.allowLooping;
+        [self setCanMinimize: mediaView.isMinimizable];
+        self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
+        self.isFullScreen = mediaView.isFullScreen;
+        self.originRect = mediaView.originRect;
+        self.originRectConverted = mediaView.originRectConverted;
+        
+        
+    }
+    
+    return self;
+}
 
 
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
+    
+    UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
+    CGRect windowRect = [mainWindow frame];
+    superviewWidth = windowRect.size.width;
+    superviewHeight = windowRect.size.height;
+    
+    if (superviewWidth > superviewHeight) {
+        superviewWidth = windowRect.size.height;
+        superviewHeight = windowRect.size.width;
+    }
+    
+    minViewWidth = superviewWidth * 0.5f;
+    minViewHeight = minViewWidth * (9.0f/16.0f);
+    maxViewOffset = (superviewHeight - (minViewHeight + 12.0f));
     
     [self setBorderAlpha:0.0f];
     self.layer.borderWidth = 1.0f;
@@ -98,6 +190,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         self.videoIndicator = [[UIImageView alloc] initWithImage: [self imageForPlayButton]];
         self.videoIndicator.contentMode = UIViewContentModeScaleAspectFit;
         self.videoIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+        self.videoIndicator.center = self.center;
         [self.videoIndicator sizeToFit];
         
     }
@@ -132,23 +225,23 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         
         [self bringSubviewToFront:self.videoIndicator];
         
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeCenterX
-                                      relatedBy:0
-                                         toItem:self.videoIndicator
-                                      attribute:NSLayoutAttributeCenterX
-                                     multiplier:1
-                                       constant:0]];
-        
-        [self addConstraint:
-         [NSLayoutConstraint constraintWithItem:self
-                                      attribute:NSLayoutAttributeCenterY
-                                      relatedBy:0
-                                         toItem:self.videoIndicator
-                                      attribute:NSLayoutAttributeCenterY
-                                     multiplier:1
-                                       constant:0]];
+//        [self addConstraint:
+//         [NSLayoutConstraint constraintWithItem:self
+//                                      attribute:NSLayoutAttributeCenterX
+//                                      relatedBy:0
+//                                         toItem:self.videoIndicator
+//                                      attribute:NSLayoutAttributeCenterX
+//                                     multiplier:1
+//                                       constant:0]];
+//        
+//        [self addConstraint:
+//         [NSLayoutConstraint constraintWithItem:self
+//                                      attribute:NSLayoutAttributeCenterY
+//                                      relatedBy:0
+//                                         toItem:self.videoIndicator
+//                                      attribute:NSLayoutAttributeCenterY
+//                                     multiplier:1
+//                                       constant:0]];
         
     }
     
@@ -374,7 +467,6 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         
         [self registerForRotation];
         
-        _imageURL = nil;
         _imageCache = image;
     }
     
@@ -415,15 +507,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             [self loadVideoAnimate];
             self.isLoadingVideo = true;
             
-            if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                [self.delegate mediaViewDidPlayVideo:self];
-            }
-            
         }
         
         if ([ABUtils notNull:self.videoURL]) {
             [self removeObservers];
-            
             
             AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
             
@@ -460,6 +547,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 
                 if (play) {
                     [self.player play];
+                    
+                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                        [self.delegate mediaViewDidPlayVideo:self];
+                    }
                 }
                 
                 
@@ -560,13 +651,15 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
     else {
         if (self.shouldDisplayFullscreen && !self.isFullScreen) {
+            
+            
             if ([[[ABMediaView sharedManager] mediaViewQueue] count]) {
-                [[ABMediaView sharedManager] queueMediaView:self];
+                [[ABMediaView sharedManager] queueMediaView:[[ABMediaView alloc] initWithMediaView:self]];
                 
                 [[ABMediaView sharedManager] showNextMediaView];
             }
             else {
-                [[ABMediaView sharedManager] queueMediaView:self];
+                [[ABMediaView sharedManager] queueMediaView:[[ABMediaView alloc] initWithMediaView:self]];
             }
         }
         else {
@@ -923,6 +1016,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
                 height = tempFloat;
             }
             
+            superviewWidth = width;
+            superviewHeight = height;
             swipeRecognizer.enabled = self.isMinimizable;
         }
         else {
@@ -985,7 +1080,6 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) handleSwipe: (UIPanGestureRecognizer *) gesture {
     if (self.isFullScreen) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
-//            NSLog(@"Touches Began");
             [self stopVideoAnimate];
             
             self.track.userInteractionEnabled = NO;
@@ -1003,15 +1097,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             offset = self.frame.origin.y;
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
-            //        NSLog(@"Touches Moved");
-            
-            CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
-            CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-            CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
             
             if (isMinimized && offset == maxViewOffset) {
                 CGPoint vel = [gesture velocityInView:self];
-                if (self.frame.origin.x > (self.superview.frame.size.width - (minViewWidth + 12.0f))) {
+                if (self.frame.origin.x > (superviewWidth - (minViewWidth + 12.0f))) {
                     [self handleDismissingForRecognizer: gesture];
                 }
                 else {
@@ -1042,16 +1131,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         else if (gesture.state == UIGestureRecognizerStateEnded ||
                  gesture.state == UIGestureRecognizerStateFailed ||
                  gesture.state == UIGestureRecognizerStateCancelled) {
-//            NSLog(@"Touches Ended");
             
             self.userInteractionEnabled = NO;
             
             BOOL minimize = false;
-            CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
-            CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-            CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
-            
-            CGFloat offsetPercentage = offset / maxViewOffset;
             
             if (offsetPercentage >= 0.40f) {
                 minimize = true;
@@ -1069,7 +1152,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
             else {
                 [UIView animateWithDuration:0.25f animations:^{
                     if (minimize) {
-                        self.frame = CGRectMake(self.superview.frame.size.width - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
+                        self.frame = CGRectMake(superviewWidth - minViewWidth - 12.0f, maxViewOffset, minViewWidth, minViewHeight);
                         self.videoIndicator.alpha = 0;
                         self.layer.cornerRadius = 1.5f;
                         [self setBorderAlpha:1.0f];
@@ -1125,13 +1208,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         CGRect frame = self.frame;
         CGPoint origin = self.frame.origin;
         
-        //        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
-        //        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-        
-        CGFloat superviewWidth = self.superview.frame.size.width;
-        CGFloat minViewWidth = superviewWidth * 0.5f;
-        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-        CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+        //        [self logFrame:self.superview.frame withTag:@"Superview"];
+        //        [self logFrame:frame withTag:@"Subview"];
         
         CGFloat difference = [gesture locationInView:self].x - xSwipePosition;
         
@@ -1179,23 +1257,19 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         CGPoint origin = self.frame.origin;
         CGSize size = self.frame.size;
         
-        //        NSLog(@"Superview x: %f  y: %f  width: %f  height: %f", self.superview.frame.origin.x, self.superview.frame.origin.y, self.superview.frame.size.width, self.superview.frame.size.height);
-        //        NSLog(@"Subview x: %f  y: %f  width: %f  height: %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-        //
-        CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
-        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-        CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+//        [self logFrame:self.superview.frame withTag:@"Superview"];
+//        [self logFrame:frame withTag:@"Subview"];
         
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         CGFloat tempOffset = offset + difference;
-        CGFloat offsetPercentage = tempOffset / maxViewOffset;
+        offsetPercentage = tempOffset / maxViewOffset;
         CGFloat testOrigin = offsetPercentage * maxViewOffset;
         
         if (testOrigin >= maxViewOffset) {
             origin.y = maxViewOffset;
             size.width = minViewWidth;
             size.height = minViewHeight;
-            origin.x = self.superview.frame.size.width - size.width - 12.0f;
+            origin.x = superviewWidth - size.width - 12.0f;
             offset = maxViewOffset;
             self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
@@ -1206,8 +1280,8 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
-            size.width = self.superview.frame.size.width;
-            size.height = self.superview.frame.size.height;
+            size.width = superviewWidth;
+            size.height = superviewHeight;
             origin.x = 0;
             offset = 0.0f;
             self.layer.cornerRadius = 0;
@@ -1219,9 +1293,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         }
         else {
             origin.y = testOrigin;
-            size.width = self.superview.frame.size.width - (offsetPercentage * (self.superview.frame.size.width - minViewWidth));
-            size.height = self.superview.frame.size.height - (offsetPercentage * (self.superview.frame.size.height - minViewHeight));
-            origin.x = self.superview.frame.size.width - size.width - (offsetPercentage * 12.0f);
+            size.width = superviewWidth - (offsetPercentage * (superviewWidth - minViewWidth));
+            size.height = superviewHeight - (offsetPercentage * (superviewHeight - minViewHeight));
+            origin.x = superviewWidth - size.width - (offsetPercentage * 12.0f);
             offset+= difference;
             self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
@@ -1345,21 +1419,55 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     self.mainWindow = [[UIApplication sharedApplication] keyWindow];
     [self.mainWindow makeKeyAndVisible];
     
-    mediaView.alpha = 0;
     mediaView.isFullScreen = YES;
+    mediaView.backgroundColor = [UIColor blackColor];
     
-    [self.mainWindow addSubview:mediaView];
+    [self logFrame:mediaView.originRect withTag:@"Origin"];
     
-    [UIView animateWithDuration:0.25f animations:^{
-        mediaView.alpha = 1;
-    } completion:^(BOOL finished) {
-        if ([ABUtils notNull:mediaView.videoURL]) {
-            [mediaView playVideoFromRecognizer];
+    if (!CGRectIsEmpty(mediaView.originRect)) {
+        if (CGRectIsEmpty(mediaView.originRectConverted)) {
+            mediaView.originRectConverted = [self convertRect:mediaView.originRect toView:self.mainWindow];
         }
-//        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
-//            [mediaView.delegate mediaViewDidShow:self];
-//        }
-    }];
+    }
+    
+    if (!CGRectIsEmpty(mediaView.originRectConverted)) {
+        mediaView.alpha = 1;
+        mediaView.frame = mediaView.originRectConverted;
+        [mediaView layoutSubviews];
+        [self.mainWindow addSubview:mediaView];
+        
+        [UIView animateWithDuration:0.5f animations:^{
+//            mediaView.videoIndicator.center = mediaView.center;
+            mediaView.frame = mediaView.superview.frame;
+            [mediaView layoutSubviews];
+        } completion:^(BOOL finished) {
+            if ([ABUtils notNull:mediaView.videoURL]) {
+                [mediaView playVideoFromRecognizer];
+            }
+            //        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
+            //            [mediaView.delegate mediaViewDidShow:self];
+            //        }
+        }];
+    }
+    else {
+        mediaView.alpha = 0;
+        mediaView.frame = self.mainWindow.frame;
+        [self.mainWindow addSubview:mediaView];
+        [self.mainWindow bringSubviewToFront:mediaView];
+        
+        [UIView animateWithDuration:0.25f animations:^{
+            mediaView.alpha = 1;
+        } completion:^(BOOL finished) {
+            if ([ABUtils notNull:mediaView.videoURL]) {
+                [mediaView playVideoFromRecognizer];
+            }
+            //        if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidShow:)]) {
+            //            [mediaView.delegate mediaViewDidShow:self];
+            //        }
+        }];
+    }
+    
+    
 }
 
 - (void) removeFromQueue:(ABMediaView *) mediaView {
@@ -1371,13 +1479,10 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) dismissMediaView {
     if (self.isFullScreen) {
         self.userInteractionEnabled = NO;
-        
-        CGFloat minViewWidth = self.superview.frame.size.width * 0.5f;
-        CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-        CGFloat maxViewOffset = (self.superview.frame.size.height - (minViewHeight + 12.0f));
+
         
         [UIView animateWithDuration:0.25f animations:^{
-            self.frame = CGRectMake(self.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
+            self.frame = CGRectMake(superviewWidth, maxViewOffset, minViewWidth, minViewHeight);
             self.alpha = 0;
             self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:0.0f];
@@ -1407,4 +1512,9 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         [self.track setTrackFont:font];
     }
 }
+
+- (void) logFrame: (CGRect) frame withTag: (NSString *) tag {
+    NSLog(@"%@ - x: %f  y: %f  width: %f  height: %f", tag, frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+}
+
 @end
