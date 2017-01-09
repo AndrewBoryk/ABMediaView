@@ -44,6 +44,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
     
     /// Determines whether the content's original size is full screen. If you are looking to make it so that when a mediaView is selected from another view, that it opens up in full screen, then set the property 'shouldDisplayFullScreen'
     BOOL isFullscreen;
+    
+    /// Determines if the video is already loading
+    BOOL isLoadingVideo;
 }
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
@@ -84,7 +87,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property BOOL showTrack;
 
 /// Determines if the video is already loading
-@property BOOL isLoadingVideo;
+@property (readonly) BOOL isLoadingVideo;
 
 /// Determines if the video should be looped when it reaches completion
 @property BOOL allowLooping;
@@ -156,7 +159,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 @property (nonatomic, readonly) CGFloat xSwipePosition;
 
 /// Determines if video is minimized
-@property (readonly)BOOL isMinimized;
+@property (readonly) BOOL isMinimized;
 
 /// The width of the view when minimized
 @property (nonatomic, readonly) CGFloat minViewWidth;
@@ -175,6 +178,12 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Height of the mainWindow
 @property (nonatomic, readonly) CGFloat superviewHeight;
+
+/// Determines whether the view has a video
+@property (readonly) BOOL hasVideo;
+
+/// Determines whether the view is already playing video
+@property (readonly) BOOL isPlayingVideo;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
@@ -202,12 +211,6 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Selector to play the video from the playRecognizer
 - (void) playVideoFromRecognizer;
-
-/// Returns whether the view has a video
-- (BOOL) hasVideo;
-
-/// Returns whether the view is already playing video
-- (BOOL) isPlayingVideo;
 
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
 - (void) setShowRemainingTime: (BOOL) showRemainingTime;

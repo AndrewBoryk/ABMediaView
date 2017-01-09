@@ -32,6 +32,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 @synthesize ySwipePosition = ySwipePosition;
 @synthesize xSwipePosition = xSwipePosition;
 @synthesize isFullScreen = isFullscreen;
+@synthesize isLoadingVideo = isLoadingVideo;
 
 + (id)sharedManager {
     static ABMediaView *sharedMyManager = nil;
@@ -382,7 +383,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self.playerLayer removeFromSuperlayer];
     self.playerLayer = nil;
-    self.isLoadingVideo = false;
+    isLoadingVideo = false;
     
     if (!self.imageViewNotReused) {
         self.image = nil;
@@ -498,7 +499,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         if (play) {
             [self loadVideoAnimate];
-            self.isLoadingVideo = true;
+            isLoadingVideo = true;
             
         }
         
@@ -584,7 +585,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                         CGFloat progress = CMTimeGetSeconds(time);
                         
                         if (progress != 0 && [self.animateTimer isValid]) {
-                            weakSelf.isLoadingVideo = false;
+                            isLoadingVideo = false;
                             [weakSelf stopVideoAnimate];
                             [weakSelf hideVideoAnimated: NO];
                         }
@@ -661,7 +662,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             if ([ABUtils notNull:self.player]) {
                 if ((self.player.rate != 0) && (self.player.error == nil)) {
                     [self stopVideoAnimate];
-                    self.isLoadingVideo = false;
+                    isLoadingVideo = false;
                     [UIView animateWithDuration:0.15f animations:^{
                         self.videoIndicator.alpha = 1.0f;
                     }];
@@ -850,21 +851,21 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
             if ([ABUtils notNull:self.player]) {
                 if ((self.player.rate != 0) && (self.player.error == nil)) {
-                    self.isLoadingVideo = true;
+                    isLoadingVideo = true;
                 }
                 else {
-                    self.isLoadingVideo = false;
+                    isLoadingVideo = false;
                 }
             }
             else {
-                self.isLoadingVideo = false;
+                isLoadingVideo = false;
             }
         }
         else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-            self.isLoadingVideo = false;
+            isLoadingVideo = false;
         }
         else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
-            self.isLoadingVideo = false;
+            isLoadingVideo = false;
         }
     }
 }
