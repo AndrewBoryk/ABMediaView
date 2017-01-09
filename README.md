@@ -56,12 +56,6 @@ There are several functions that can be used to queue, show, and dismiss ABMedia
 [[ABMediaView sharedManager] queueMediaView:mediaView];
 ```
 
-If one is looking to present an ABMediaView and jump the queue, then this can be done by utilizing the 'presentMediaView' function. Calling this function will dismiss whatever ABMediaView is being currently presented, and will move the provided ABMediaView to the front of the queue.
-
-```objective-c
-- (void) presentMediaView:(ABMediaView *) mediaView;
-```
-
 
 Secondly, if the queue has multiple ABMediaViews in it, then the next view can be displayed by calling the 'showNextMediaView' function on the sharedManager. This function will dismiss the current ABMediaView, and present the next view in the queue.
 
@@ -69,6 +63,19 @@ Secondly, if the queue has multiple ABMediaViews in it, then the next view can b
 [[ABMediaView sharedManager] showNextMediaView];
 ```
 
+
+If one is looking to present an ABMediaView and jump the queue, then this can be done by utilizing the 'presentMediaView' function. Calling this function will dismiss whatever ABMediaView is being currently presented, and will move the provided ABMediaView to the front of the queue.
+
+```objective-c
+- (void) presentMediaView:(ABMediaView *) mediaView;
+```
+
+
+If there is an ABMediaView in the queue that should be removed, then it can be removed by calling the 'removeFromQueue' function on the sharedManager. This will remove the ABMediaView from the queue, and if the removed ABMediaView is the currently presented view, it will be dismissed and the next ABMediaView in the queue will be presented.
+
+```objective-c
+[[ABMediaView sharedManager] removeFromQueue:mediaView];
+```
 
 ***
 ### Initialization
