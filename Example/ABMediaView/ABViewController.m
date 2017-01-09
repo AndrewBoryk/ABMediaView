@@ -43,7 +43,9 @@
     /// Set the url for the video that will be shown in the mediaView
     [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
     
+    /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
     self.mediaView.originRect = self.mediaView.frame;
+    
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {

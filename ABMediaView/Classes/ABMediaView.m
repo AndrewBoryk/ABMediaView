@@ -1253,6 +1253,18 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
         CGFloat tempOffset = offset + difference;
         offsetPercentage = tempOffset / maxViewOffset;
+        
+        if (offsetPercentage > 1) {
+            offsetPercentage = 1;
+        }
+        else if (offsetPercentage < 0) {
+            offsetPercentage = 0;
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(mediaView:didChangeOffset:)]) {
+            [self.delegate mediaView:self didChangeOffset:offsetPercentage];
+        }
+        
         CGFloat testOrigin = offsetPercentage * maxViewOffset;
         
         if (testOrigin >= maxViewOffset) {

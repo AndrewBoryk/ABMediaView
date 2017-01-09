@@ -174,6 +174,9 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 
 @optional
 
+/// A listener to know what percentage that the view has minimized, at a value from 0 to 1
+- (void) mediaView: (ABMediaView *) mediaView didChangeOffset: (float) offsetPercentage;
+
 /// When the mediaView begins playing a video
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
 
