@@ -266,7 +266,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Called when the mediaView has begun the presentation process
 - (void) mediaViewWillPresent: (ABMediaView *) mediaView;
 
-/// Called when the mediaView presented
+/// Called when the mediaView has been presented
 - (void) mediaViewDidPresent: (ABMediaView *) mediaView;
 
 /// Called when the mediaView has begun the dismissal process
