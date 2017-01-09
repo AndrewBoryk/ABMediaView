@@ -619,7 +619,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = self.superview.frame;
             
-            if (![self isPlayingVideo] || self.isLoadingVideo) {
+            if (!self.isPlayingVideo || self.isLoadingVideo) {
                 self.videoIndicator.alpha = 1.0f;
             }
             
@@ -1036,7 +1036,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.userInteractionEnabled = YES;
         self.track.userInteractionEnabled = YES;
         
-        if (![self isPlayingVideo] || self.isLoadingVideo) {
+        if (!self.isPlayingVideo || self.isLoadingVideo) {
             self.videoIndicator.alpha = 1.0f;
         }
         
@@ -1160,7 +1160,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     else {
                         self.frame = self.superview.frame;
                         
-                        if (![self isPlayingVideo] || self.isLoadingVideo) {
+                        if (!self.isPlayingVideo || self.isLoadingVideo) {
                             self.videoIndicator.alpha = 1.0f;
                         }
                         
@@ -1290,7 +1290,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            if (!self.isPlayingVideo || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 0;
             }
             
@@ -1305,7 +1305,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.layer.cornerRadius = 0;
             [self setBorderAlpha:0.0f];
             
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            if (!self.isPlayingVideo || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = 1;
             }
             
@@ -1320,7 +1320,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
             
-            if (![self isPlayingVideo] || self.isLoadingVideo)  {
+            if (!self.isPlayingVideo || self.isLoadingVideo)  {
                 self.videoIndicator.alpha = (1-offsetPercentage);
             }
             
