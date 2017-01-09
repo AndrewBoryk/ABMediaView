@@ -51,7 +51,6 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Video location on disk that was cached after loading
 @property (strong, nonatomic) NSString *videoCache;
 
-
 /// Theme color which will show on the play button and progress track for videos
 @property (strong, nonatomic) UIColor *themeColor;
 
@@ -103,6 +102,8 @@ extern const NSNotificationName ABMediaViewDidRotateNotification;
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
 @property CGRect originRectConverted;
 
+/// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
+@property CGFloat bottomBuffer;
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 

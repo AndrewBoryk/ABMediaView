@@ -158,19 +158,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
 - (void) commonInit {
     self.themeColor = [UIColor cyanColor];
     
-    UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
-    CGRect windowRect = [mainWindow frame];
-    superviewWidth = windowRect.size.width;
-    superviewHeight = windowRect.size.height;
-    
-    if (superviewWidth > superviewHeight) {
-        superviewWidth = windowRect.size.height;
-        superviewHeight = windowRect.size.width;
-    }
-    
-    minViewWidth = superviewWidth * 0.5f;
-    minViewHeight = minViewWidth * (9.0f/16.0f);
-    maxViewOffset = (superviewHeight - (minViewHeight + 12.0f));
+    [self initializeSizeVariables];
     
     [self setBorderAlpha:0.0f];
     self.layer.borderWidth = 1.0f;
@@ -1382,7 +1370,7 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
         
         CGFloat minViewWidth = mediaView.superview.frame.size.width * 0.5f;
         CGFloat minViewHeight = minViewWidth * (9.0f/16.0f);
-        CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f));
+        CGFloat maxViewOffset = (mediaView.superview.frame.size.height - (minViewHeight + 12.0f + self.bottomBuffer));
         
         [UIView animateWithDuration:0.25f animations:^{
             mediaView.frame = CGRectMake(mediaView.superview.frame.size.width, maxViewOffset, minViewWidth, minViewHeight);
@@ -1513,8 +1501,36 @@ const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRota
     }
 }
 
+- (void) setBottomBuffer:(CGFloat)bottomBuffer {
+    _bottomBuffer = bottomBuffer;
+    
+    if (_bottomBuffer < 0) {
+        self.bottomBuffer = 0;
+    }
+    else if (_bottomBuffer > 120) {
+        self.bottomBuffer = 120;
+    }
+    
+    [self initializeSizeVariables];
+    
+}
 - (void) logFrame: (CGRect) frame withTag: (NSString *) tag {
     NSLog(@"%@ - x: %f  y: %f  width: %f  height: %f", tag, frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 }
 
+- (void) initializeSizeVariables {
+    UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
+    CGRect windowRect = [mainWindow frame];
+    superviewWidth = windowRect.size.width;
+    superviewHeight = windowRect.size.height;
+    
+    if (superviewWidth > superviewHeight) {
+        superviewWidth = windowRect.size.height;
+        superviewHeight = windowRect.size.width;
+    }
+    
+    minViewWidth = superviewWidth * 0.5f;
+    minViewHeight = minViewWidth * (9.0f/16.0f);
+    maxViewOffset = (superviewHeight - (minViewHeight + 12.0f + self.bottomBuffer));
+}
 @end
