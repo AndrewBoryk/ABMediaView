@@ -169,9 +169,12 @@ mediaView.imageViewNotReused = YES;
 
 ***
 ### Delegate
-There is a delegate with optional methods to determine when the ABMediaView has played or paused the video in its AVPlayer.
+There is a delegate with optional methods to determine when the ABMediaView has played or paused the video in its AVPlayer, as well as how much the view has minimized.
 
 ```objective-c
+/// A listener to know what percentage that the view has minimized, at a value from 0 to 1
+- (void) mediaView: (ABMediaView *) mediaView didChangeOffset: (float) offsetPercentage;
+
 /// When the mediaView begins playing a video
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
 
