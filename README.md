@@ -50,6 +50,26 @@ As a singleton class, the manager can be accessed from anywhere within your app 
 [ABMediaView sharedManager];
 ```
 
+There are several functions that can be used to queue, show, and dismiss ABMediaViews. These functions are handled by the sharedManager, the first of which is 'queueMediaView'. This function is used to add a new ABMediaView to the queue. If there are no ABMediaViews in the queue at the time that the view is added, then the newly-queued view will be presented.
+
+```objective-c
+[[ABMediaView sharedManager] queueMediaView:mediaView];
+```
+
+If one is looking to present an ABMediaView and jump the queue, then this can be done by utilizing the 'presentMediaView' function. Calling this function will dismiss whatever ABMediaView is being currently presented, and will move the provided ABMediaView to the front of the queue.
+
+```objective-c
+- (void) presentMediaView:(ABMediaView *) mediaView;
+```
+
+
+Secondly, if the queue has multiple ABMediaViews in it, then the next view can be displayed by calling the 'showNextMediaView' function on the sharedManager. This function will dismiss the current ABMediaView, and present the next view in the queue.
+
+```objective-c
+[[ABMediaView sharedManager] showNextMediaView];
+```
+
+
 ***
 ### Initialization
 An ABMediaView can be initilized programmatically, or by subclassing a UIImageView in the interface builder.
