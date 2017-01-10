@@ -44,39 +44,30 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    [self.mediaView setGifURL:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"];
-//    self.mediaView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
-    /// Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
-//    [self.mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
-//        
-//    }];
+    // Gifs can be displayed in ABMediaView, where the gif can be downloaded from the internet
+    // [self.mediaView setGifURL:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"];
     
-    /// Set the url for the video that will be shown in the mediaView
-//    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
+    // Gifs can also be displays via NSData
+    // NSData *gifData = ...;
+    // [self.mediaView setGifData:gifData];
     
-    /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
+    // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    
+    // You can also set the video URL, download the video, and set a thumnail image that doesn't need to be downloaded
+    // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailImage:thumnailImage];
+    
+    // BONUS FUNCTIONALITY: If you want, you can also set a Gif as the thumnail, either by URL or NSData.
+    // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifURL:@"www.gif.com/urlHere"];
+    // NSData *gifData = ...;
+    // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifData:gifData];
+    
+    // Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
     self.mediaView.originRect = self.mediaView.frame;
     
     
-    /// This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
+    // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
     self.mediaView.autoPlayAfterPresentation = YES;
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    // Executes before and after rotation, that way any ABMediaViews can adjust their frames for the new size. Is especially helpful when users are watching landscape videos and rotate their devices between portrait and landscape.
-    
-    [coordinator animateAlongsideTransition:^(id  _Nonnull context) {
-        
-        // Notifies the ABMediaView that the device is about to rotate
-        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewWillRotateNotification object:nil];
-        
-    } completion:^(id  _Nonnull context) {
-        
-        // Notifies the ABMediaView that the device just finished rotating
-        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewDidRotateNotification object:nil];
-    }];
 }
 
 - (IBAction)showMediaViewAction:(id)sender {
@@ -89,19 +80,15 @@
     // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
     [mediaView hideCloseButton:YES];
     
-    // Set the url for the image that will be shown in the mediaView, it will download it and set it to the view
-    [mediaView setImageURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" withCompletion:^(UIImage *image, NSError *error) {
-        
-    }];
+    // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
-    // Set the url for the video that will be shown in the mediaView
-    [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"];
-    
+    // Present the mediaView, dismiss any other mediaView that is showing
     [[ABMediaView sharedManager] presentMediaView:mediaView];
 }
 
 - (void) initializeSettingsForMediaView: (ABMediaView *) mediaView {
-//    mediaView.delegate = self;
+    mediaView.delegate = self;
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -133,6 +120,27 @@
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     mediaView.imageViewNotReused = YES;
 }
+
+#pragma mark - TransitionCoordinator
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    // Executes before and after rotation, that way any ABMediaViews can adjust their frames for the new size. Is especially helpful when users are watching landscape videos and rotate their devices between portrait and landscape.
+    
+    [coordinator animateAlongsideTransition:^(id  _Nonnull context) {
+        
+        // Notifies the ABMediaView that the device is about to rotate
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewWillRotateNotification object:nil];
+        
+    } completion:^(id  _Nonnull context) {
+        
+        // Notifies the ABMediaView that the device just finished rotating
+        [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewDidRotateNotification object:nil];
+    }];
+}
+
+#pragma mark - ABMediaView Delegate
 
 - (void) mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage {
     NSLog(@"MediaView offset changed: %f", offsetPercentage);

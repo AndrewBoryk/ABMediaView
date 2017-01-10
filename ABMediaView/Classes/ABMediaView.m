@@ -480,6 +480,26 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     //    }
 }
 
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
+    [self setImageURL:thumbnailURL];
+    [self setVideoURL:videoURL];
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailGifURL:(NSString *)thumbnailGifURL {
+    [self setGifURL:thumbnailGifURL];
+    [self setVideoURL:videoURL];
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailGifData:(NSData *)thumbnailGifData {
+    [self setGifData:thumbnailGifData];
+    [self setVideoURL:videoURL];
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail {
+    self.image = thumbnail;
+    [self setVideoURL:videoURL];
+}
+
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion {
     
     if ([ABUtils notNull:_videoURL]) {

@@ -207,8 +207,20 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Download the image, display the image, and give completion block
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion;
 
-/// Set the url for the image
+/// Set the url where the video can be downloaded from
 - (void) setVideoURL:(NSString *)videoURL;
+
+/// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL;
+
+/// Set the url where the video can be downloaded from, as well as the url where the thumbnail gif can be found
+- (void) setVideoURL:(NSString *)videoURL withThumbnailGifURL:(NSString *) thumbnailGifURL;
+
+/// Set the url where the video can be downloaded from, as well as the data for the thumbnail gif
+- (void) setVideoURL:(NSString *)videoURL withThumbnailGifData:(NSData *) thumbnailGifData;
+
+/// Set the url where the video can be downloaded from, as well as the thumbnail image can be found
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail;
 
 /// Loads the video, saves to disk, and decides whether to play the video
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion;
