@@ -70,6 +70,7 @@
     
     // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
     self.mediaView.autoPlayAfterPresentation = YES;
+    
 }
 
 - (IBAction)showMediaViewAction:(id)sender {
