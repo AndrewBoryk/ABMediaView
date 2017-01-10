@@ -73,12 +73,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     CGRect playFrame = self.videoIndicator.frame;
     CGRect closeFrame = self.closeButton.frame;
     
-    CGFloat playSize = 30.0f + (30.0f * (self.frame.size.height / self.superviewHeight));
+    CGFloat playSize = 30.0f + (30.0f * (self.frame.size.width / self.superviewWidth));
     
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
-        playSize = 30.0f + (30.0f * (self.frame.size.width / self.superviewHeight));
+        playSize = 30.0f + (30.0f * (self.frame.size.height / self.superviewWidth));
     }
     
     playFrame.size = CGSizeMake(playSize, playSize);
