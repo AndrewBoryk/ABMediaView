@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/AndrewBoryk/ABMediaView/blob/master/ABMediaViewLogo.png?raw=true" alt="ABMediaView custom logo"/>
 </p>
-[![CI Status](http://img.shields.io/travis/Andrew Boryk/ABMediaView.svg?style=flat)](https://travis-ci.org/Andrew Boryk/ABMediaView)
+[![CI Status](https://travis-ci.org/AndrewBoryk/ABMediaView.svg?branch=master)](https://travis-ci.org/AndrewBoryk/ABMediaView)
 [![Version](https://img.shields.io/cocoapods/v/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 [![License](https://img.shields.io/cocoapods/l/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 [![Platform](https://img.shields.io/cocoapods/p/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
@@ -12,7 +12,7 @@
 
 ## Description
 
-ABMediaView can display both images and videos. It subclasses UIImageView, and has functionality to lazy-load images from the web. In addition, it can also display videos, downloaded via URL from disk or web. Videos contain a player with a timeline and scrubbing. A major added functionality is that this mediaView has a queue and can present mediaViews in fullscreen mode. There is functionality which allows the view to be minimized by swiping, where it sits in the bottom right corner as a thumbnail. Videos can continue playing and be heard from this position. The user can choose to swipe the view away to dismiss. There various different functionality that can be toggled on and off to customize the view to one's choosing.
+ABMediaView can display images, videos, and now GIFs! It subclasses UIImageView, and has functionality to lazy-load images from the web. In addition, it can also display videos, downloaded via URL from disk or web. Videos contain a player with a timeline and scrubbing. GIFs can also be displayed in an ABMediaView, via lazy-loading from the web, or set via NSData. The GIF that is downloaded is saved as UIImage object for easy storage. A major added functionality is that this mediaView has a queue and can present mediaViews in fullscreen mode. There is functionality which allows the view to be minimized by swiping, where it sits in the bottom right corner as a thumbnail. Videos can continue playing and be heard from this position. The user can choose to swipe the view away to dismiss. There are various different functionality that can be toggled on and off to customize the view to one's choosing.
 
 ![alt tag](ABMediaViewScrubScreenshot.gif)
 
@@ -72,7 +72,9 @@ Secondly, if one is looking to present an ABMediaView and jump the queue, then t
 On the other hand, if one is looking to dismiss the currently displayed ABMediaView, then the function 'dismissMediaViewAnimated:withCompletion:' can be called. If the view is minimized, this will make it move and disappear offscreen. If not, the view will just disappear. It comes with a completion block so that actions can be taken after the disappearance.
 
 ```objective-c
-- (void) dismissMediaViewAnimated:(BOOL) animated withCompletion:(void (^)(BOOL completed))completion;
+[mediaView dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
+    // Executes after mediaView finishes dismissing itself
+}];
 ```
 
 
@@ -101,11 +103,39 @@ ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
 ABMediaView comes with Lazy-loading functionality, where all that is needed to be provided is the image or video source URL. There is also a completion block where the downloaded image is returned for caching.
 
 ```objective-c
+// Set the video to be displayed in the mediaView, which will be downloaded and available for caching
 [mediaView setImageURL:@"http://yoursite.com/yourimage.jpg" withCompletion:^(UIImage *image, NSError *error) {
-        
+    // Execute code upon completion
 }];
-    
+
+// Set the image to be displayed in the mediaView, which will be downloaded and available for caching
 [mediaView setVideoURL:@"http://yoursite/yourvideo.mp4"];
+
+// Set both the video url, and the thumbnail image for the mediaView, downloading both and making both available for caching
+[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailURL:@"http://yoursite.com/yourimage.jpg"];
+```
+
+
+GIF support has also been made available for ABMediaView. To set a GIF to an ABMediaView, simply set it via URL or NSData, where is will be downloaded and set to the view. GIFs are made available as UIImages for easy storage. 
+
+```objective-c
+// GIFs can be displayed in ABMediaView, where the GIF can be downloaded from the internet
+[mediaView setGifURL:@"http://yoursite/yourgif.gif"];
+
+// GIFs can also be displayed via NSData
+NSData *gifData = ...;
+[mediaView setGifData:gifData];
+```
+
+
+*BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for a video
+
+```objective-c
+// Set video for mediaView by URL, and set GIF as thumbnail by URL
+[mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifURL:@"http://yoursite/yourgif.gif"];
+
+// Set video for mediaView by URL, and set GIF as thumbnail using NSData
+[self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifData:gifData];
 ```
 
 
@@ -199,14 +229,21 @@ There is functionality to toggle hiding the close button, that way it does not s
 ```
 
 
-ABMediaView has functionality to set the frame from which the fullscreen pop-up will originate. This functionality is useful to combine with 'shouldDisplayFullscreen', as it will allow the pop-up to originate from the frame of the mediaView with 'shouldDisplayFullscreen' enabled.
+ABMediaView has functionality to set the frame from which the fullscreen pop-up will originate. This functionality is useful to combine with 'shouldDisplayFullscreen', as it will allow the pop-up to originate from the frame of the mediaView with 'shouldDisplayFullscreen' enabled. 
 
 ```objective-c
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
-self.mediaView.originRect = self.mediaView.frame;
+mediaView.originRect = self.mediaView.frame;
     
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
-self.mediaView.originRectConverted = self.mediaView.frame;
+mediaView.originRectConverted = self.mediaView.frame;
+```
+
+
+However, if one is using dynamic UI, and therefore can not determine the originRect of the ABMediaView, one can set the property 'presentFromOriginRect' to true. With this functionality enabled, the fullscreen ABMediaView will popup from frame of the  ABMediaView which presents it. If 'presentFromOriginRect' is enabled, then there is no need to set 'originRect' or 'originRectConverted', as this property supersedes both.
+
+```objective-c
+self.mediaView.presentFromOriginRect = YES;
 ```
 
 
@@ -269,6 +306,19 @@ In addition, there are also delegate methods to help determine whether a ABMedia
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 ```
 
+If one is looking to cache the images, videos, or gifs that are being downloaded via the ABMediaView, delegates have been made handle to get these objects.
+
+
+```objective-c
+/// Called when the mediaView has completed downloading the image from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;
+
+/// Called when the mediaView has completed downloading the video from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSString *)video;
+
+/// Called when the mediaView has completed downloading the gif from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
+```
 
 ## Author
 
