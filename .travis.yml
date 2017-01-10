@@ -8,6 +8,9 @@ xcode_project: Example/ABMediaView.xcworkspace #3
 xcode_scheme: ABMediaView-Example #4
 xcode_sdk: iphonesimulator9.3
 
+notifications:
+  email: false
+
 # cache: cocoapods
 # podfile: Example/Podfile
 # before_install:

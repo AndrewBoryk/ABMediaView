@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ABMediaView'
-  s.version          = '0.2.2'
+  s.version          = '0.2.4'
   s.summary          = 'UIImageView subclass which can display and lazy-load images, videos, and GIFs from the web, with fullscreen and minimized mode functionality'
 
 # This description is used to generate tags and improve search results.
