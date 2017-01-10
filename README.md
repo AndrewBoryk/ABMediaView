@@ -12,7 +12,7 @@
 
 ## Description
 
-ABMediaView can display images, videos, and now GIFs! It subclasses UIImageView, and has functionality to lazy-load images from the web. In addition, it can also display videos, downloaded via URL from disk or web. Videos contain a player with a timeline and scrubbing. GIFs can also be displayed in an ABMediaView, via lazy-loading from the web, or set via NSData. The GIF that is downloaded is saved as UIImage object for easy storage. A major added functionality is that this mediaView has a queue and can present mediaViews in fullscreen mode. There is functionality which allows the view to be minimized by swiping, where it sits in the bottom right corner as a thumbnail. Videos can continue playing and be heard from this position. The user can choose to swipe the view away to dismiss. There are various different functionality that can be toggled on and off to customize the view to one's choosing.
+ABMediaView can display images, videos, and now GIFs! It subclasses UIImageView, and has functionality to lazy-load images from the web. In addition, it can also display videos, downloaded via URL from disk or web. Videos contain a player with a timeline and scrubbing. GIFs can also be displayed in an ABMediaView, via lazy-loading from the web, or set via NSData. The GIF that is downloaded is saved as a UIImage object for easy storage. A major added functionality is that this mediaView has a queue and can present mediaViews in fullscreen mode. There is functionality which allows the view to be minimized by swiping, where it sits in the bottom right corner as a thumbnail. Videos can continue playing and be heard from this position. The user can choose to swipe the view away to dismiss. There are various different functionality that can be toggled on and off to customize the view to one's choosing.
 
 ![alt tag](ABMediaViewScrubScreenshot.gif)
 
@@ -27,11 +27,11 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Features
 
-* Display for image and video
-* Easy Lazy-loading for images and video
+* Display for image, video, and GIF
+* Easy Lazy-loading for images, videos, and GIFs
 * Fullscreen display with minimization
 * Queue for presenting mediaViews in fullscreen
-* Track for buffer, progress, and scrubbing 
+* Track for buffer, progress, and scrubbing
 
 ## Installation
 
@@ -203,7 +203,7 @@ ABMediaView has a theme color which changes the color of the track as well as th
 ```
 
 
-ABMediaView will display images and videos according to the contentMode set on the view. However, there is also functionality to have the contentMode be set to aspectFill while the videoGravity is set to aspectFit.
+ABMediaView will display images, videos, and GIFs according to the contentMode set on the view. However, there is also functionality to have the contentMode be set to aspectFill while the videoGravity is set to aspectFit.
 
 ```objective-c
 // Setting the contentMode to aspectFit will set the videoGravity to aspectFit as well
@@ -306,7 +306,7 @@ In addition, there are also delegate methods to help determine whether a ABMedia
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 ```
 
-If one is looking to cache the images, videos, or gifs that are being downloaded via the ABMediaView, delegates have been made handle to get these objects.
+If one is looking to cache the images, videos, or GIFs that are being downloaded via the ABMediaView, delegates have been made handle to get these objects.
 
 
 ```objective-c
@@ -316,7 +316,7 @@ If one is looking to cache the images, videos, or gifs that are being downloaded
 /// Called when the mediaView has completed downloading the video from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSString *)video;
 
-/// Called when the mediaView has completed downloading the gif from the web
+/// Called when the mediaView has completed downloading the GIF from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
 ```
 
