@@ -1737,6 +1737,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     _gifURL = gifURL;
     
     if ([ABUtils notNull:self.gifURL]) {
+        if ([ABUtils notNull:self.gifCache]) {
+            self.image = self.gifCache;
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
             self.gifCache = self.image;
@@ -1750,6 +1754,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     _gifData = gifData;
     
     if ([ABUtils notNull:self.gifData]) {
+        if ([ABUtils notNull:self.gifCache]) {
+            self.image = self.gifCache;
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.image = [UIImage animatedImageWithAnimatedGIFData:gifData];
             self.gifCache = self.image;
