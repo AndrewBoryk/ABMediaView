@@ -25,10 +25,10 @@
     [self.mediaView setShouldDisplayFullscreen: YES];
     
     // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
-    self.mediaView.minimizedAspectRatio = ABMediaViewRatioPresetSquare;
+    self.mediaView.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
     
     // Adjust the ratio of the screen that the width of the minimized view will stretch across. The default value for this is 0.5
-    self.mediaView.minimizedWidthRatio = 0.5f;
+    self.mediaView.minimizedWidthRatio = 1.0f;
     
     // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
     [self.mediaView setBottomBuffer:0.0f];
@@ -81,7 +81,7 @@
     [mediaView hideCloseButton:YES];
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
     // Present the mediaView, dismiss any other mediaView that is showing
     [[ABMediaView sharedManager] presentMediaView:mediaView];

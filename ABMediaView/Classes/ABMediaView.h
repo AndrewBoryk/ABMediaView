@@ -48,6 +48,12 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
     
     /// Determines if the video is already loading
     BOOL isLoadingVideo;
+    
+    /// Recognizer to record user swiping
+    UIPanGestureRecognizer *swipeRecognizer;
+    
+    /// Recognizer to record a user swiping right to dismiss a minimize video
+    UIPanGestureRecognizer *dismissRecognizer;
 }
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
@@ -128,6 +134,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Change font for track labels
 @property (strong, nonatomic) UIFont *trackFont;
+
+/// Recognizer to record user swiping
+@property (strong, nonatomic, readonly) UIPanGestureRecognizer *swipeRecognizer;
 
 /// Recognizer which keeps track of whether the user taps the view to play or pause the video
 @property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;

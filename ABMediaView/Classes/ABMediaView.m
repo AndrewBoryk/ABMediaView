@@ -18,12 +18,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 @implementation ABMediaView {
     float bufferTime;
     
-    /// Recognizer to record user swiping
-    UIPanGestureRecognizer *swipeRecognizer;
-    
-    /// Recognizer to record a user swiping right to dismiss a minimize video
-    UIPanGestureRecognizer *dismissRecognizer;
-    
 }
 
 @synthesize isMinimized = isMinimized;
@@ -33,6 +27,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 @synthesize xSwipePosition = xSwipePosition;
 @synthesize isFullScreen = isFullscreen;
 @synthesize isLoadingVideo = isLoadingVideo;
+@synthesize swipeRecognizer = swipeRecognizer;
 
 + (id)sharedManager {
     static ABMediaView *sharedMyManager = nil;
@@ -132,6 +127,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         self.minimizedAspectRatio = mediaView.minimizedAspectRatio;
         self.minimizedWidthRatio = mediaView.minimizedWidthRatio;
+        
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        
+        if (UIDeviceOrientationIsLandscape(orientation)) {
+            self.swipeRecognizer.enabled = NO;
+        }
         
     }
     
@@ -481,7 +482,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
-    [self setImageURL:thumbnailURL];
+    [self setImageURL:thumbnailURL withCompletion:nil];
     [self setVideoURL:videoURL];
 }
 

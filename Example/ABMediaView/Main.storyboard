@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,10 +30,10 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mWW-nq-RdB" customClass="ABMediaView">
-                                <rect key="frame" x="48" y="193.5" width="279" height="279"/>
+                                <rect key="frame" x="0.0" y="227.5" width="375" height="211"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="1:1" id="wys-h3-9gn"/>
+                                    <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="16:9" id="wys-h3-9gn"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4o-zf-89b">
@@ -72,7 +71,7 @@
                             <constraint firstItem="VvP-eB-0HN" firstAttribute="leading" secondItem="C4o-zf-89b" secondAttribute="leading" id="29w-xd-xzy"/>
                             <constraint firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="2J0-wP-ceE"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
-                            <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leadingMargin" constant="32" id="Bf6-wa-sXD"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="Bf6-wa-sXD"/>
                             <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="C13-F5-29s"/>
                             <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" id="KYO-R8-3Sw"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
@@ -84,7 +83,7 @@
                             <constraint firstItem="C4o-zf-89b" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="sih-yD-nNE"/>
                             <constraint firstItem="VvP-eB-0HN" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="yoR-Ke-bnF"/>
                             <constraint firstItem="DcG-yi-4VF" firstAttribute="bottom" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="zZo-Cl-Vjt"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="mWW-nq-RdB" secondAttribute="trailing" constant="32" id="ze1-TZ-JB2"/>
+                            <constraint firstAttribute="trailing" secondItem="mWW-nq-RdB" secondAttribute="trailing" id="ze1-TZ-JB2"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
