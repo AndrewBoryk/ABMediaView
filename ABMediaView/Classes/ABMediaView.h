@@ -285,4 +285,13 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 
+/// Called when the mediaView has completed downloading the image from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;
+
+/// Called when the mediaView has completed downloading the video from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSString *)video;
+
+/// Called when the mediaView has completed downloading the gif from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
+
 @end

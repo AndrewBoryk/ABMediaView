@@ -62,10 +62,6 @@
     self.mediaView.autoPlayAfterPresentation = YES;
 }
 
-- (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
-    mediaView.image = nil;
-}
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
@@ -137,4 +133,50 @@
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     mediaView.imageViewNotReused = YES;
 }
+
+- (void) mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage {
+    NSLog(@"MediaView offset changed: %f", offsetPercentage);
+}
+
+- (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
+    NSLog(@"MediaView did play video");
+}
+
+- (void) mediaViewDidPauseVideo:(ABMediaView *)mediaView {
+    NSLog(@"MediaView did pause video");
+}
+
+- (void) mediaViewWillPresent:(ABMediaView *)mediaView {
+    NSLog(@"MediaView will present");
+}
+
+- (void) mediaViewDidPresent:(ABMediaView *)mediaView {
+    NSLog(@"MediaView will present");
+}
+
+- (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
+    NSLog(@"MediaView will dismiss");
+}
+
+- (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
+    NSLog(@"MediaView did dismiss");
+}
+
+- (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image {
+    NSLog(@"Image: %@", image);
+}
+
+- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo:(NSString *)video {
+    NSLog(@"Video path: %@", video);
+}
+
+- (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif {
+    NSLog(@"Gif: %@", gif);
+}
+
+
+
+
+
+
 @end

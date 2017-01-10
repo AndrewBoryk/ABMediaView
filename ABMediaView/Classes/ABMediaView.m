@@ -112,6 +112,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self setImageURL:mediaView.imageURL withCompletion:nil];
         [self setVideoURL:mediaView.videoURL];
         self.videoCache = mediaView.videoCache;
+        self.gifCache = mediaView.gifCache;
         [self setGifURL:mediaView.gifURL];
         
         self.themeColor = mediaView.themeColor;
@@ -451,18 +452,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             completion(nil, nil);
         }
     }
-}
-
-- (void) setImage:(UIImage *)image {
-    super.image = image;
-    
-    if ([ABUtils notNull:image]) {
-        
-        [self registerForRotation];
-        
-        _imageCache = image;
-    }
-    
 }
 
 - (void) setVideoURL:(NSString *)videoURL {
@@ -808,6 +797,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             if ([ABUtils notNull:self.player]) {
                 if ([ABUtils notNull:self.player.currentItem]) {
+                    self.image = nil;
+                    
                     //                    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
                     
                     if (isnan(bufferTime)) {
@@ -852,9 +843,11 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
         }
         else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
+            self.image = nil;
             isLoadingVideo = false;
         }
         else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
+            self.image = nil;
             isLoadingVideo = false;
         }
     }
@@ -1763,7 +1756,36 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.gifCache = self.image;
         });
     }
+}
+
+- (void) setGifCache:(UIImage *)gifCache {
+    _gifCache = gifCache;
     
+    if ([ABUtils notNull:self.gifCache]) {
+        if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadGif:)]) {
+            [self.delegate mediaView:self didDownloadGif:self.gifCache];
+        }
+    }
+}
+
+- (void) setImageCache:(UIImage *)imageCache {
+    _imageCache = imageCache;
+    
+    if ([ABUtils notNull:self.imageCache]) {
+        if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadImage:)]) {
+            [self.delegate mediaView:self didDownloadImage:self.imageCache];
+        }
+    }
+}
+
+- (void) setVideoCache:(NSString *)videoCache {
+    _videoCache = videoCache;
+    
+    if ([ABUtils notNull:self.videoCache]) {
+        if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadVideo:)]) {
+            [self.delegate mediaView:self didDownloadVideo:self.videoCache];
+        }
+    }
 }
 
 @end
