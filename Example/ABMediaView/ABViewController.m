@@ -63,8 +63,10 @@
     // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifData:gifData];
     
     // Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
-    self.mediaView.originRect = self.mediaView.frame;
+//    self.mediaView.originRect = self.mediaView.frame;
     
+    // If the frame of the mediaView is dynamic, and you would like it to present from the origin frame, then you can ensure this by setting the 'presentFromOriginRect' property to true. After this is set to true, there is no need to set the 'originRect' or 'originRectConverted' properties
+    self.mediaView.presentFromOriginRect = YES;
     
     // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
     self.mediaView.autoPlayAfterPresentation = YES;
@@ -134,6 +136,9 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewWillRotateNotification object:nil];
         
     } completion:^(id  _Nonnull context) {
+        
+        // Change origin rect because the screen has rotated
+//        self.mediaView.originRect = self.mediaView.frame;
         
         // Notifies the ABMediaView that the device just finished rotating
         [[NSNotificationCenter defaultCenter] postNotificationName:ABMediaViewDidRotateNotification object:nil];

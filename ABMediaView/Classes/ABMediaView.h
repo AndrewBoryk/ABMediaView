@@ -159,6 +159,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Timer for animating the videoIndicator, to show that the video is loading
 @property (strong, nonatomic) NSTimer *animateTimer;
 
+/// Setting this value to true will allow you to have the fullscreen popup originate from the frame of the original view, without having to set the originRect yourself
+@property BOOL presentFromOriginRect;
+
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
 @property CGRect originRect;
 

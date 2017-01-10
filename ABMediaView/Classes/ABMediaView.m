@@ -121,8 +121,14 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self hideCloseButton: mediaView.hideCloseButton];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         
-        self.originRect = mediaView.originRect;
-        self.originRectConverted = mediaView.originRectConverted;
+        if (mediaView.presentFromOriginRect) {
+            self.originRect = mediaView.frame;
+        }
+        else {
+            self.originRect = mediaView.originRect;
+            self.originRectConverted = mediaView.originRectConverted;
+        }
+        
         self.bottomBuffer = mediaView.bottomBuffer;
         
         self.minimizedAspectRatio = mediaView.minimizedAspectRatio;
