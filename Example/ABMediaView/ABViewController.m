@@ -47,7 +47,7 @@
     // Gifs can be displayed in ABMediaView, where the gif can be downloaded from the internet
     // [self.mediaView setGifURL:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"];
     
-    // Gifs can also be displays via NSData
+    // Gifs can also be displayed via NSData
     // NSData *gifData = ...;
     // [self.mediaView setGifData:gifData];
     
