@@ -52,7 +52,10 @@
     // [self.mediaView setGifData:gifData];
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    //[self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    
+    // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
+    [self.mediaView setAudioURL:@"http://narwakk.free.fr/musiques/Bob/Bob%20Marley%20-%20Roots,%20Rock,%20Reggae.mp3" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
     // You can also set the video URL, download the video, and set a thumnail image that doesn't need to be downloaded
     // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailImage:thumnailImage];

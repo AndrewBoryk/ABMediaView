@@ -87,6 +87,12 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Video location on disk that was cached after loading
 @property (strong, nonatomic) NSString *videoCache;
 
+/// URL endpoint for audio
+@property (strong, nonatomic) NSString *audioURL;
+
+/// Audio location on disk that was cached after loading
+@property (strong, nonatomic) NSString *audioCache;
+
 /// URL endpoint for gif
 @property (strong, nonatomic) NSString *gifURL;
 
@@ -210,6 +216,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Determines whether the view has a video
 @property (readonly) BOOL hasVideo;
 
+/// Determines whether the view has media (video or audio)
+@property (readonly) BOOL hasMedia;
+
 /// Determines whether the view is already playing video
 @property (readonly) BOOL isPlayingVideo;
 
@@ -233,6 +242,18 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 
 /// Set the url where the video can be downloaded from, as well as the thumbnail image can be found
 - (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail;
+
+/// Set the url where the audio can be downloaded from, as well as the url where the thumbnail image can be found
+- (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL;
+
+/// Set the url where the audio can be downloaded from, as well as the url where the thumbnail gif can be found
+- (void) setAudioURL:(NSString *)audioURL withThumbnailGifURL: (NSString *)thumbnailGifURL;
+
+/// Set the url where the audio can be downloaded from, as well as the data for the thumbnail gif
+- (void) setAudioURL:(NSString *)audioURL withThumbnailGifData: (NSData *)thumbnailGifData;
+
+/// Set the url where the audio can be downloaded from, as well as the thumbnail image can be found
+- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (NSString *)thumbnail;
 
 /// Loads the video, saves to disk, and decides whether to play the video
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion;

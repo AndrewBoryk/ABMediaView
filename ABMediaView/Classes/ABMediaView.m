@@ -106,6 +106,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.imageCache = mediaView.imageCache;
         [self setImageURL:mediaView.imageURL withCompletion:nil];
         [self setVideoURL:mediaView.videoURL];
+        [self setAudioURL:mediaView.audioURL];
+        [self setAudioCache:mediaView.audioCache];
         self.videoCache = mediaView.videoCache;
         self.gifCache = mediaView.gifCache;
         [self setGifURL:mediaView.gifURL];
@@ -468,7 +470,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self.track setProgress: @0 withDuration: 0];
     [self.track setBuffer: @0 withDuration: 0];
     
-    if ([ABUtils notNull:self.videoURL]) {
+    if ([self hasMedia]) {
         self.videoIndicator.alpha = 1;
     }
     
@@ -507,6 +509,49 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self setVideoURL:videoURL];
 }
 
+- (void) setAudioURL:(NSString *)audioURL {
+    _audioURL = audioURL;
+    
+    self.track.hidden = YES;
+    [self.track setProgress: @0 withDuration: 0];
+    [self.track setBuffer: @0 withDuration: 0];
+    
+    if ([self hasMedia]) {
+        self.videoIndicator.alpha = 1;
+    }
+    
+    if ([ABUtils notNull:self.track]) {
+        if ([ABUtils notNull:self.track.scrubRecognizer]) {
+            [self.tapRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
+        }
+        
+        if ([ABUtils notNull:self.track.tapRecognizer]) {
+            [self.tapRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
+        }
+    }
+}
+
+- (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL {
+    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setAudioURL:audioURL];
+}
+
+- (void) setAudioURL:(NSString *)audioURL withThumbnailGifURL: (NSString *)thumbnailGifURL {
+    [self setGifURL:thumbnailGifURL];
+    [self setAudioURL:audioURL];
+}
+
+- (void) setAudioURL:(NSString *)audioURL withThumbnailGifData: (NSData *)thumbnailGifData {
+    [self setGifData:thumbnailGifData];
+    [self setAudioURL:audioURL];
+}
+
+- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (NSString *)thumbnail {
+    self.image = thumbnail;
+    [self setAudioURL:audioURL];
+}
+
+
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion {
     
     if ([ABUtils notNull:_videoURL]) {
@@ -517,105 +562,204 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
         }
         
-        if ([ABUtils notNull:self.videoURL]) {
-            [self removeObservers];
+        [self removeObservers];
+        
+        AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+        
+        if ([ABUtils notNull:self.videoCache]) {
+            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
+            if ([ABUtils notNull:cachedVideo]) {
+                vidAsset = cachedVideo;
+            }
+        }
+        
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
+        
+        self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+        
+        
+        if ([ABUtils notNull:self.player]) {
             
-            AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             
-            if ([ABUtils notNull:self.videoCache]) {
-                AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
-                if ([ABUtils notNull:cachedVideo]) {
-                    vidAsset = cachedVideo;
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(playerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.player currentItem]];
+            
+            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            self.playerLayer.videoGravity = [self getVideoGravity];
+            
+            self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+            
+            [(AVPlayerLayer *)self.layer setPlayer:self.player];
+            
+            //                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+            
+            if (play) {
+                [self.player play];
+                
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                    [self.delegate mediaViewDidPlayVideo:self];
                 }
             }
             
-            AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
             
-            self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+            [self.player addObserver:self
+                          forKeyPath:@"currentItem.loadedTimeRanges"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
             
+            [self.player addObserver:self
+                          forKeyPath:@"playbackBufferEmpty"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
             
-            if ([ABUtils notNull:self.player]) {
+            [self.player addObserver:self
+                          forKeyPath:@"playbackLikelyToKeepUp"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            [self.player addObserver:self
+                          forKeyPath:@"playbackBufferFull"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            CMTime interval = CMTimeMake(10.0, NSEC_PER_SEC);
+            
+            __weak __typeof(self)weakSelf = self;
+            [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                //                        float pTime = CMTimeGetSeconds(time);
                 
-                self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-                
-                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                         selector:@selector(playerItemDidReachEnd:)
-                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                                           object:[self.player currentItem]];
-                
-                self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
-                self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-                self.playerLayer.videoGravity = [self getVideoGravity];
-                
-                self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-                
-                [(AVPlayerLayer *)self.layer setPlayer:self.player];
-                
-//                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
-                
-                if (play) {
-                    [self.player play];
-                    
-                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                        [self.delegate mediaViewDidPlayVideo:self];
+                if ([ABUtils notNull: weakSelf.player.currentItem]) {
+                    if (weakSelf.showTrack) {
+                        weakSelf.track.hidden = NO;
                     }
+                    else {
+                        weakSelf.track.hidden = YES;
+                    }
+                    
+                    CGFloat progress = CMTimeGetSeconds(time);
+                    
+                    if (progress != 0 && [self.animateTimer isValid]) {
+                        isLoadingVideo = false;
+                        [weakSelf stopVideoAnimate];
+                        [weakSelf hideVideoAnimated: NO];
+                    }
+                    
+                    [weakSelf.track setProgress: [NSNumber numberWithFloat:CMTimeGetSeconds(time)] withDuration: CMTimeGetSeconds(weakSelf.player.currentItem.duration)];
                 }
                 
-                
-                [self.player addObserver:self
-                              forKeyPath:@"currentItem.loadedTimeRanges"
-                                 options:NSKeyValueObservingOptionNew
-                                 context:nil];
-                
-                [self.player addObserver:self
-                              forKeyPath:@"playbackBufferEmpty"
-                                 options:NSKeyValueObservingOptionNew
-                                 context:nil];
-                
-                [self.player addObserver:self
-                              forKeyPath:@"playbackLikelyToKeepUp"
-                                 options:NSKeyValueObservingOptionNew
-                                 context:nil];
-                
-                [self.player addObserver:self
-                              forKeyPath:@"playbackBufferFull"
-                                 options:NSKeyValueObservingOptionNew
-                                 context:nil];
-                
-                CMTime interval = CMTimeMake(10.0, NSEC_PER_SEC);
-                
-                __weak __typeof(self)weakSelf = self;
-                [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-                    //                        float pTime = CMTimeGetSeconds(time);
-                    
-                    if ([ABUtils notNull: weakSelf.player.currentItem]) {
-                        if (weakSelf.showTrack) {
-                            weakSelf.track.hidden = NO;
-                        }
-                        else {
-                            weakSelf.track.hidden = YES;
-                        }
-                        
-                        CGFloat progress = CMTimeGetSeconds(time);
-                        
-                        if (progress != 0 && [self.animateTimer isValid]) {
-                            isLoadingVideo = false;
-                            [weakSelf stopVideoAnimate];
-                            [weakSelf hideVideoAnimated: NO];
-                        }
-                        
-                        [weakSelf.track setProgress: [NSNumber numberWithFloat:CMTimeGetSeconds(time)] withDuration: CMTimeGetSeconds(weakSelf.player.currentItem.duration)];
-                    }
-                    
-                }];
-                
-            }
+            }];
             
             
             
         }
         
         
+    }
+    else if ([ABUtils notNull:self.audioURL]) {
+        if (play) {
+            [self loadVideoAnimate];
+            isLoadingVideo = true;
+            
+        }
+        
+        [self removeObservers];
+        
+        AVURLAsset *audAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioURL] options:nil];
+        
+        if ([ABUtils notNull:self.audioCache]) {
+            AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioCache] options:nil];
+            if ([ABUtils notNull:cachedAudio]) {
+                audAsset = cachedAudio;
+            }
+        }
+        
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:audAsset];
+        
+        self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+        
+        
+        if ([ABUtils notNull:self.player]) {
+            
+            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(playerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.player currentItem]];
+            
+            self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+            self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            self.playerLayer.videoGravity = [self getVideoGravity];
+            
+            self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+            
+            [(AVPlayerLayer *)self.layer setPlayer:self.player];
+            
+            //                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+            
+            if (play) {
+                [self.player play];
+                
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                    [self.delegate mediaViewDidPlayVideo:self];
+                }
+            }
+            
+            
+            [self.player addObserver:self
+                          forKeyPath:@"currentItem.loadedTimeRanges"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            [self.player addObserver:self
+                          forKeyPath:@"playbackBufferEmpty"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            [self.player addObserver:self
+                          forKeyPath:@"playbackLikelyToKeepUp"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            [self.player addObserver:self
+                          forKeyPath:@"playbackBufferFull"
+                             options:NSKeyValueObservingOptionNew
+                             context:nil];
+            
+            CMTime interval = CMTimeMake(10.0, NSEC_PER_SEC);
+            
+            __weak __typeof(self)weakSelf = self;
+            [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                //                        float pTime = CMTimeGetSeconds(time);
+                
+                if ([ABUtils notNull: weakSelf.player.currentItem]) {
+                    if (weakSelf.showTrack) {
+                        weakSelf.track.hidden = NO;
+                    }
+                    else {
+                        weakSelf.track.hidden = YES;
+                    }
+                    
+                    CGFloat progress = CMTimeGetSeconds(time);
+                    
+                    if (progress != 0 && [self.animateTimer isValid]) {
+                        isLoadingVideo = false;
+                        [weakSelf stopVideoAnimate];
+                        [weakSelf hideVideoAnimated: NO];
+                    }
+                    
+                    [weakSelf.track setProgress: [NSNumber numberWithFloat:CMTimeGetSeconds(time)] withDuration: CMTimeGetSeconds(weakSelf.player.currentItem.duration)];
+                }
+                
+            }];
+            
+            
+            
+        }
     }
     else {
         
@@ -633,7 +777,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = self.superview.frame;
             
-            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
                 self.videoIndicator.alpha = 1.0f;
             }
             
@@ -754,8 +898,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 - (void)animateVideo {
     // Animate video loader fade in and out
     BOOL showAnimation = true;
-    if ([ABUtils notNull:self.videoURL]) {
-        if ([ABUtils notNull:self.videoURL] && !self.isLoadingVideo) {
+    if ([self hasMedia]) {
+        if (!self.isLoadingVideo) {
             showAnimation = false;
             
         }
@@ -824,7 +968,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             if ([ABUtils notNull:self.player]) {
                 if ([ABUtils notNull:self.player.currentItem]) {
-                    self.image = nil;
+                    if ([self hasVideo]) {
+                        self.image = nil;
+                    }
+                    
                     
                     //                    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
                     
@@ -870,11 +1017,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
         }
         else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-            self.image = nil;
+            if ([self hasVideo]) {
+                self.image = nil;
+            }
             isLoadingVideo = false;
         }
         else if ([keyPath isEqualToString:@"playbackBufferFull"]) {
-            self.image = nil;
+            if ([self hasVideo]) {
+                self.image = nil;
+            }
             isLoadingVideo = false;
         }
     }
@@ -913,11 +1064,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
 - (BOOL) hasVideo {
     
-    if ([ABUtils notNull:self.videoURL]) {
-        return YES;
-    }
-    
-    return NO;
+    return [ABUtils notNull:self.videoURL];
 }
 
 - (BOOL) isPlayingVideo {
@@ -1046,7 +1193,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.userInteractionEnabled = YES;
         self.track.userInteractionEnabled = YES;
         
-        if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
+        if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
             self.videoIndicator.alpha = 1.0f;
         }
         
@@ -1062,7 +1209,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self updatePlayerFrame];
     
-    if ([ABUtils notNull:self.videoURL]) {
+    if ([self hasMedia]) {
         [self.track updateBuffer];
         [self.track updateProgress];
         [self.track updateBarBackground];
@@ -1172,7 +1319,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     else {
                         self.frame = self.superview.frame;
                         
-                        if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL]) {
+                        if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
                             self.videoIndicator.alpha = 1.0f;
                         }
                         
@@ -1302,7 +1449,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
-            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
                 self.videoIndicator.alpha = 0;
             }
             
@@ -1317,7 +1464,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.layer.cornerRadius = 0;
             [self setBorderAlpha:0.0f];
             
-            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
                 self.videoIndicator.alpha = 1.0f;
             }
             
@@ -1332,7 +1479,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 //            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
             
-            if ((!self.isPlayingVideo || self.isLoadingVideo) && [ABUtils notNull:self.videoURL])  {
+            if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
                 self.videoIndicator.alpha = (1-offsetPercentage);
             }
             
@@ -1502,7 +1649,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 [self.delegate mediaViewDidPresent:self];
             }
             
-            if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
+            if ([mediaView hasMedia] && mediaView.autoPlayAfterPresentation) {
                 [mediaView handleTapFromRecognizer];
             }
         }];
@@ -1528,7 +1675,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 [self.delegate mediaViewDidPresent:self];
             }
             
-            if ([ABUtils notNull:mediaView.videoURL] && mediaView.autoPlayAfterPresentation) {
+            if ([mediaView hasMedia] && mediaView.autoPlayAfterPresentation) {
                 [mediaView handleTapFromRecognizer];
             }
         }];
@@ -1815,4 +1962,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
+- (BOOL) hasMedia {
+    return ([self hasVideo] || [ABUtils notNull:self.audioURL]);
+}
 @end
