@@ -15,4 +15,7 @@
 
 /// Determines whether value is null or nil
 + (BOOL)notNull:(id)object;
+
+/// Returns the width of the view
++ (float)viewWidth;
 @end

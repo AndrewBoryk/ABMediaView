@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		453162141E3E8DE400A069FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453162131E3E8DE400A069FC /* AVFoundation.framework */; };
+		453162161E3E8DE900A069FC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453162151E3E8DE900A069FC /* MediaPlayer.framework */; };
 		455AA6171E1DA55B00F7596E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455AA6161E1DA55B00F7596E /* Launch Screen.storyboard */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -39,6 +41,8 @@
 /* Begin PBXFileReference section */
 		0990C3564723B9CBE7C5D99E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		263A7E61C622D8B34AC006EB /* ABMediaView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ABMediaView.podspec; path = ../ABMediaView.podspec; sourceTree = "<group>"; };
+		453162131E3E8DE400A069FC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		453162151E3E8DE900A069FC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		455AA6161E1DA55B00F7596E /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ABMediaView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ABMediaView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -74,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				453162161E3E8DE900A069FC /* MediaPlayer.framework in Frameworks */,
+				453162141E3E8DE400A069FC /* AVFoundation.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
@@ -130,6 +136,8 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				453162151E3E8DE900A069FC /* MediaPlayer.framework */,
+				453162131E3E8DE400A069FC /* AVFoundation.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,

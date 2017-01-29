@@ -55,4 +55,9 @@
                            alpha:1.0f];
 }
 
++ (float)viewWidth {
+    CGRect screen = [[UIScreen mainScreen] bounds];
+    
+    return screen.size.width;
+}
 @end
