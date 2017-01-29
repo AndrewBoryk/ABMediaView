@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AVFoundation/AVFoundation.h>
+@class ABPlayer;
 #import "ABUtils.h"
 #import "VideoTrackView.h"
 #import "UIImage+animatedGIF.h"
@@ -156,8 +157,8 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Closes the mediaView when in fullscreen mode
 @property (strong, nonatomic) UIButton *closeButton;
 
-/// AVPlayer which will handle video playback
-@property (strong, nonatomic) AVPlayer *player;
+/// ABPlayer which will handle video playback
+@property (strong, nonatomic) ABPlayer *player;
 
 /// AVPlayerLayer which will display video
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;

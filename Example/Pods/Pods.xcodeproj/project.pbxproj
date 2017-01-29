@@ -14,6 +14,8 @@
 		337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */; };
 		453162121E3E8D0F00A069FC /* ABVolumeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 453162101E3E8D0F00A069FC /* ABVolumeManager.m */; };
+		453162191E3E958200A069FC /* ABPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 453162171E3E958200A069FC /* ABPlayer.h */; };
+		4531621A1E3E958200A069FC /* ABPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 453162181E3E958200A069FC /* ABPlayer.m */; };
 		4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */ = {isa = PBXBuildFile; fileRef = 4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */; };
 		4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
@@ -46,6 +48,8 @@
 		417BF06B15201C58C0C1D9D40CC9057C /* Pods-ABMediaView_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ABMediaView_Example-frameworks.sh"; sourceTree = "<group>"; };
 		4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABVolumeManager.h; sourceTree = "<group>"; };
 		453162101E3E8D0F00A069FC /* ABVolumeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABVolumeManager.m; sourceTree = "<group>"; };
+		453162171E3E958200A069FC /* ABPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPlayer.h; sourceTree = "<group>"; };
+		453162181E3E958200A069FC /* ABPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPlayer.m; sourceTree = "<group>"; };
 		4581F26823B69E946067E82873DBFE69 /* ABUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ABUtils.h; sourceTree = "<group>"; };
 		4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
@@ -187,6 +191,8 @@
 				7F927730E1DCD2F8375E76A40A78DEE1 /* ABUtils.m */,
 				EC7AA0250DAC78111DB8F88E7BDDF05E /* ABMediaView.h */,
 				74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */,
+				453162171E3E958200A069FC /* ABPlayer.h */,
+				453162181E3E958200A069FC /* ABPlayer.m */,
 				4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */,
 				453162101E3E8D0F00A069FC /* ABVolumeManager.m */,
 				9A023380458885D30A16E28353C60935 /* VideoTrackView.h */,
@@ -274,6 +280,7 @@
 			files = (
 				337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */,
 				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
+				453162191E3E958200A069FC /* ABPlayer.h in Headers */,
 				84A3651C77982797C777561E41C233E8 /* ABUtils.h in Headers */,
 				453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */,
 				4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */,
@@ -388,6 +395,7 @@
 				453162121E3E8D0F00A069FC /* ABVolumeManager.m in Sources */,
 				4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */,
 				891A6829DA4F37A11EFA90E1B5DE049F /* ABMediaView.m in Sources */,
+				4531621A1E3E958200A069FC /* ABPlayer.m in Sources */,
 				D5AD45D47EB6E702BE1763E4F7097619 /* ABUtils.m in Sources */,
 				4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */,
 				9F4291863A44DD71D96EFBA38EA05E9F /* VideoTrackView.m in Sources */,

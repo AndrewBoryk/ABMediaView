@@ -7,6 +7,7 @@
 //
 
 #import "ABMediaView.h"
+#import "ABPlayer.h"
 
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
@@ -575,7 +576,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:vidAsset];
         
-        self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+        self.player = [[ABPlayer alloc] initWithPlayerItem:playerItem];
         
         
         if ([ABUtils notNull:self.player]) {
@@ -679,7 +680,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:audAsset];
         
-        self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+        self.player = [[ABPlayer alloc] initWithPlayerItem:playerItem];
         
         
         if ([ABUtils notNull:self.player]) {
