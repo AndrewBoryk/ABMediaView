@@ -12,7 +12,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 typedef NS_ENUM(NSInteger, AudioType) {
-    PlayAudio,
+    PlayAudioWhenSilent,
     DefaultAudio,
 };
 

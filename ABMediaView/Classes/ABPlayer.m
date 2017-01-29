@@ -12,7 +12,7 @@
 @implementation ABPlayer
 
 - (void) play {
-    [[ABVolumeManager sharedManager] setAudioSession:PlayAudio];
+    [[ABVolumeManager sharedManager] setAudioSession:PlayAudioWhenSilent];
     
     [super play];
 }

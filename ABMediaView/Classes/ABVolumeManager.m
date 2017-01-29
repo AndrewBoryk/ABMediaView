@@ -157,7 +157,7 @@
 
 - (void) setAudioSession: (AudioType) type {
     
-    if (type == PlayAudio) {
+    if (type == PlayAudioWhenSilent) {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
     }
     else {
