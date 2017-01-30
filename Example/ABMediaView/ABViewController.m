@@ -21,18 +21,17 @@
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];
     
+    // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
+    [self.mediaView hideCloseButton:YES];
+    
     // Setting which determines whether mediaView should pop up and display in full screen mode
     [self.mediaView setShouldDisplayFullscreen: YES];
     
-    // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
-    self.mediaView.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
+    // If the frame of the mediaView is dynamic, and you would like it to present from the origin frame, then you can ensure this by setting the 'presentFromOriginRect' property to true. After this is set to true, there is no need to set the 'originRect' or 'originRectConverted' properties
+    self.mediaView.presentFromOriginRect = YES;
     
-    // Adjust the ratio of the screen that the width of the minimized view will stretch across. The default value for this is 0.5
-    self.mediaView.minimizedWidthRatio = 1.0f;
-    
-    // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
-    [self.mediaView setBottomBuffer:0.0f];
-    
+    // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
+    self.mediaView.autoPlayAfterPresentation = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,10 +51,7 @@
     // [self.mediaView setGifData:gifData];
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    //[self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
-    
-    // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    [self.mediaView setAudioURL:@"http://narwakk.free.fr/musiques/Bob/Bob%20Marley%20-%20Roots,%20Rock,%20Reggae.mp3" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
     // You can also set the video URL, download the video, and set a thumnail image that doesn't need to be downloaded
     // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailImage:thumnailImage];
@@ -68,29 +64,16 @@
     // Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
 //    self.mediaView.originRect = self.mediaView.frame;
     
-    // If the frame of the mediaView is dynamic, and you would like it to present from the origin frame, then you can ensure this by setting the 'presentFromOriginRect' property to true. After this is set to true, there is no need to set the 'originRect' or 'originRectConverted' properties
-    self.mediaView.presentFromOriginRect = YES;
-    
-    // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
-    self.mediaView.autoPlayAfterPresentation = YES;
     
 }
 
 - (IBAction)showMediaViewAction:(id)sender {
     
-    ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
-
-    // Sets functionality for this demonstration, visit the function to see different functionality
-    [self initializeSettingsForMediaView:mediaView];
+    MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic];
+    mediaPicker.delegate = self;
+    mediaPicker.allowsPickingMultipleItems = NO; // this is the default
+    [self presentViewController:mediaPicker animated:YES completion:nil];
     
-    // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
-    [mediaView hideCloseButton:YES];
-    
-    // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    [mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
-    
-    // Present the mediaView, dismiss any other mediaView that is showing
-    [[ABMediaView sharedManager] presentMediaView:mediaView];
 }
 
 - (void) initializeSettingsForMediaView: (ABMediaView *) mediaView {
@@ -191,6 +174,42 @@
     NSLog(@"Gif: %@", gif);
 }
 
+- (void) mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
+    NSLog(@"Media Item Collection: %@", mediaItemCollection);
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        MPMediaItem *item = [[mediaItemCollection items] firstObject];
+        NSURL *url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        
+        ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
+        
+        // Sets functionality for this demonstration, visit the function to see different functionality
+        [self initializeSettingsForMediaView:mediaView];
+        
+        // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape
+        mediaView.minimizedAspectRatio = ABMediaViewRatioPresetLandscape;
+        
+        // Adjust the ratio of the screen that the width of the minimized view will stretch across. The default value for this is 0.5
+        mediaView.minimizedWidthRatio = 1.0f;
+        
+        // Add space to the bottom of the mediaView when it is minimized. By default, there is 12px of space. More can be added if it is desired to reserve space on the bottom for a UITabbar, UIToolbar, or other content.
+        [mediaView setBottomBuffer:0.0f];
+        
+        // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
+        mediaView.autoPlayAfterPresentation = YES;
+        
+        // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
+        [mediaView setAudioURL:url.relativeString withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+        
+        // Present the mediaView, dismiss any other mediaView that is showing
+        [[ABMediaView sharedManager] presentMediaView:mediaView];
+        
+    }];
+}
+
+- (void) mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 
 

@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <ABMediaView/ABMediaView.h>
-
-@interface ABViewController : UIViewController <ABMediaViewDelegate>
+#import <MediaPlayer/MediaPlayer.h>
+@interface ABViewController : UIViewController <ABMediaViewDelegate, MPMediaPickerControllerDelegate>
 
 /// Button to add a mediaView to the queue
 @property (strong, nonatomic) IBOutlet UIButton *showMediaViewButton;
