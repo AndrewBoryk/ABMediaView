@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="whP-gf-Uak">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="whP-gf-Uak">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyz-3g-968">
-                                <rect key="frame" x="129" y="60" width="116" height="30"/>
+                                <rect key="frame" x="129" y="80" width="116" height="30"/>
                                 <state key="normal" title="Show MediaView"/>
                                 <connections>
                                     <action selector="showMediaViewAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="59c-Zc-LFl"/>
@@ -36,28 +36,28 @@
                                     <constraint firstAttribute="width" secondItem="mWW-nq-RdB" secondAttribute="height" multiplier="16:9" id="wys-h3-9gn"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4o-zf-89b">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C4o-zf-89b">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="TfZ-eh-2XN"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VvP-eB-0HN">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VvP-eB-0HN">
                                 <rect key="frame" x="0.0" y="666" width="375" height="1"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="83y-ee-4tJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sCd-An-hHo">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sCd-An-hHo">
                                 <rect key="frame" x="0.0" y="0.0" width="1" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="Giw-r4-OX1"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DcG-yi-4VF">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DcG-yi-4VF">
                                 <rect key="frame" x="374" y="0.0" width="1" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -73,7 +73,7 @@
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="Bf6-wa-sXD"/>
                             <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="C13-F5-29s"/>
-                            <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" id="KYO-R8-3Sw"/>
+                            <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="-20" id="KYO-R8-3Sw"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
                             <constraint firstItem="DcG-yi-4VF" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="fzu-CN-4b0"/>
@@ -86,7 +86,6 @@
                             <constraint firstAttribute="trailing" secondItem="mWW-nq-RdB" secondAttribute="trailing" id="ze1-TZ-JB2"/>
                         </constraints>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="mediaView" destination="mWW-nq-RdB" id="a6o-5Z-yB0"/>
                         <outlet property="showMediaViewButton" destination="qyz-3g-968" id="195-Lz-9Es"/>

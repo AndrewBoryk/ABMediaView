@@ -214,6 +214,9 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Height of the mainWindow
 @property (nonatomic, readonly) CGFloat superviewHeight;
 
+/// Ability to offset the subviews at the top of the screen to avoid hiding other views (ie. UIStatusBar)
+@property (nonatomic) CGFloat topSubviewsOffset;
+
 /// Determines whether the view has a video
 @property (readonly) BOOL hasVideo;
 

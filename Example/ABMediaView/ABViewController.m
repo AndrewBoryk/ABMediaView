@@ -108,6 +108,9 @@
     
     // If the imageview is not in a reusable cell, and you wish that the image not disappear for a split second when reloaded, then you can enable this functionality
     mediaView.imageViewNotReused = YES;
+    
+    // Adds a offset to the views at the top of the ABMediaView, which helps to make sure that the views do not block other views (ie. UIStatusBar)
+    [mediaView setTopSubviewsOffset:20.0f];
 }
 
 #pragma mark - TransitionCoordinator
@@ -136,6 +139,7 @@
 
 - (void) mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage {
     NSLog(@"MediaView offset changed: %f", offsetPercentage);
+    
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
@@ -148,6 +152,8 @@
 
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
     NSLog(@"MediaView will present");
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void) mediaViewDidPresent:(ABMediaView *)mediaView {
@@ -156,6 +162,8 @@
 
 - (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
     NSLog(@"MediaView will dismiss");
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
