@@ -11,7 +11,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AVFoundation/AVFoundation.h>
 @class ABPlayer;
-#import "ABUtils.h"
 #import "VideoTrackView.h"
 #import "UIImage+animatedGIF.h"
 
@@ -81,6 +80,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Gradient dark overlay on top of the mediaView which UI can be placed on top of
 @property (strong, nonatomic) UIImageView *topOverlay;
+
+/// Height constraint of the top overlay
+@property (strong, nonatomic) NSLayoutConstraint *topOverlayHeight;
 
 /// Label at the top of the mediaView, displayed within the topOverlay. Designated for a title, but other text can be inserted
 @property (strong, nonatomic) UILabel *titleLabel;
@@ -381,5 +383,11 @@ extern const CGFloat ABBufferTabBar;
 
 /// Called when the mediaView has completed downloading the gif from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
+
+/// Called when the user taps the title label
+- (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView;
+
+/// Called when the user taps the details label
+- (void) handleDetailsSelectionInMediaView:(ABMediaView *)mediaView;
 
 @end

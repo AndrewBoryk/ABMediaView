@@ -7,7 +7,7 @@
 //
 
 #import "ABVolumeManager.h"
-#import "ABUtils.h"
+#import "ABCommons.h"
 #import <AVFoundation/AVFoundation.h>
 
 @implementation ABVolumeManager
@@ -33,7 +33,7 @@
     if (self = [super init]) {
         // Initialize caches
         
-        volumeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [ABUtils viewWidth], 2)];
+        volumeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [ABCommons viewWidth], 2)];
         
         volumeBackground.backgroundColor = [UIColor darkGrayColor];
         volumeBackground.alpha = 0;
@@ -83,13 +83,13 @@
     
     // Volume changed, show volumeBar
     
-    volumeBackground.frame = CGRectMake(0, 0, [ABUtils viewWidth], 2);
+    volumeBackground.frame = CGRectMake(0, 0, [ABCommons viewWidth], 2);
     
     CGRect volumeBarFrame = volumeBar.frame;
     
     CGFloat previousWidth = volumeBarFrame.size.width;
     
-    CGFloat viewWidth = [ABUtils viewWidth];
+    CGFloat viewWidth = [ABCommons viewWidth];
     
     CGFloat newWidth = (volumeSlider.value/1.0f) * viewWidth;
     
@@ -169,11 +169,11 @@
 }
 
 + (UIColor *) lightVolumeBar {
-    return [ABUtils colorWithHexString:@"FFFFFF"];
+    return [ABCommons colorWithHexString:@"FFFFFF"];
 }
 
 + (UIColor *) darkVolumeBar {
-    return [ABUtils colorWithHexString:@"1DCBD0"];
+    return [ABCommons colorWithHexString:@"1DCBD0"];
 }
 @end
 

@@ -1,14 +1,14 @@
 //
-//  ABUtils.h
+//  ABCommons.h
 //  Pods
 //
-//  Created by Andrew Boryk on 1/4/17.
+//  Created by Andrew Boryk on 2/1/17.
 //
 //
 
 #import <Foundation/Foundation.h>
 
-@interface ABUtils : NSObject
+@interface ABCommons : NSObject
 
 /// Returns a color for a hex string
 + (UIColor*)colorWithHexString:(NSString*)hex;

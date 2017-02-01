@@ -8,6 +8,7 @@
 
 #import "ABMediaView.h"
 #import "ABPlayer.h"
+#import "ABCommons.h"
 
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
@@ -22,8 +23,14 @@ const CGFloat ABBufferStatusAndNavigationBar = 64.0f;
 const CGFloat ABBufferTabBar = 49.0f;
 
 @implementation ABMediaView {
+    /// Number of seconds in the buffer
     float bufferTime;
     
+    /// Recognizer for when title label is tapped
+    UITapGestureRecognizer *titleTapRecognizer;
+    
+    /// Recognizer for when details label is tapped
+    UITapGestureRecognizer *detailsTapRecognizer;
 }
 
 @synthesize isMinimized = isMinimized;
@@ -180,7 +187,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self addTapGesture];
     
-    if (![ABUtils notNull:self.topOverlay]) {
+    if (![ABCommons notNull:self.topOverlay]) {
         self.topOverlay = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.superviewHeight, 80)];
         self.topOverlay.translatesAutoresizingMaskIntoConstraints = NO;
         CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -198,7 +205,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self.topOverlay setImage:outputImage];
     }
     
-    if (![ABUtils notNull:self.loadingIndicator]) {
+    if (![ABCommons notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
         self.loadingIndicator.hidesWhenStopped = YES;
@@ -206,7 +213,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         
     }
     
-    if (![ABUtils notNull:self.videoIndicator]) {
+    if (![ABCommons notNull:self.videoIndicator]) {
         
         self.videoIndicator = [[UIImageView alloc] initWithImage: [self imageForPlayButton]];
         self.videoIndicator.contentMode = UIViewContentModeScaleAspectFit;
@@ -216,7 +223,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         
     }
     
-    if (![ABUtils notNull:self.closeButton]) {
+    if (![ABCommons notNull:self.closeButton]) {
         
         self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50.0f, 50.0f)];
         self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -228,7 +235,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.closeButton.alpha = 0;
     
     
-    if (![ABUtils notNull:swipeRecognizer]) {
+    if (![ABCommons notNull:swipeRecognizer]) {
         swipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
         swipeRecognizer.delegate = self;
         swipeRecognizer.delaysTouchesBegan = YES;
@@ -239,7 +246,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self addGestureRecognizer:swipeRecognizer];
     
-    if (![ABUtils notNull:self.track]) {
+    if (![ABCommons notNull:self.track]) {
         self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
         [self.track.progressView setBackgroundColor: self.themeColor];
@@ -283,13 +290,9 @@ const CGFloat ABBufferTabBar = 49.0f;
                                      multiplier:1
                                        constant:0]];
         
-        [self.topOverlay addConstraint:[NSLayoutConstraint constraintWithItem:self.topOverlay
-                                                               attribute:NSLayoutAttributeHeight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:nil
-                                                               attribute:NSLayoutAttributeNotAnAttribute
-                                                              multiplier:1
-                                                                constant:80.0f]];
+        [self updateTopOverlayHeight];
+        [self.topOverlay addConstraint:self.topOverlayHeight];
+        
         [self.topOverlay layoutIfNeeded];
         
     }
@@ -329,7 +332,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     
     
-    if (![self.subviews containsObject:self.track] && [ABUtils notNull:self.track]) {
+    if (![self.subviews containsObject:self.track] && [ABCommons notNull:self.track]) {
         
         [self addSubview:self.track];
         
@@ -404,7 +407,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     //
     //    }
     
-    self.backgroundColor = [ABUtils colorWithHexString:@"EFEFF4"];
+    self.backgroundColor = [ABCommons colorWithHexString:@"EFEFF4"];
 //    self.clipsToBounds = YES;
     
 }
@@ -464,7 +467,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self removeObservers];
     
-    if ([ABUtils notNull:self.player]) {
+    if ([ABCommons notNull:self.player]) {
         [self.player pause];
     }
     
@@ -496,13 +499,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.image = nil;
     }
     
-    if ([ABUtils notNull:imageURL]) {
+    if ([ABCommons notNull:imageURL]) {
         NSURL *iURL = [NSURL URLWithString:imageURL];
         
-        if ([ABUtils notNull:self.imageCache]) {
+        if ([ABCommons notNull:self.imageCache]) {
             self.image = self.imageCache;
             
-            if ([ABUtils notNull:completion]) {
+            if ([ABCommons notNull:completion]) {
                 completion(self.imageCache, nil);
             }
         }
@@ -518,7 +521,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                             
                             //                        [self.loadingIndicator stopLoading];
                             
-                            if ([ABUtils notNull:completion]) {
+                            if ([ABCommons notNull:completion]) {
                                 completion(image, error);
                             }
                         });
@@ -534,7 +537,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     else {
         //        [self.loadingIndicator stopAnimating];
         
-        if ([ABUtils notNull:completion]) {
+        if ([ABCommons notNull:completion]) {
             completion(nil, nil);
         }
     }
@@ -551,12 +554,12 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.videoIndicator.alpha = 1;
     }
     
-    if ([ABUtils notNull:self.track]) {
-        if ([ABUtils notNull:self.track.scrubRecognizer]) {
+    if ([ABCommons notNull:self.track]) {
+        if ([ABCommons notNull:self.track.scrubRecognizer]) {
             [self.tapRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
         }
         
-        if ([ABUtils notNull:self.track.tapRecognizer]) {
+        if ([ABCommons notNull:self.track.tapRecognizer]) {
             [self.tapRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
         }
     }
@@ -597,12 +600,12 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.videoIndicator.alpha = 1;
     }
     
-    if ([ABUtils notNull:self.track]) {
-        if ([ABUtils notNull:self.track.scrubRecognizer]) {
+    if ([ABCommons notNull:self.track]) {
+        if ([ABCommons notNull:self.track.scrubRecognizer]) {
             [self.tapRecognizer requireGestureRecognizerToFail:self.track.scrubRecognizer];
         }
         
-        if ([ABUtils notNull:self.track.tapRecognizer]) {
+        if ([ABCommons notNull:self.track.tapRecognizer]) {
             [self.tapRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
         }
     }
@@ -631,7 +634,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion {
     
-    if ([ABUtils notNull:_videoURL]) {
+    if ([ABCommons notNull:_videoURL]) {
         
         if (play) {
             [self loadVideoAnimate];
@@ -643,9 +646,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
         
-        if ([ABUtils notNull:self.videoCache]) {
+        if ([ABCommons notNull:self.videoCache]) {
             AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
-            if ([ABUtils notNull:cachedVideo]) {
+            if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
         }
@@ -655,7 +658,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.player = [[ABPlayer alloc] initWithPlayerItem:playerItem];
         
         
-        if ([ABUtils notNull:self.player]) {
+        if ([ABCommons notNull:self.player]) {
             
             self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             
@@ -711,7 +714,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                 //                        float pTime = CMTimeGetSeconds(time);
                 
-                if ([ABUtils notNull: weakSelf.player.currentItem]) {
+                if ([ABCommons notNull: weakSelf.player.currentItem]) {
                     if (weakSelf.showTrack) {
                         weakSelf.track.hidden = NO;
                     }
@@ -738,7 +741,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         
     }
-    else if ([ABUtils notNull:self.audioURL]) {
+    else if ([ABCommons notNull:self.audioURL]) {
         if (play) {
             [self loadVideoAnimate];
             isLoadingVideo = true;
@@ -749,9 +752,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *audAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioURL] options:nil];
         
-        if ([ABUtils notNull:self.audioCache]) {
+        if ([ABCommons notNull:self.audioCache]) {
             AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioCache] options:nil];
-            if ([ABUtils notNull:cachedAudio]) {
+            if ([ABCommons notNull:cachedAudio]) {
                 audAsset = cachedAudio;
             }
         }
@@ -761,7 +764,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.player = [[ABPlayer alloc] initWithPlayerItem:playerItem];
         
         
-        if ([ABUtils notNull:self.player]) {
+        if ([ABCommons notNull:self.player]) {
             
             self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             
@@ -817,7 +820,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                 //                        float pTime = CMTimeGetSeconds(time);
                 
-                if ([ABUtils notNull: weakSelf.player.currentItem]) {
+                if ([ABCommons notNull: weakSelf.player.currentItem]) {
                     if (weakSelf.showTrack) {
                         weakSelf.track.hidden = NO;
                     }
@@ -844,7 +847,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     else {
         
-        if ([ABUtils notNull:completion]) {
+        if ([ABCommons notNull:completion]) {
             completion(nil, nil);
         }
     }
@@ -900,7 +903,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [[ABMediaView sharedManager] presentMediaView:[[ABMediaView alloc] initWithMediaView:self]];
         }
         else {
-            if ([ABUtils notNull:self.player]) {
+            if ([ABCommons notNull:self.player]) {
                 if ((self.player.rate != 0) && (self.player.error == nil)) {
                     [self stopVideoAnimate];
                     isLoadingVideo = false;
@@ -1021,19 +1024,19 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) updatePlayerFrame {
-    if ([ABUtils notNull:self.playerLayer]) {
+    if ([ABCommons notNull:self.playerLayer]) {
         self.playerLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     }
 }
 
 //- (void) updateImage {
-//    if ([ABUtils notNull:self.imageURL]) {
+//    if ([ABCommons notNull:self.imageURL]) {
 //        self.imageView.image = [Defaults cache:self.cache objectForKey:self.imageURL];
 //
 //        //        [self.loadingIndicator stopAnimating];
 //        [self.loader stopLoading];
 //
-//        if (![ABUtils notNull: self.imageView.image] && self.showProgress) {
+//        if (![ABCommons notNull: self.imageView.image] && self.showProgress) {
 //            //            [self.loadingIndicator startAnimating];
 //            [self.loader startLoading];
 //        }
@@ -1042,10 +1045,10 @@ const CGFloat ABBufferTabBar = 49.0f;
 //}
 
 //- (void) updateProgress: (NSNotification *) notification {
-//    if ([ABUtils notNull:notification.object] && [notification.object isKindOfClass:[NSDictionary class]]) {
+//    if ([ABCommons notNull:notification.object] && [notification.object isKindOfClass:[NSDictionary class]]) {
 //        NSDictionary *progressDictionary = notification.object;
 //
-//        if ([ABUtils notNull:[progressDictionary objectForKey:@"image"]] && [ABUtils notNull:self.imageURL] && [ABUtils notNull:[progressDictionary objectForKey:@"progress"]] && [[progressDictionary objectForKey:@"progress"]isKindOfClass: [NSNumber class]]) {
+//        if ([ABCommons notNull:[progressDictionary objectForKey:@"image"]] && [ABCommons notNull:self.imageURL] && [ABCommons notNull:[progressDictionary objectForKey:@"progress"]] && [[progressDictionary objectForKey:@"progress"]isKindOfClass: [NSNumber class]]) {
 //            if ([self.imageURL isEqualToString:[progressDictionary objectForKey:@"image"]]) {
 //                NSNumber *progress = [progressDictionary objectForKey:@"progress"];
 //
@@ -1057,14 +1060,14 @@ const CGFloat ABBufferTabBar = 49.0f;
 //}
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([ABUtils notNull:keyPath]) {
+    if ([ABCommons notNull:keyPath]) {
         //        [self print:object tag:@"Object"];
         //        [self print:change tag:@"Change"];
         //        [self print:keyPath tag:@"Key"];
         if ([keyPath isEqualToString:@"currentItem.loadedTimeRanges"]) {
             
-            if ([ABUtils notNull:self.player]) {
-                if ([ABUtils notNull:self.player.currentItem]) {
+            if ([ABCommons notNull:self.player]) {
+                if ([ABCommons notNull:self.player.currentItem]) {
                     if ([self hasVideo]) {
                         self.image = nil;
                     }
@@ -1101,7 +1104,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
         }
         else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
-            if ([ABUtils notNull:self.player]) {
+            if ([ABCommons notNull:self.player]) {
                 if ((self.player.rate != 0) && (self.player.error == nil)) {
                     isLoadingVideo = true;
                 }
@@ -1130,7 +1133,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 
 //- (void) showProgress: (float) progress {
-//    if ([ABUtils notNull:self.imageView.image]) {
+//    if ([ABCommons notNull:self.imageView.image]) {
 //        [self.loader stopLoading];
 //    }
 //    else {
@@ -1144,7 +1147,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) addTapGesture {
     //initializes gestures
-    if (![ABUtils notNull:self.tapRecognizer]) {
+    if (![ABCommons notNull:self.tapRecognizer]) {
         self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFromRecognizer)];
         self.tapRecognizer.numberOfTapsRequired = 1;
         self.tapRecognizer.delegate = self;
@@ -1161,12 +1164,12 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (BOOL) hasVideo {
     
-    return [ABUtils notNull:self.videoURL];
+    return [ABCommons notNull:self.videoURL];
 }
 
 - (BOOL) isPlayingVideo {
     
-    if ([ABUtils notNull:self.player]) {
+    if ([ABCommons notNull:self.player]) {
         if (((self.player.rate != 0) && (self.player.error == nil)) || self.isLoadingVideo) {
             return YES;
         }
@@ -1224,7 +1227,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (self.videoAspectFit != videoAspectFit) {
         self.videoAspectFit = videoAspectFit;
         
-        if ([ABUtils notNull:self.playerLayer]) {
+        if ([ABCommons notNull:self.playerLayer]) {
             self.playerLayer.videoGravity = [self getVideoGravity];
         }
     }
@@ -1314,8 +1317,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     BOOL hasDetails = NO;
-    if ([ABUtils notNull:self.detailsLabel]) {
-        if ([ABUtils isValidEntry:self.detailsLabel.text]) {
+    if ([ABCommons notNull:self.detailsLabel]) {
+        if ([ABCommons isValidEntry:self.detailsLabel.text]) {
             hasDetails = YES;
         }
     }
@@ -1325,13 +1328,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self updateDetailsLabelOffsets];
     }
     
+    [self updateTopOverlayHeight];
     [self layoutIfNeeded];
     
     
 }
 
 - (void) seekToTime:(float)time {
-    if ([ABUtils notNull:self.player]) {
+    if ([ABCommons notNull:self.player]) {
         int32_t timeScale = self.player.currentItem.asset.duration.timescale;
         CMTime timeCM = CMTimeMakeWithSeconds(time, timeScale);
         [self.player seekToTime:timeCM toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
@@ -1351,8 +1355,8 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.tapRecognizer.enabled = NO;
             self.closeButton.userInteractionEnabled = NO;
             
-            if ([ABUtils notNull:self.track]) {
-                if ([ABUtils notNull:self.track.hideTimer]) {
+            if ([ABCommons notNull:self.track]) {
+                if ([ABCommons notNull:self.track.hideTimer]) {
                     [self.track.hideTimer invalidate];
                     [self.track hideTrack];
                 }
@@ -1698,7 +1702,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setShowRemainingTime: (BOOL) showRemainingTime {
     _displayRemainingTime = showRemainingTime;
     
-    if ([ABUtils notNull:self.track]) {
+    if ([ABCommons notNull:self.track]) {
         self.track.showRemainingTime = showRemainingTime;
     }
 }
@@ -1706,13 +1710,13 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setCanMinimize:(BOOL)canMinimize {
     self.isMinimizable = canMinimize;
     
-    if ([ABUtils notNull:swipeRecognizer]) {
+    if ([ABCommons notNull:swipeRecognizer]) {
         swipeRecognizer.enabled = self.isMinimizable;
     }
 }
 
 - (void) queueMediaView: (ABMediaView *) mediaView {
-    if ([ABUtils notNull:mediaView]) {
+    if ([ABCommons notNull:mediaView]) {
         [self.mediaViewQueue addObject:mediaView];
     }
 }
@@ -1722,7 +1726,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [[ABMediaView sharedManager] presentMediaView:[self.mediaViewQueue firstObject]];
     }
     else {
-        if ([ABUtils notNull: [[ABMediaView sharedManager] currentMediaView]]) {
+        if ([ABCommons notNull: [[ABMediaView sharedManager] currentMediaView]]) {
             [[[ABMediaView sharedManager] currentMediaView] dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
                 NSLog(@"No mediaView in queue");
             }];
@@ -1741,7 +1745,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) presentMediaView:(ABMediaView *) mediaView animated:(BOOL)animated {
     
-    if ([ABUtils notNull: [[ABMediaView sharedManager] currentMediaView]]) {
+    if ([ABCommons notNull: [[ABMediaView sharedManager] currentMediaView]]) {
         [[[ABMediaView sharedManager] currentMediaView] dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
             [[ABMediaView sharedManager] removeFromQueue:mediaView];
             [[ABMediaView sharedManager] handleMediaViewPresentation:mediaView animated:animated];
@@ -1849,7 +1853,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 - (void) removeFromQueue:(ABMediaView *) mediaView {
-    if ([ABUtils notNull:mediaView] && self.mediaViewQueue.count) {
+    if ([ABCommons notNull:mediaView] && self.mediaViewQueue.count) {
         [self.mediaViewQueue removeObject:mediaView];
     }
 }
@@ -1895,7 +1899,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             [[ABMediaView sharedManager] setCurrentMediaView:nil];
             
-            if ([ABUtils notNull:completion]) {
+            if ([ABCommons notNull:completion]) {
                 completion(YES);
             }
             
@@ -1906,14 +1910,14 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setBorderAlpha: (CGFloat) alpha {
-    self.layer.borderColor = [[ABUtils colorWithHexString:@"95a5a6"] colorWithAlphaComponent:alpha].CGColor;
+    self.layer.borderColor = [[ABCommons colorWithHexString:@"95a5a6"] colorWithAlphaComponent:alpha].CGColor;
     self.layer.shadowOpacity = alpha;
 }
 
 - (void) setTrackFont:(UIFont *)font {
     _trackFont = font;
     
-    if ([ABUtils notNull:font]) {
+    if ([ABCommons notNull:font]) {
         [self.track setTrackFont:font];
     }
 }
@@ -2145,8 +2149,8 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setGifURL:(NSString *)gifURL {
     _gifURL = gifURL;
     
-    if ([ABUtils notNull:self.gifURL]) {
-        if ([ABUtils notNull:self.gifCache]) {
+    if ([ABCommons notNull:self.gifURL]) {
+        if ([ABCommons notNull:self.gifCache]) {
             self.image = self.gifCache;
         }
         
@@ -2162,8 +2166,8 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setGifData:(NSData *)gifData {
     _gifData = gifData;
     
-    if ([ABUtils notNull:self.gifData]) {
-        if ([ABUtils notNull:self.gifCache]) {
+    if ([ABCommons notNull:self.gifData]) {
+        if ([ABCommons notNull:self.gifCache]) {
             self.image = self.gifCache;
         }
         
@@ -2177,7 +2181,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setGifCache:(UIImage *)gifCache {
     _gifCache = gifCache;
     
-    if ([ABUtils notNull:self.gifCache]) {
+    if ([ABCommons notNull:self.gifCache]) {
         if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadGif:)]) {
             [self.delegate mediaView:self didDownloadGif:self.gifCache];
         }
@@ -2187,7 +2191,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setImageCache:(UIImage *)imageCache {
     _imageCache = imageCache;
     
-    if ([ABUtils notNull:self.imageCache]) {
+    if ([ABCommons notNull:self.imageCache]) {
         if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadImage:)]) {
             [self.delegate mediaView:self didDownloadImage:self.imageCache];
         }
@@ -2197,7 +2201,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setVideoCache:(NSString *)videoCache {
     _videoCache = videoCache;
     
-    if ([ABUtils notNull:self.videoCache]) {
+    if ([ABCommons notNull:self.videoCache]) {
         if ([self.delegate respondsToSelector:@selector(mediaView:didDownloadVideo:)]) {
             [self.delegate mediaView:self didDownloadVideo:self.videoCache];
         }
@@ -2205,7 +2209,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (BOOL) hasMedia {
-    return ([self hasVideo] || [ABUtils notNull:self.audioURL]);
+    return ([self hasVideo] || [ABCommons notNull:self.audioURL]);
 }
 
 - (void) setTopBuffer:(CGFloat)topBuffer {
@@ -2226,7 +2230,32 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self setTitle:title withDetails:nil];
 }
 
+- (void) handleTitleTap {
+    if ([self.delegate respondsToSelector:@selector(handleTitleSelectionInMediaView:)]) {
+        [self.delegate handleTitleSelectionInMediaView:self];
+    }
+}
+
+- (void) handleDetailsTap {
+    if ([self.delegate respondsToSelector:@selector(handleDetailsSelectionInMediaView:)]) {
+        [self.delegate handleDetailsSelectionInMediaView:self];
+    }
+}
+
 - (void) setTitle:(NSString *)title withDetails:(NSString *)details {
+    //initializes gestures
+    if (![ABCommons notNull:titleTapRecognizer]) {
+        titleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTitleTap)];
+        titleTapRecognizer.numberOfTapsRequired = 1;
+        titleTapRecognizer.delegate = self;
+    }
+    
+    if (![ABCommons notNull:detailsTapRecognizer]) {
+        detailsTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailsTap)];
+        detailsTapRecognizer.numberOfTapsRequired = 1;
+        detailsTapRecognizer.delegate = self;
+    }
+    
     [self.titleLabel removeFromSuperview];
     [self.detailsLabel removeFromSuperview];
     self.titleTopOffset = nil;
@@ -2234,11 +2263,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.titleLabel = nil;
     self.detailsLabel = nil;
     
-    BOOL hasTitle = [ABUtils isValidEntry:title];
-    BOOL hasDetails = [ABUtils isValidEntry:details];
+    BOOL hasTitle = [ABCommons isValidEntry:title];
+    BOOL hasDetails = [ABCommons isValidEntry:details];
     
     if (hasTitle) {
-        title = [ABUtils trimWhiteAndMultiSpace:title];
+        title = [ABCommons trimWhiteAndMultiSpace:title];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
         self.titleLabel.text = title;
@@ -2247,6 +2276,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         self.titleLabel.alpha = 0.0f;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        if (![self.titleLabel.gestureRecognizers containsObject:titleTapRecognizer]) {
+            [self.titleLabel addGestureRecognizer:titleTapRecognizer];
+        }
         
         if (![self.subviews containsObject:self.titleLabel]) {
             [self addSubview:self.titleLabel];
@@ -2258,7 +2291,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                              toItem:self.titleLabel
                                           attribute:NSLayoutAttributeTrailing
                                          multiplier:1
-                                           constant:60]];
+                                           constant:50]];
             
             [self addConstraint:
              [NSLayoutConstraint constraintWithItem:self.titleLabel
@@ -2267,7 +2300,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                              toItem:self
                                           attribute:NSLayoutAttributeLeading
                                          multiplier:1
-                                           constant:60]];
+                                           constant:56]];
             
             [self updateTitleLabelOffsets:hasDetails];
             [self addConstraint: self.titleTopOffset];
@@ -2281,7 +2314,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                                          constant:16.0f]];
         }
         if (hasDetails) {
-            details = [ABUtils trimWhiteAndMultiSpace:details];
+            details = [ABCommons trimWhiteAndMultiSpace:details];
             self.detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
             self.detailsLabel.text = details;
             self.detailsLabel.textColor = [UIColor whiteColor];
@@ -2289,6 +2322,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.detailsLabel.textAlignment = NSTextAlignmentLeft;
             self.detailsLabel.alpha = 0.0f;
             self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            if (![self.detailsLabel.gestureRecognizers containsObject:detailsTapRecognizer]) {
+                [self.detailsLabel addGestureRecognizer:detailsTapRecognizer];
+            }
             
             if (![self.subviews containsObject:self.detailsLabel]) {
                 [self addSubview:self.detailsLabel];
@@ -2300,7 +2337,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                  toItem:self.detailsLabel
                                               attribute:NSLayoutAttributeTrailing
                                              multiplier:1
-                                               constant:60]];
+                                               constant:50]];
                 
                 [self addConstraint:
                  [NSLayoutConstraint constraintWithItem:self.detailsLabel
@@ -2309,7 +2346,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                  toItem:self
                                               attribute:NSLayoutAttributeLeading
                                              multiplier:1
-                                               constant:60]];
+                                               constant:56]];
                 
                 [self updateDetailsLabelOffsets];
                 
@@ -2329,11 +2366,10 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) updateTitleLabelOffsets:(BOOL) hasDetails {
     
-    if ([ABUtils notNull:self.titleLabel]) {
-        [self layoutIfNeeded];
+    if ([ABCommons notNull:self.titleLabel]) {
         CGFloat constant = 8.0f+self.topBuffer;
         if (!hasDetails) {
-            constant += 12.0f;
+            constant += 9.0f;
         }
         
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
@@ -2342,8 +2378,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             constant -= self.topBuffer;
         }
         
-        if ([ABUtils notNull:self.titleTopOffset]) {
+        if ([ABCommons notNull:self.titleTopOffset]) {
+            [self layoutIfNeeded];
             self.titleTopOffset.constant = constant;
+            [self layoutIfNeeded];
         }
         else {
             self.titleTopOffset = [NSLayoutConstraint constraintWithItem:self.titleLabel
@@ -2355,14 +2393,12 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                                 constant:constant];
         }
         
-        [self layoutIfNeeded];
     }
     
 }
 
 - (void) updateDetailsLabelOffsets {
-    if ([ABUtils notNull:self.titleLabel]) {
-        [self layoutIfNeeded];
+    if ([ABCommons notNull:self.titleLabel]) {
         CGFloat constant = 8.0f+self.topBuffer;
         
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
@@ -2371,8 +2407,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             constant -= self.topBuffer;
         }
         
-        if ([ABUtils notNull:self.detailsTopOffset]) {
-            self.detailsTopOffset.constant = constant+20.0f;
+        if ([ABCommons notNull:self.detailsTopOffset]) {
+            [self layoutIfNeeded];
+            self.detailsTopOffset.constant = constant+18.0f;
+            [self layoutIfNeeded];
         }
         else {
             self.detailsTopOffset = [NSLayoutConstraint constraintWithItem:self.detailsLabel
@@ -2381,12 +2419,38 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                                     toItem:self
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:1
-                                                                  constant:constant+20.0f];
+                                                                  constant:constant+18.0f];
         }
-        
-        [self layoutIfNeeded];
     }
 }
+
+- (void) updateTopOverlayHeight {
+    if ([ABCommons notNull:self.topOverlay]) {
+        
+        CGFloat height = 50.0f+self.topBuffer;
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        
+        if (UIDeviceOrientationIsLandscape(orientation)) {
+            height -= self.topBuffer;
+        }
+        if ([ABCommons notNull:self.topOverlayHeight]) {
+            [self layoutIfNeeded];
+            self.topOverlayHeight.constant = height;
+            [self layoutIfNeeded];
+        }
+        else {
+            self.topOverlayHeight = [NSLayoutConstraint constraintWithItem:self.topOverlay
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:nil
+                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                multiplier:1
+                                                                  constant:height];
+        }
+        
+    }
+}
+
 @end
 
 

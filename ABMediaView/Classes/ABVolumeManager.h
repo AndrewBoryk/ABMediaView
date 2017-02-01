@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger, AudioType) {
     DefaultAudio,
 };
 
-#define ABVolumeBarColorLight [ABUtils colorWithHexString:@"FFFFFF"];
+#define ABVolumeBarColorLight [ABCommons colorWithHexString:@"FFFFFF"];
 #define ABVolumeBarColorDark = 
 
 @interface ABVolumeManager : NSObject {

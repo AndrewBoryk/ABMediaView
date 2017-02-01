@@ -7,6 +7,7 @@
 //
 
 #import "VideoTrackView.h"
+#import "ABCommons.h"
 
 @implementation VideoTrackView 
 
@@ -165,7 +166,7 @@
     [self updateProgress];
     
     int trackInt = 0;
-    if ([ABUtils notNull:progress]) {
+    if ([ABCommons notNull:progress]) {
         trackInt = progress.intValue;
     }
     
@@ -197,7 +198,7 @@
 
 - (void) updateProgress {
     
-    if ([ABUtils notNull:self.progress]) {
+    if ([ABCommons notNull:self.progress]) {
         CGFloat prog = self.progress.floatValue;
         
         if (prog == 0) {
@@ -228,7 +229,7 @@
 }
 
 - (void) updateBuffer {
-    if ([ABUtils notNull:self.buffer]) {
+    if ([ABCommons notNull:self.buffer]) {
         CGFloat buff = self.buffer.floatValue;
         
         if (buff == 0) {
@@ -350,7 +351,7 @@
 }
 
 - (void) setTrackFont: (UIFont *) font {
-    if ([ABUtils notNull:font]) {
+    if ([ABCommons notNull:font]) {
         self.totalTimeLabel.font = font;
         self.currentTimeLabel.font = font;
     }

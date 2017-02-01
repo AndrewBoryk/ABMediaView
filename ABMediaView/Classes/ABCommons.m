@@ -1,14 +1,14 @@
 //
-//  ABUtils.m
+//  ABCommons.m
 //  Pods
 //
-//  Created by Andrew Boryk on 1/4/17.
+//  Created by Andrew Boryk on 2/1/17.
 //
 //
 
-#import "ABUtils.h"
+#import "ABCommons.h"
 
-@implementation ABUtils
+@implementation ABCommons
 
 #pragma mark - Conditional Oriented
 + (BOOL)notNull:(id)object {
@@ -48,7 +48,7 @@
 }
 
 + (BOOL)notBlank: (NSString *) text {
-    if ([ABUtils notNull:text]) {
+    if ([ABCommons notNull:text]) {
         if (![text isEqualToString:@""]) {
             return YES;
         }
@@ -65,7 +65,7 @@
 }
 
 + (NSString *)trimWhiteSpace: (NSString *) text {
-    if ([ABUtils notNull:text]) {
+    if ([ABCommons notNull:text]) {
         text = [text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
     
@@ -73,7 +73,7 @@
 }
 
 + (NSString *)trimMultiSpace: (NSString *) text {
-    if ([ABUtils notNull:text]) {
+    if ([ABCommons notNull:text]) {
         while ([text containsString:@"  "]) {
             text = [text stringByReplacingOccurrencesOfString:@"  " withString:@" "];
         }
@@ -87,9 +87,9 @@
 }
 
 + (NSString *)trimWhiteAndMultiSpace: (NSString *) text {
-    if ([ABUtils notNull:text]) {
-        text = [ABUtils trimWhiteSpace:text];
-        text = [ABUtils trimMultiSpace:text];
+    if ([ABCommons notNull:text]) {
+        text = [ABCommons trimWhiteSpace:text];
+        text = [ABCommons trimMultiSpace:text];
     }
     
     return text;
@@ -103,8 +103,8 @@
 }
 
 + (BOOL)isValidEntry: (NSString *) text {
-    if ([ABUtils notNull:text]) {
-        if ([ABUtils notBlank:[ABUtils removeSpaces:text]]) {
+    if ([ABCommons notNull:text]) {
+        if ([ABCommons notBlank:[ABCommons removeSpaces:text]]) {
             return YES;
         }
     }
@@ -152,4 +152,5 @@
     
     return screen.size.width;
 }
+
 @end

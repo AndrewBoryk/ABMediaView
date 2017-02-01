@@ -134,8 +134,8 @@
     // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the audio.
     [mediaView setAudioURL:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3" withThumbnailURL:@"http://www.popologynow.com/wp-content/uploads/2015/01/M_FallOutBoy_082214-3.jpg"];
     
-    // Tile and details can be set for a me
-    [mediaView setTitle:@"Immortals (Remix)" withDetails:@"Fall Out Boy"];
+    // Tile and details can be set for a mediaView, which displays labels on the top of the view
+    [mediaView setTitle:@"\"The Take Over, The Breaks Over\"" withDetails:@"Fall Out Boy"];
     
     // Present the mediaView, dismiss any other mediaView that is showing
     [[ABMediaView sharedManager] presentMediaView:mediaView];
@@ -308,6 +308,9 @@
     [self dismissViewControllerAnimated:YES completion:^{
         MPMediaItem *item = [[mediaItemCollection items] firstObject];
         NSURL *url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
+        NSString *artist = [item valueForProperty:MPMediaItemPropertyArtist];
+        
         NSLog(@"MPMediaItemPropertyAssetURL %@", url);
         
         MPMediaItemArtwork *artWork = [item valueForProperty:MPMediaItemPropertyArtwork];
@@ -325,6 +328,12 @@
         
         // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the audio.
         [mediaView setAudioURL:url.relativeString withThumbnailImage:[artWork imageWithSize:CGSizeMake(screenWidth, screenWidth)]];
+        
+        // Setting just the title allows for a label to be displayed at the top of the mediaView
+        // [mediaView setTitle:title];
+        
+        // Setting both the title and details displays two labels on the top of the mediaView
+        [mediaView setTitle:title withDetails:artist];
         
         // Present the mediaView, dismiss any other mediaView that is showing
         [[ABMediaView sharedManager] presentMediaView:mediaView];

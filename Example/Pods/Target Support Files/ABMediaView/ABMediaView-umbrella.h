@@ -11,7 +11,6 @@
 #endif
 
 #import "ABMediaView.h"
-#import "ABUtils.h"
 #import "VideoTrackView.h"
 
 FOUNDATION_EXPORT double ABMediaViewVersionNumber;
