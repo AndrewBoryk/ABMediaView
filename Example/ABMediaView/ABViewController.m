@@ -360,8 +360,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         
         CGSize size = [[[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] naturalSize];
         
-        NSLog(@"Width %f height %f", size.width, size.height);
-        
         [picker dismissViewControllerAnimated:YES completion:^{
             ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
             
