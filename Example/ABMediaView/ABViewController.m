@@ -159,7 +159,7 @@
     NSLog(@"MediaView offset changed: %f", offsetPercentage);
     
     if (![[UIApplication sharedApplication] isStatusBarHidden]) {
-        if (offsetPercentage < (statusBarHeightPercentage/2.0f)) {
+        if (offsetPercentage < (statusBarHeightPercentage*0.66f)) {
             if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleLightContent) {
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             }
