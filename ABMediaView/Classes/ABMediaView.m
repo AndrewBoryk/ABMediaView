@@ -2222,6 +2222,20 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     _topBuffer = topBuffer;
     
+    [self updateTopOverlayHeight];
+    
+    BOOL hasDetails = NO;
+    if ([ABCommons notNull:self.detailsLabel]) {
+        if ([ABCommons isValidEntry:self.detailsLabel.text]) {
+            hasDetails = YES;
+        }
+    }
+    
+    [self updateTitleLabelOffsets:hasDetails];
+    if (hasDetails) {
+        [self updateDetailsLabelOffsets];
+    }
+    
     [self layoutSubviews];
     
 }
@@ -2276,6 +2290,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         self.titleLabel.alpha = 0.0f;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.titleLabel.userInteractionEnabled = YES;
         
         if (![self.titleLabel.gestureRecognizers containsObject:titleTapRecognizer]) {
             [self.titleLabel addGestureRecognizer:titleTapRecognizer];
@@ -2287,7 +2302,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self addConstraint:
              [NSLayoutConstraint constraintWithItem:self
                                           attribute:NSLayoutAttributeTrailing
-                                          relatedBy:NSLayoutRelationEqual
+                                          relatedBy:NSLayoutRelationGreaterThanOrEqual
                                              toItem:self.titleLabel
                                           attribute:NSLayoutAttributeTrailing
                                          multiplier:1
@@ -2322,7 +2337,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.detailsLabel.textAlignment = NSTextAlignmentLeft;
             self.detailsLabel.alpha = 0.0f;
             self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            
+            self.detailsLabel.userInteractionEnabled = YES;
             if (![self.detailsLabel.gestureRecognizers containsObject:detailsTapRecognizer]) {
                 [self.detailsLabel addGestureRecognizer:detailsTapRecognizer];
             }
@@ -2333,7 +2348,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 [self addConstraint:
                  [NSLayoutConstraint constraintWithItem:self
                                               attribute:NSLayoutAttributeTrailing
-                                              relatedBy:NSLayoutRelationEqual
+                                              relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                  toItem:self.detailsLabel
                                               attribute:NSLayoutAttributeTrailing
                                              multiplier:1
