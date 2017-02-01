@@ -1868,12 +1868,60 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        
+        CGFloat width = screenRect.size.width;
+        CGFloat height = screenRect.size.height;
+        
         if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
-            mediaView.closeButton.alpha = 0;
+            if (height < width) {
+                mediaView.closeButton.alpha = 1;
+            }
+            else {
+                mediaView.closeButton.alpha = 0;
+            }
+            
+        }
+        else if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsLandscape(orientation)) {
+            if (height > width) {
+                mediaView.closeButton.alpha = 0;
+            }
+            else {
+                mediaView.closeButton.alpha = 1;
+            }
         }
         else {
             mediaView.closeButton.alpha = 1;
         }
+//        
+//        if (UIDeviceOrientationIsPortrait(orientation)) {
+//            
+//            if (height < width) {
+//                CGFloat tempFloat = width;
+//                width = height;
+//                height = tempFloat;
+//            }
+//            
+//            swipeRecognizer.enabled = self.isMinimizable;
+//        }
+//        else {
+//            
+//            if (height > width) {
+//                mediaView.closeButton.alpha = 0;
+//            }
+//            
+//            swipeRecognizer.enabled = NO;
+//            
+//        }
+//        
+//        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+//        
+//        if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
+//            mediaView.closeButton.alpha = 0;
+//        }
+//        else {
+//            mediaView.closeButton.alpha = 1;
+//        }
     }
     else {
         mediaView.closeButton.alpha = 0;
