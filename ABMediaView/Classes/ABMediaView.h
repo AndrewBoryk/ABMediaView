@@ -73,6 +73,27 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Main window which the mediaView will be added to
 @property (strong, nonatomic) UIWindow *mainWindow;
 
+/// Gradient dark overlay on top of the mediaView which UI can be placed on top of
+@property (strong, nonatomic) UIImageView *topOverlay;
+
+/// Label at the top of the mediaView, displayed within the topOverlay. Designated for a title, but other text can be inserted
+@property (strong, nonatomic) UILabel *titleLabel;
+
+/// Space between the titleLabel and the superview
+@property (strong, nonatomic) NSLayoutConstraint *titleTopOffset;
+
+/// Label at the top of the mediaView, displayed within the topOverlay. Designated for details
+@property (strong, nonatomic) UILabel *detailsLabel;
+
+/// Space between the detailsLabel and the superview
+@property (strong, nonatomic) NSLayoutConstraint *detailsTopOffset;
+
+/// Set a title to the mediaView, displayed in the titleLabel of the topOverlay, without a details
+- (void) setTitle:(NSString *)title;
+
+/// Set a title and details to the mediaView, displayed in the titleLabel and detailsLabel of the topOverlay
+- (void) setTitle:(NSString *)title withDetails:(NSString *)details;
+
 /// Track which shows the progress of the video being played
 @property (strong, nonatomic) VideoTrackView *track;
 

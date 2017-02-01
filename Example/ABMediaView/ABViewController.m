@@ -134,6 +134,9 @@
     // Set the url for the audio that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the audio.
     [mediaView setAudioURL:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3" withThumbnailURL:@"http://www.popologynow.com/wp-content/uploads/2015/01/M_FallOutBoy_082214-3.jpg"];
     
+    // Tile and details can be set for a me
+    [mediaView setTitle:@"Immortals (Remix)" withDetails:@"Fall Out Boy"];
+    
     // Present the mediaView, dismiss any other mediaView that is showing
     [[ABMediaView sharedManager] presentMediaView:mediaView];
 }

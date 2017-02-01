@@ -175,6 +175,24 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self addTapGesture];
     
+    if (![ABUtils notNull:self.topOverlay]) {
+        self.topOverlay = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.superviewHeight, 80)];
+        self.topOverlay.translatesAutoresizingMaskIntoConstraints = NO;
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        
+        gradient.frame = self.topOverlay.bounds;
+        gradient.colors = @[(id)[[UIColor blackColor] colorWithAlphaComponent:0.5f].CGColor, (id)[UIColor clearColor].CGColor];
+        
+        UIGraphicsBeginImageContextWithOptions(gradient.frame.size, NO, 0);
+        
+        [gradient renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+        
+        [self.topOverlay setImage:outputImage];
+    }
+    
     if (![ABUtils notNull:self.loadingIndicator]) {
         self.loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -204,11 +222,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     self.closeButton.alpha = 0;
     
-    if (![self.subviews containsObject:self.closeButton]) {
-        [self addSubview:self.closeButton];
-        
-        [self bringSubviewToFront:self.closeButton];
-    }
     
     if (![ABUtils notNull:swipeRecognizer]) {
         swipeRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
@@ -232,6 +245,55 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
     
     self.track.hidden = YES;
+    
+    if (![self.subviews containsObject:self.topOverlay]) {
+        self.topOverlay.alpha = 0;
+        
+        [self addSubview:self.topOverlay];
+        
+        [self addConstraint:
+         [NSLayoutConstraint constraintWithItem:self
+                                      attribute:NSLayoutAttributeTrailing
+                                      relatedBy:NSLayoutRelationEqual
+                                         toItem:self.topOverlay
+                                      attribute:NSLayoutAttributeTrailing
+                                     multiplier:1
+                                       constant:0]];
+        
+        [self addConstraint:
+         [NSLayoutConstraint constraintWithItem:self
+                                      attribute:NSLayoutAttributeLeading
+                                      relatedBy:NSLayoutRelationEqual
+                                         toItem:self.topOverlay
+                                      attribute:NSLayoutAttributeLeading
+                                     multiplier:1
+                                       constant:0]];
+        
+        [self addConstraint:
+         [NSLayoutConstraint constraintWithItem:self
+                                      attribute:NSLayoutAttributeTop
+                                      relatedBy:NSLayoutRelationEqual
+                                         toItem:self.topOverlay
+                                      attribute:NSLayoutAttributeTop
+                                     multiplier:1
+                                       constant:0]];
+        
+        [self.topOverlay addConstraint:[NSLayoutConstraint constraintWithItem:self.topOverlay
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:nil
+                                                               attribute:NSLayoutAttributeNotAnAttribute
+                                                              multiplier:1
+                                                                constant:80.0f]];
+        [self.topOverlay layoutIfNeeded];
+        
+    }
+    
+    if (![self.subviews containsObject:self.closeButton]) {
+        [self addSubview:self.closeButton];
+        
+        [self bringSubviewToFront:self.closeButton];
+    }
     
     if (![self.subviews containsObject:self.videoIndicator]) {
         self.videoIndicator.alpha = 0;
@@ -297,7 +359,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                                                                attribute:NSLayoutAttributeHeight
                                                                relatedBy:NSLayoutRelationEqual
                                                                   toItem:nil
-                                                               attribute: NSLayoutAttributeNotAnAttribute
+                                                               attribute:NSLayoutAttributeNotAnAttribute
                                                               multiplier:1
                                                                 constant:60.0f]];
         
@@ -415,6 +477,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     self.videoIndicator.alpha = 0;
     self.closeButton.alpha = 0;
+    self.topOverlay.alpha = 0;
+    self.titleLabel.alpha = 0;
+    self.detailsLabel.alpha = 0;
     
     [self stopVideoAnimate];
 }
@@ -607,6 +672,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             if (play) {
                 [self.player play];
                 
+                [self handleTopOverlayDisplay:self];
+                
                 if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
                     [self.delegate mediaViewDidPlayVideo:self];
                 }
@@ -711,6 +778,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             if (play) {
                 [self.player play];
                 
+                [self handleTopOverlayDisplay:self];
+                
                 if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
                     [self.delegate mediaViewDidPlayVideo:self];
                 }
@@ -794,6 +863,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
             
             [self handleCloseButtonDisplay:self];
+            [self handleTopOverlayDisplay:self];
             
             [self layoutSubviews];
             
@@ -836,6 +906,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     
                     [self.player pause];
                     
+                    [self handleTopOverlayDisplay:self];
+                    
                     if ([self.delegate respondsToSelector:@selector(mediaViewDidPauseVideo:)]) {
                         [self.delegate mediaViewDidPauseVideo:self];
                     }
@@ -847,6 +919,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     
                     [self.player play];
                     
+                    [self handleTopOverlayDisplay:self];
+                    
                     if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
                         [self.delegate mediaViewDidPlayVideo:self];
                     }
@@ -856,6 +930,8 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     [self loadVideoAnimate];
                     
                     [self.player play];
+                    
+                    [self handleTopOverlayDisplay:self];
                     
                     if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
                         [self.delegate mediaViewDidPlayVideo: self];
@@ -1214,6 +1290,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         }
         
         [self handleCloseButtonDisplay:self];
+        [self handleTopOverlayDisplay:self];
         
         if (self.isLoadingVideo) {
             [self stopVideoAnimate];
@@ -1229,6 +1306,18 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self.track updateBuffer];
         [self.track updateProgress];
         [self.track updateBarBackground];
+    }
+    
+    BOOL hasDetails = NO;
+    if ([ABUtils notNull:self.detailsLabel]) {
+        if ([ABUtils isValidEntry:self.detailsLabel.text]) {
+            hasDetails = YES;
+        }
+    }
+    
+    [self updateTitleLabelOffsets:hasDetails];
+    if (hasDetails) {
+        [self updateDetailsLabelOffsets];
     }
     
     [self layoutIfNeeded];
@@ -1333,6 +1422,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                         self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
                         self.videoIndicator.alpha = 0;
                         self.closeButton.alpha = 0;
+                        self.topOverlay.alpha = 0;
+                        self.titleLabel.alpha = 0;
+                        self.detailsLabel.alpha = 0;
 //                        self.layer.cornerRadius = 1.5f;
                         [self setBorderAlpha:1.0f];
                     }
@@ -1344,6 +1436,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                         }
                         
                         [self handleCloseButtonDisplay:self];
+                        [self handleTopOverlayDisplay:self];
                         
                         self.layer.cornerRadius = 0.0f;
                         [self setBorderAlpha:0.0f];
@@ -1484,6 +1577,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
             
             self.closeButton.alpha = 0;
+            self.topOverlay.alpha = 0;
+            self.titleLabel.alpha = 0;
+            self.detailsLabel.alpha = 0;
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
@@ -1499,6 +1595,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             }
             
             [self handleCloseButtonDisplay:self];
+            [self handleTopOverlayDisplay:self];
         }
         else {
             origin.y = testOrigin;
@@ -1523,9 +1620,16 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 else {
                     self.closeButton.alpha = (1-offsetPercentage);
                 }
+                
+                self.topOverlay.alpha = (1-offsetPercentage);
+                self.titleLabel.alpha = (1-offsetPercentage);
+                self.detailsLabel.alpha = (1-offsetPercentage);
             }
             else {
                 self.closeButton.alpha = 0;
+                self.topOverlay.alpha = 0;
+                self.titleLabel.alpha = 0;
+                self.detailsLabel.alpha = 0;
             }
         }
         
@@ -1648,6 +1752,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [mediaView setFullscreen:YES];
     [mediaView handleCloseButtonDisplay:mediaView];
+    [mediaView handleTopOverlayDisplay:mediaView];
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -1661,6 +1766,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         mediaView.alpha = 1;
         mediaView.frame = mediaView.originRectConverted;
         mediaView.closeButton.alpha = 0;
+        mediaView.topOverlay.alpha = 0;
+        mediaView.titleLabel.alpha = 0;
+        mediaView.detailsLabel.alpha = 0;
         [mediaView layoutSubviews];
         [self.mainWindow addSubview:mediaView];
         [self.mainWindow bringSubviewToFront:mediaView];
@@ -1676,6 +1784,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             //            mediaView.videoIndicator.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
             [mediaView handleCloseButtonDisplay:mediaView];
+            [mediaView handleTopOverlayDisplay:mediaView];
             [mediaView layoutSubviews];
         } completion:^(BOOL finished) {
             
@@ -1692,6 +1801,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     else {
         mediaView.alpha = 0;
         mediaView.closeButton.alpha = 0;
+        mediaView.topOverlay.alpha = 0;
+        mediaView.titleLabel.alpha = 0;
+        mediaView.detailsLabel.alpha = 0;
         mediaView.frame = self.mainWindow.frame;
         [self.mainWindow addSubview:mediaView];
         [self.mainWindow bringSubviewToFront:mediaView];
@@ -1705,6 +1817,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:animationTime animations:^{
             mediaView.alpha = 1;
             [mediaView handleCloseButtonDisplay:mediaView];
+            [mediaView handleTopOverlayDisplay:mediaView];
         } completion:^(BOOL finished) {
             if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidPresent:)]) {
                 [mediaView.delegate mediaViewDidPresent:mediaView];
@@ -1748,6 +1861,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
         } completion:^(BOOL finished) {
             [self.player pause];
+            
             [self.playerLayer removeFromSuperlayer];
             self.playerLayer = nil;
             self.player = nil;
@@ -1945,6 +2059,27 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     }
 }
 
+- (void) handleTopOverlayDisplay: (ABMediaView *) mediaView {
+    if (mediaView.isFullScreen) {
+        if ([mediaView isPlayingVideo]) {
+            mediaView.topOverlay.alpha = 0;
+            mediaView.titleLabel.alpha = 0;
+            mediaView.detailsLabel.alpha = 0;
+        }
+        else {
+            mediaView.topOverlay.alpha = 1;
+            mediaView.titleLabel.alpha = 1;
+            mediaView.detailsLabel.alpha = 1;
+        }
+    }
+    else {
+        mediaView.topOverlay.alpha = 0;
+        mediaView.titleLabel.alpha = 0;
+        mediaView.detailsLabel.alpha = 0;
+    }
+}
+
+
 - (void) setFullscreen: (BOOL) fullscreen {
     isFullscreen = fullscreen;
 }
@@ -2063,6 +2198,172 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [self layoutSubviews];
     
+}
+
+- (void) setTitle:(NSString *)title {
+    [self setTitle:title withDetails:nil];
+}
+
+- (void) setTitle:(NSString *)title withDetails:(NSString *)details {
+    [self.titleLabel removeFromSuperview];
+    [self.detailsLabel removeFromSuperview];
+    self.titleTopOffset = nil;
+    self.detailsTopOffset = nil;
+    self.titleLabel = nil;
+    self.detailsLabel = nil;
+    
+    BOOL hasTitle = [ABUtils isValidEntry:title];
+    BOOL hasDetails = [ABUtils isValidEntry:details];
+    
+    if (hasTitle) {
+        title = [ABUtils trimWhiteAndMultiSpace:title];
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
+        self.titleLabel.text = title;
+        self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
+        self.titleLabel.textAlignment = NSTextAlignmentLeft;
+        self.titleLabel.alpha = 0.8f;
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        if (![self.subviews containsObject:self.titleLabel]) {
+            [self addSubview:self.titleLabel];
+            
+            [self addConstraint:
+             [NSLayoutConstraint constraintWithItem:self
+                                          attribute:NSLayoutAttributeTrailing
+                                          relatedBy:NSLayoutRelationEqual
+                                             toItem:self.titleLabel
+                                          attribute:NSLayoutAttributeTrailing
+                                         multiplier:1
+                                           constant:60]];
+            
+            [self addConstraint:
+             [NSLayoutConstraint constraintWithItem:self.titleLabel
+                                          attribute:NSLayoutAttributeLeading
+                                          relatedBy:NSLayoutRelationEqual
+                                             toItem:self
+                                          attribute:NSLayoutAttributeLeading
+                                         multiplier:1
+                                           constant:60]];
+            
+            [self updateTitleLabelOffsets:hasDetails];
+            [self addConstraint: self.titleTopOffset];
+            
+            [self.titleLabel addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel
+                                                                        attribute:NSLayoutAttributeHeight
+                                                                        relatedBy:NSLayoutRelationEqual
+                                                                           toItem:nil
+                                                                        attribute:NSLayoutAttributeNotAnAttribute
+                                                                       multiplier:1
+                                                                         constant:16.0f]];
+        }
+        if (hasDetails) {
+            details = [ABUtils trimWhiteAndMultiSpace:details];
+            self.detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
+            self.detailsLabel.text = details;
+            self.detailsLabel.textColor = [UIColor whiteColor];
+            self.detailsLabel.font = [UIFont systemFontOfSize:12.0f];
+            self.detailsLabel.textAlignment = NSTextAlignmentLeft;
+            self.detailsLabel.alpha = 0.8f;
+            self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            if (![self.subviews containsObject:self.detailsLabel]) {
+                [self addSubview:self.detailsLabel];
+                
+                [self addConstraint:
+                 [NSLayoutConstraint constraintWithItem:self
+                                              attribute:NSLayoutAttributeTrailing
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.detailsLabel
+                                              attribute:NSLayoutAttributeTrailing
+                                             multiplier:1
+                                               constant:60]];
+                
+                [self addConstraint:
+                 [NSLayoutConstraint constraintWithItem:self.detailsLabel
+                                              attribute:NSLayoutAttributeLeading
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeLeading
+                                             multiplier:1
+                                               constant:60]];
+                
+                [self updateDetailsLabelOffsets];
+                
+                [self addConstraint: self.detailsTopOffset];
+                
+                [self.detailsLabel addConstraint:[NSLayoutConstraint constraintWithItem:self.detailsLabel
+                                                                            attribute:NSLayoutAttributeHeight
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:nil
+                                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                                           multiplier:1
+                                                                             constant:16.0f]];
+            }
+        }
+    }
+}
+
+- (void) updateTitleLabelOffsets:(BOOL) hasDetails {
+    
+    if ([ABUtils notNull:self.titleLabel]) {
+        [self layoutIfNeeded];
+        CGFloat constant = 8.0f+self.topBuffer;
+        if (!hasDetails) {
+            constant += 12.0f;
+        }
+        
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        
+        if (UIDeviceOrientationIsLandscape(orientation)) {
+            constant -= self.topBuffer;
+        }
+        
+        if ([ABUtils notNull:self.titleTopOffset]) {
+            self.titleTopOffset.constant = constant;
+        }
+        else {
+            self.titleTopOffset = [NSLayoutConstraint constraintWithItem:self.titleLabel
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1
+                                                                constant:constant];
+        }
+        
+        [self layoutIfNeeded];
+    }
+    
+}
+
+- (void) updateDetailsLabelOffsets {
+    if ([ABUtils notNull:self.titleLabel]) {
+        [self layoutIfNeeded];
+        CGFloat constant = 8.0f+self.topBuffer;
+        
+        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+        
+        if (UIDeviceOrientationIsLandscape(orientation)) {
+            constant -= self.topBuffer;
+        }
+        
+        if ([ABUtils notNull:self.detailsTopOffset]) {
+            self.detailsTopOffset.constant = constant+20.0f;
+        }
+        else {
+            self.detailsTopOffset = [NSLayoutConstraint constraintWithItem:self.detailsLabel
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1
+                                                                  constant:constant+20.0f];
+        }
+        
+        [self layoutIfNeeded];
+    }
 }
 @end
 

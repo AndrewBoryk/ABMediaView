@@ -10,6 +10,7 @@
 
 @implementation ABUtils
 
+#pragma mark - Conditional Oriented
 + (BOOL)notNull:(id)object {
     if ([object isEqual:[NSNull null]] || [object isKindOfClass:[NSNull class]] || object == nil) {
         return false;
@@ -17,6 +18,97 @@
     else {
         return true;
     }
+}
+
++ (BOOL)isNull:(id)object {
+    if ([object isEqual:[NSNull null]] || [object isKindOfClass:[NSNull class]] || object == nil) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
++ (BOOL)notNil:(id)object {
+    if (object == nil) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
++ (BOOL)isNil:(id)object {
+    if (object == nil) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
++ (BOOL)notBlank: (NSString *) text {
+    if ([ABUtils notNull:text]) {
+        if (![text isEqualToString:@""]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+#pragma mark - String Modification Oriented
+
++ (NSString *)removeSpecialCharacters: (NSString *) text {
+    NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"] invertedSet];
+    return  [[text componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
+}
+
++ (NSString *)trimWhiteSpace: (NSString *) text {
+    if ([ABUtils notNull:text]) {
+        text = [text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+    
+    return text;
+}
+
++ (NSString *)trimMultiSpace: (NSString *) text {
+    if ([ABUtils notNull:text]) {
+        while ([text containsString:@"  "]) {
+            text = [text stringByReplacingOccurrencesOfString:@"  " withString:@" "];
+        }
+        
+        while ([text containsString:@"\n\n"]) {
+            text = [text stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
+        }
+    }
+    
+    return text;
+}
+
++ (NSString *)trimWhiteAndMultiSpace: (NSString *) text {
+    if ([ABUtils notNull:text]) {
+        text = [ABUtils trimWhiteSpace:text];
+        text = [ABUtils trimMultiSpace:text];
+    }
+    
+    return text;
+}
+
++ (NSString *)removeSpaces: (NSString *) text {
+    text = [self trimWhiteAndMultiSpace:text];
+    text = [text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    return text;
+}
+
++ (BOOL)isValidEntry: (NSString *) text {
+    if ([ABUtils notNull:text]) {
+        if ([ABUtils notBlank:[ABUtils removeSpaces:text]]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 + (UIColor*)colorWithHexString:(NSString*)hex
