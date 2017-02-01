@@ -141,6 +141,24 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         self.delegate = mediaView.delegate;
         
+        NSString *title = nil;
+        NSString *details = nil;
+        
+        if ([ABCommons notNull:mediaView.titleLabel]) {
+            if ([ABCommons isValidEntry:mediaView.titleLabel.text]) {
+                title = mediaView.titleLabel.text;
+            }
+            
+        }
+        
+        if ([ABCommons notNull:mediaView.detailsLabel]) {
+            if ([ABCommons isValidEntry:mediaView.detailsLabel.text]) {
+                details = mediaView.detailsLabel.text;
+            }
+        }
+        
+        [self setTitle:title withDetails:details];
+        
         if (mediaView.presentFromOriginRect) {
             self.originRect = mediaView.frame;
         }
@@ -1630,7 +1648,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                     self.closeButton.alpha = (1-offsetPercentage);
                 }
                 
-                if ([self isPlayingVideo]) {
+                if ([self isPlayingVideo] || ![self hasTitle:self]) {
                     self.topOverlay.alpha = 0;
                     self.titleLabel.alpha = 0;
                     self.detailsLabel.alpha = 0;
@@ -2085,7 +2103,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) handleTopOverlayDisplay: (ABMediaView *) mediaView {
     [UIView animateWithDuration:0.20 animations:^{
         if (mediaView.isFullScreen) {
-            if ([mediaView isPlayingVideo]) {
+            if ([self isPlayingVideo] || ![self hasTitle:self]) {
                 mediaView.topOverlay.alpha = 0;
                 mediaView.titleLabel.alpha = 0;
                 mediaView.detailsLabel.alpha = 0;
@@ -2291,6 +2309,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.titleLabel.alpha = 0.0f;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.titleLabel.userInteractionEnabled = YES;
+        [self addShadow:self.titleLabel];
         
         if (![self.titleLabel.gestureRecognizers containsObject:titleTapRecognizer]) {
             [self.titleLabel addGestureRecognizer:titleTapRecognizer];
@@ -2315,7 +2334,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                              toItem:self
                                           attribute:NSLayoutAttributeLeading
                                          multiplier:1
-                                           constant:56]];
+                                           constant:50]];
             
             [self updateTitleLabelOffsets:hasDetails];
             [self addConstraint: self.titleTopOffset];
@@ -2326,7 +2345,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                                            toItem:nil
                                                                         attribute:NSLayoutAttributeNotAnAttribute
                                                                        multiplier:1
-                                                                         constant:16.0f]];
+                                                                         constant:18.0f]];
         }
         if (hasDetails) {
             details = [ABCommons trimWhiteAndMultiSpace:details];
@@ -2338,6 +2357,8 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.detailsLabel.alpha = 0.0f;
             self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
             self.detailsLabel.userInteractionEnabled = YES;
+            [self addShadow:self.detailsLabel];
+            
             if (![self.detailsLabel.gestureRecognizers containsObject:detailsTapRecognizer]) {
                 [self.detailsLabel addGestureRecognizer:detailsTapRecognizer];
             }
@@ -2361,7 +2382,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                  toItem:self
                                               attribute:NSLayoutAttributeLeading
                                              multiplier:1
-                                               constant:56]];
+                                               constant:50]];
                 
                 [self updateDetailsLabelOffsets];
                 
@@ -2373,7 +2394,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                                                toItem:nil
                                                                             attribute:NSLayoutAttributeNotAnAttribute
                                                                            multiplier:1
-                                                                             constant:16.0f]];
+                                                                             constant:18.0f]];
             }
         }
     }
@@ -2384,7 +2405,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if ([ABCommons notNull:self.titleLabel]) {
         CGFloat constant = 8.0f+self.topBuffer;
         if (!hasDetails) {
-            constant += 9.0f;
+            constant += 8.0f;
         }
         
         UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
@@ -2464,6 +2485,36 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
         
     }
+}
+
+- (void) addShadow: (UILabel *) label {
+    label.layer.masksToBounds = NO;
+    label.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.32f];
+    label.shadowOffset = CGSizeMake(0, 1);
+}
+
+- (BOOL) hasTitle: (ABMediaView *)mediaView {
+    if ([ABCommons notNull:mediaView]) {
+        if ([ABCommons notNull:mediaView.titleLabel]) {
+            if ([ABCommons isValidEntry:mediaView.titleLabel.text]) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL) hasDetails: (ABMediaView *)mediaView {
+    if ([ABCommons notNull:mediaView]) {
+        if ([ABCommons notNull:mediaView.detailsLabel]) {
+            if ([ABCommons isValidEntry:mediaView.detailsLabel.text]) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
 }
 
 @end

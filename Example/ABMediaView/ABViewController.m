@@ -35,7 +35,7 @@
     [self initializeSettingsForMediaView:self.mediaView];
     
     // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
-    [self.mediaView hideCloseButton:YES];
+//    [self.mediaView hideCloseButton:YES];
     
     // Setting which determines whether mediaView should pop up and display in full screen mode
     [self.mediaView setShouldDisplayFullscreen: YES];
@@ -71,6 +71,9 @@
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
     [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    
+    // Setting just the title allows for a label to be displayed at the top of the mediaView
+    [self.mediaView setTitle:@"Big Buck Bunny"];
     
     // You can also set the video URL, download the video, and set a thumnail image that doesn't need to be downloaded
     // [self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailImage:thumnailImage];
@@ -338,7 +341,7 @@
         [mediaView setAudioURL:url.relativeString withThumbnailImage:[artWork imageWithSize:CGSizeMake(screenWidth, screenWidth)]];
         
         // Setting just the title allows for a label to be displayed at the top of the mediaView
-        // [mediaView setTitle:title];
+//         [mediaView setTitle:title];
         
         // Setting both the title and details displays two labels on the top of the mediaView
         [mediaView setTitle:title withDetails:artist];
