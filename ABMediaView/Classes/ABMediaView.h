@@ -28,6 +28,12 @@ extern const CGFloat ABMediaViewRatioPresetPortrait;
 extern const CGFloat ABMediaViewRatioPresetSquare;
 extern const CGFloat ABMediaViewRatioPresetLandscape;
 
+/// Preset buffer offsets for easy access
+extern const CGFloat ABBufferStatusBar;
+extern const CGFloat ABBufferNavigationBar;
+extern const CGFloat ABBufferStatusAndNavigationBar;
+extern const CGFloat ABBufferTabBar;
+
 @interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate> {
     /// Position of the swipe vertically
     CGFloat ySwipePosition;

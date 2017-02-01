@@ -16,6 +16,11 @@ const CGFloat ABMediaViewRatioPresetPortrait = (16.0f/9.0f);
 const CGFloat ABMediaViewRatioPresetSquare = 1.0f;
 const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 
+const CGFloat ABBufferStatusBar = 20.0f;
+const CGFloat ABBufferNavigationBar = 44.0f;
+const CGFloat ABBufferStatusAndNavigationBar = 64.0f;
+const CGFloat ABBufferTabBar = 49.0f;
+
 @implementation ABMediaView {
     float bufferTime;
     
@@ -1621,9 +1626,17 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     self.closeButton.alpha = (1-offsetPercentage);
                 }
                 
-                self.topOverlay.alpha = (1-offsetPercentage);
-                self.titleLabel.alpha = (1-offsetPercentage);
-                self.detailsLabel.alpha = (1-offsetPercentage);
+                if ([self isPlayingVideo]) {
+                    self.topOverlay.alpha = 0;
+                    self.titleLabel.alpha = 0;
+                    self.detailsLabel.alpha = 0;
+                }
+                else {
+                    self.topOverlay.alpha = (1-offsetPercentage);
+                    self.titleLabel.alpha = (1-offsetPercentage);
+                    self.detailsLabel.alpha = (1-offsetPercentage);
+                }
+                
             }
             else {
                 self.closeButton.alpha = 0;
@@ -1752,7 +1765,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     [mediaView setFullscreen:YES];
     [mediaView handleCloseButtonDisplay:mediaView];
-    [mediaView handleTopOverlayDisplay:mediaView];
+    if (!mediaView.autoPlayAfterPresentation) {
+        [mediaView handleTopOverlayDisplay:mediaView];
+    }
     
     mediaView.backgroundColor = [UIColor blackColor];
     
@@ -1784,7 +1799,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             //            mediaView.videoIndicator.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
             [mediaView handleCloseButtonDisplay:mediaView];
-            [mediaView handleTopOverlayDisplay:mediaView];
+            if (!mediaView.autoPlayAfterPresentation) {
+                [mediaView handleTopOverlayDisplay:mediaView];
+            }
             [mediaView layoutSubviews];
         } completion:^(BOOL finished) {
             
@@ -1817,7 +1834,9 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [UIView animateWithDuration:animationTime animations:^{
             mediaView.alpha = 1;
             [mediaView handleCloseButtonDisplay:mediaView];
-            [mediaView handleTopOverlayDisplay:mediaView];
+            if (!mediaView.autoPlayAfterPresentation) {
+                [mediaView handleTopOverlayDisplay:mediaView];
+            }
         } completion:^(BOOL finished) {
             if ([mediaView.delegate respondsToSelector:@selector(mediaViewDidPresent:)]) {
                 [mediaView.delegate mediaViewDidPresent:mediaView];
@@ -2060,23 +2079,26 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 }
 
 - (void) handleTopOverlayDisplay: (ABMediaView *) mediaView {
-    if (mediaView.isFullScreen) {
-        if ([mediaView isPlayingVideo]) {
+    [UIView animateWithDuration:0.20 animations:^{
+        if (mediaView.isFullScreen) {
+            if ([mediaView isPlayingVideo]) {
+                mediaView.topOverlay.alpha = 0;
+                mediaView.titleLabel.alpha = 0;
+                mediaView.detailsLabel.alpha = 0;
+            }
+            else {
+                mediaView.topOverlay.alpha = 1;
+                mediaView.titleLabel.alpha = 1;
+                mediaView.detailsLabel.alpha = 1;
+            }
+        }
+        else {
             mediaView.topOverlay.alpha = 0;
             mediaView.titleLabel.alpha = 0;
             mediaView.detailsLabel.alpha = 0;
         }
-        else {
-            mediaView.topOverlay.alpha = 1;
-            mediaView.titleLabel.alpha = 1;
-            mediaView.detailsLabel.alpha = 1;
-        }
-    }
-    else {
-        mediaView.topOverlay.alpha = 0;
-        mediaView.titleLabel.alpha = 0;
-        mediaView.detailsLabel.alpha = 0;
-    }
+    }];
+    
 }
 
 
@@ -2223,7 +2245,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
-        self.titleLabel.alpha = 0.8f;
+        self.titleLabel.alpha = 0.0f;
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         
         if (![self.subviews containsObject:self.titleLabel]) {
@@ -2265,7 +2287,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.detailsLabel.textColor = [UIColor whiteColor];
             self.detailsLabel.font = [UIFont systemFontOfSize:12.0f];
             self.detailsLabel.textAlignment = NSTextAlignmentLeft;
-            self.detailsLabel.alpha = 0.8f;
+            self.detailsLabel.alpha = 0.0f;
             self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
             
             if (![self.subviews containsObject:self.detailsLabel]) {
