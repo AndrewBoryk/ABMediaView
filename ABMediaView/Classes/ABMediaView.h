@@ -334,6 +334,18 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 
+/// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
+- (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView;
+
+/// Called when the mediaView is in the process of minimizing, and has made a change in frame
+- (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView;
+
+/// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
+- (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+
+/// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
+- (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+
 /// Called when the mediaView has completed downloading the image from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;
 
@@ -343,15 +355,4 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 /// Called when the mediaView has completed downloading the gif from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
 
-/// Called before the mediaView begins minimizing
-- (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView;
-
-/// Called when the mediaView begins minimizing
-- (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView;
-
-/// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
-- (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
-
-/// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
-- (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
 @end
