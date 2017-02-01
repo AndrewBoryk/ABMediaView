@@ -129,7 +129,7 @@
     mediaView.imageViewNotReused = YES;
     
     // Adds a offset to the views at the top of the ABMediaView, which helps to make sure that the views do not block other views (ie. UIStatusBar)
-    [mediaView setTopSubviewsOffset:20.0f];
+    [mediaView setTopBuffer:20.0f];
 }
 
 #pragma mark - TransitionCoordinator

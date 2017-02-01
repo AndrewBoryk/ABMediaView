@@ -84,7 +84,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     playFrame.size = CGSizeMake(playSize, playSize);
     closeFrame.size = CGSizeMake(50.0f, 50.0f);
-    closeFrame.origin = CGPointMake(0, 0 + self.topSubviewsOffset);
+    closeFrame.origin = CGPointMake(0, 0 + self.topBuffer);
     
     self.videoIndicator.frame = playFrame;
     self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
@@ -124,6 +124,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self hideCloseButton: mediaView.hideCloseButton];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         self.delegate = mediaView.delegate;
+        self.topBuffer = mediaView.topBuffer;
         
         if (mediaView.presentFromOriginRect) {
             self.originRect = mediaView.frame;
@@ -2034,15 +2035,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     return ([self hasVideo] || [ABUtils notNull:self.audioURL]);
 }
 
-- (void) setTopSubviewsOffset:(CGFloat)topSubviewsOffset {
-    if (topSubviewsOffset < 0) {
-        topSubviewsOffset = 0;
+- (void) setTopBuffer:(CGFloat)topBuffer {
+    if (topBuffer < 0) {
+        topBuffer = 0;
     }
-    else if (topSubviewsOffset > 64) {
-        topSubviewsOffset = 64;
+    else if (topBuffer > 64) {
+        topBuffer = 64;
     }
     
-    _topSubviewsOffset = topSubviewsOffset;
+    _topBuffer = topBuffer;
     
     [self layoutSubviews];
     
