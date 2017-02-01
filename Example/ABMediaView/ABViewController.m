@@ -7,6 +7,7 @@
 //
 
 #import "ABViewController.h"
+#import "ABAppDelegate.h"
 
 @interface ABViewController () {
     
@@ -189,10 +190,19 @@
     NSLog(@"MediaView will present");
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    // Enable rotation when the ABMediaView is presented. For this application, we want the ABMediaView to rotate when in fullscreen, in order to watch landscape videos. However, our app's interface in portrait, so when the ABMediaView is shown, that is when rotation should be enabled
+    [self restrictRotation:NO];
 }
 
 - (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
     NSLog(@"MediaView will dismiss");
+    
+    // Disable rotation when the ABMediaView is being dismissed. For this application, we want the ABMediaView to rotate when in fullscreen, in order to watch landscape videos. However, our app's interface in portrait, so when leaving the ABMediaView, we want rotation to be restricted
+    [self restrictRotation:YES];
+    
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
 }
 
 - (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
@@ -277,7 +287,13 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-
+-(void) restrictRotation:(BOOL) restriction
+{
+    // An approach at determining whether the view should allow for rotation, when the ABMediaView is fullscreen, we want rotation to be enabled. However, if ABMediaView is not fullscreen, I don't want rotation to be allowed
+    
+    ABAppDelegate* appDelegate = (ABAppDelegate*)[UIApplication sharedApplication].delegate;
+    appDelegate.restrictRotation = restriction;
+}
 
 
 

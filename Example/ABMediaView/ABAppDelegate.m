@@ -13,6 +13,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    // Disable rotation
+    self.restrictRotation = true;
+    
     return YES;
 }
 
@@ -43,4 +47,12 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    //Determines whether landscape orientation is supported.
+    if(self.restrictRotation)
+        return UIInterfaceOrientationMaskPortrait;
+    
+    return UIInterfaceOrientationMaskAll;
+}
 @end
