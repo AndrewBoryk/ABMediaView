@@ -103,20 +103,23 @@ ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];
 ABMediaView comes with Lazy-loading functionality, where all that is needed to be provided is the image or video source URL. There is also a completion block where the downloaded image is returned for caching.
 
 ```objective-c
-// Set the video to be displayed in the mediaView, which will be downloaded and available for caching
+// Set the image to be displayed in the mediaView, which will be downloaded and available for caching
 [mediaView setImageURL:@"http://yoursite.com/yourimage.jpg" withCompletion:^(UIImage *image, NSError *error) {
     // Execute code upon completion
 }];
 
-// Set the image to be displayed in the mediaView, which will be downloaded and available for caching
+// Set the video to be displayed in the mediaView, which will be downloaded and available for caching
 [mediaView setVideoURL:@"http://yoursite/yourvideo.mp4"];
 
 // Set both the video url, and the thumbnail image for the mediaView, downloading both and making both available for caching
 [mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailURL:@"http://yoursite.com/yourimage.jpg"];
+
+// Set the video url for the mediaView , downloading it and making it available for caching, as well as the thumbnail image
+[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailImage:[UIImage imageNamed: @"thumbnail.png"]];
 ```
 
 
-GIF support has also been made available for ABMediaView. To set a GIF to an ABMediaView, simply set it via URL or NSData, where is will be downloaded and set to the view. GIFs are made available as UIImages for easy storage. 
+GIF support has also been made available for ABMediaView. To set a GIF to an ABMediaView, simply set it via URL or NSData, where it will be downloaded and set to the view. GIFs are made available as UIImages for easy storage. 
 
 ```objective-c
 // GIFs can be displayed in ABMediaView, where the GIF can be downloaded from the internet
@@ -127,15 +130,35 @@ NSData *gifData = ...;
 [mediaView setGifData:gifData];
 ```
 
+In addition, Audio support has also been made available for ABMediaView. To set Audio to an ABMediaView, simply set it via URL, where it will be downloaded and set to the view. 
 
-*BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for a video
+```objective-c
+
+// Set the audio to be displayed in the mediaView
+[mediaView setAudioURL:@"http://yoursite/yourvideo.mp4"];
+
+// Set both the audio and thumbnail url for the mediaView
+[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailURL:@"http://yoursite.com/yourimage.jpg"];
+
+// Set the audio url for the mediaViee, as well as the thumbnail image
+[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailImage:[UIImage imageNamed: @"thumbnail.png"]];
+```
+
+*BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for a video and audio
 
 ```objective-c
 // Set video for mediaView by URL, and set GIF as thumbnail by URL
 [mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifURL:@"http://yoursite/yourgif.gif"];
 
 // Set video for mediaView by URL, and set GIF as thumbnail using NSData
-[self.mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifData:gifData];
+[mediaView setVideoURL:@"www.video.com/urlHere" withThumbnailGifData:gifData];
+
+// Set audio for mediaView by URL, and set GIF as thumbnail by URL
+[mediaView setAudioURL:@"www.audio.com/urlHere" withThumbnailGifURL:@"http://yoursite/yourgif.gif"];
+
+// Set audio for mediaView by URL, and set GIF as thumbnail using NSData
+[mediaView setAudioURL:@"www.audio.com/urlHere" withThumbnailGifData:gifData];
+
 ```
 
 
@@ -173,7 +196,7 @@ ABMediaView also comes with an option for toggling the functionality which would
 ```
 
 
-ABMediaView also comes with a few playback options for video. One option, 'allowLooping', toggles whether videos should replay after reaching the end. Another option, 'autoPlayAfterPresentation', toggles whether videos whould play automatically after presenting. By default, ABMediaView is set to autmatically play videos after presentation.
+ABMediaView also comes with a few playback options for video and audio. One option, 'allowLooping', toggles whether media should replay after reaching the end. Another option, 'autoPlayAfterPresentation', toggles whether media should play automatically after presenting. By default, ABMediaView is set to autmatically play media after presentation.
 
 ```objective-c
 // Toggle looping functionality
@@ -184,7 +207,7 @@ ABMediaView also comes with a few playback options for video. One option, 'allow
 ```
 
 
-ABMediaView has several options for enabling and editing the progress track that shows when displaying videos
+ABMediaView has several options for enabling and editing the progress track that shows when displaying videos and audio
 
 ```objective-c
 // Enable progress track to show at the bottom of the view
@@ -225,6 +248,7 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 ```
 
 
+
 There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up. In addition, the close button remains visible when the view is held in landscape orientation, due to minimizing being disabled during landscape.
 
 ```objective-c
@@ -243,6 +267,19 @@ By default, there is a buffer of 12px between the minimized ABMediaView and the 
 
 ```objective-c
 [mediaView setBottomBuffer:0.0f];
+```
+
+
+To make these buffers easier to use, I have provided iOS standard presets for easy access to certain buffer values.
+
+```objective-c
+// ABBufferStatusBar = 20px
+// ABBufferNavigationBar = 44px
+// ABBufferStatusAndNavigationBar = 64px
+// ABBufferTabBar = 49px
+
+[mediaView setTopBuffer:ABBufferStatusBar];
+[mediaView setBottomBuffer:ABBufferTabBar];
 ```
 
 
