@@ -8,7 +8,17 @@
 
 #import "ABViewController.h"
 
-@interface ABViewController ()
+@interface ABViewController () {
+    
+    /// Width of the screen in pixels
+    CGFloat screenWidth;
+    
+    /// Height of the screen in pixels
+    CGFloat screenHeight;
+    
+    /// Percentage of the screen that the status bar would take up
+    CGFloat statusBarHeightPercentage;
+}
 
 @end
 
@@ -17,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];
     
@@ -43,6 +53,14 @@
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    // Set certain measurement variables so they can be used later on
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    screenWidth = window.frame.size.width;
+    screenHeight = window.frame.size.height;
+    statusBarHeightPercentage = 20.0f/screenHeight;
+    
+    NSLog(@"Status bar percentage %f", statusBarHeightPercentage);
+    
     // Gifs can be displayed in ABMediaView, where the gif can be downloaded from the internet
     // [self.mediaView setGifURL:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"];
     
@@ -140,6 +158,19 @@
 - (void) mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage {
     NSLog(@"MediaView offset changed: %f", offsetPercentage);
     
+    if (![[UIApplication sharedApplication] isStatusBarHidden]) {
+        if (offsetPercentage < (statusBarHeightPercentage/2.0f)) {
+            if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleLightContent) {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+            }
+        }
+        else {
+            if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+            }
+        }
+    }
+    
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
@@ -152,23 +183,50 @@
 
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
     NSLog(@"MediaView will present");
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void) mediaViewDidPresent:(ABMediaView *)mediaView {
     NSLog(@"MediaView will present");
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
     NSLog(@"MediaView will dismiss");
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
     NSLog(@"MediaView did dismiss");
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
+
+- (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView {
+    NSLog(@"MediaView will minimize to a certain value");
+}
+
+- (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView {
+    NSLog(@"MediaView did minimize to a certain value");
+}
+
+- (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
+    NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
+}
+
+- (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
+    NSLog(@"MediaView snapped to minimized mode? %i", isMinimized);
+    
+    if (isMinimized) {
+        if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        }
+    }
+    else {
+        if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleLightContent) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
+    }
+}
+
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image {
     NSLog(@"Image: %@", image);

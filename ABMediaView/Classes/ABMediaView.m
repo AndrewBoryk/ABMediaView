@@ -1310,6 +1310,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                 }];
             }
             else {
+                if ([self.delegate respondsToSelector:@selector(mediaViewWillEndMinimizing:atMinimizedState:)]) {
+                    [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:minimize];
+                }
+                
                 [UIView animateWithDuration:0.25f animations:^{
                     if (minimize) {
                         self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
@@ -1353,9 +1357,14 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
                     
                     self.userInteractionEnabled = YES;
                     
+                    if ([self.delegate respondsToSelector:@selector(mediaViewDidEndMinimizing:atMinimizedState:)]) {
+                        [self.delegate mediaViewDidEndMinimizing:self atMinimizedState:minimize];
+                    }
+                    
                     if (self.isLoadingVideo) {
                         [self loadVideoAnimate];
                     }
+                    
                 }];
             }
             
@@ -1418,6 +1427,11 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 - (void) handleMinimizingForRecognizer: (UIPanGestureRecognizer *) gesture {
     
     if (self.isFullScreen) {
+        
+        if ([self.delegate respondsToSelector:@selector(mediaViewWillChangeMinimization:)]) {
+            [self.delegate mediaViewWillChangeMinimization:self];
+        }
+        
         CGRect frame = self.frame;
         CGPoint origin = self.frame.origin;
         CGSize size = self.frame.size;
@@ -1512,6 +1526,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             [self.track updateBuffer];
             [self.track updateProgress];
             [self.track updateBarBackground];
+        } completion:^(BOOL finished) {
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidChangeMinimization:)]) {
+                [self.delegate mediaViewDidChangeMinimization:self];
+            }
         }];
         
         
