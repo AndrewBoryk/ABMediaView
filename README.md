@@ -161,6 +161,9 @@ NSData *gifData = ...;
 }
 ```
 
+In relation to screen rotation, if your application's UI requires Portrait orientation, but you want the ABMediaView to be viewable in Landscape mode, methodology for handling this case has been included in the Example project. This is popular functionality, so it is included to make developing easier for such a functionality. The method leverages the delegate methods for ABMediaView to determine when the app should restrict rotation.
+
+
 ***
 ### Customization
 ABMediaView also comes with an option for toggling the functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits minimized. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
@@ -226,6 +229,20 @@ There is functionality to toggle hiding the close button, that way it does not s
 
 ```objective-c
 [mediaView hideCloseButton:YES];
+```
+
+
+In the case that there is a UIStatusBar on your screen that you would not like to hide, or instances where you would like to reserve space on the top of your screen for other views, ABMediaView possesses the ability to offset the subviews at the top of the screen to avoid hiding these views. Setting the 'topOffset' property of an ABMediaView would move down the 'closeButton' and any other top-anchored views. Again, a major use case for this would be to set the 'topOffset' property to 20px in order to avoid covering the UIStatusBar.
+
+```objective-c
+[mediaView setTopBuffer:20.0f];
+```
+
+
+By default, there is a buffer of 12px between the minimized ABMediaView and the screen's bottom. More space can be added by adjusting the 'bottomBuffer' value for the ABMediaView. This is useful in order to have the mediaView show above views such as UITabBars and UIToolbars, to avoid covering views that need reserved space on the bottom of the screen.
+
+```objective-c
+[mediaView setBottomBuffer:0.0f];
 ```
 
 
