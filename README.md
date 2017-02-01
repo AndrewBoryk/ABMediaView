@@ -239,7 +239,7 @@ In the case that there is a UIStatusBar on your screen that you would not like t
 ```
 
 
-By default, there is a buffer of 12px between the minimized ABMediaView and the screen's bottom. More space can be added by adjusting the 'bottomBuffer' value for the ABMediaView. This is useful in order to have the mediaView show above views such as UITabBars and UIToolbars, to avoid covering views that need reserved space on the bottom of the screen.
+By default, there is a buffer of 12px between the minimized ABMediaView and the screen's bottom. More space can be added by adjusting the 'bottomBuffer' value for the ABMediaView. This is useful in order to have the mediaView show above views such as UITabBars and UIToolbars, to avoid covering these views that need reserved space on the bottom of the screen.
 
 ```objective-c
 [mediaView setBottomBuffer:0.0f];
@@ -322,6 +322,24 @@ In addition, there are also delegate methods to help determine whether a ABMedia
 /// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
 ```
+
+
+The following delegate methods are useful when looking to determine if the ABMediaView has begun, is in the process, or has completed minimizing. A popular use case for this would be adjust the UIStatusBarStyle depending on whether the ABMediaView is visible behind it.
+
+```objective-c
+/// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
+- (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView;
+
+/// Called when the mediaView is in the process of minimizing, and has made a change in frame
+- (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView;
+
+/// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
+- (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+
+/// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
+- (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+```
+
 
 If one is looking to cache the images, videos, or GIFs that are being downloaded via the ABMediaView, delegates have been made handle to get these objects.
 
