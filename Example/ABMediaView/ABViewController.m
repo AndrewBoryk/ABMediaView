@@ -305,6 +305,8 @@
     [self dismissViewControllerAnimated:YES completion:^{
         MPMediaItem *item = [[mediaItemCollection items] firstObject];
         NSURL *url = [item valueForProperty:MPMediaItemPropertyAssetURL];
+        NSLog(@"MPMediaItemPropertyAssetURL %@", url);
+        
         MPMediaItemArtwork *artWork = [item valueForProperty:MPMediaItemPropertyArtwork];
         
         ABMediaView *mediaView = [[ABMediaView alloc] initWithFrame:self.view.frame];

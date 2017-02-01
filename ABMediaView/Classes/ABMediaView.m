@@ -780,7 +780,12 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     ////if the cell that is selected already has a video playing then its paused and if not then play that video
     
     if (isMinimized) {
-        self.userInteractionEnabled = YES;
+        self.userInteractionEnabled = NO;
+        
+        if ([self.delegate respondsToSelector:@selector(mediaViewWillEndMinimizing:atMinimizedState:)]) {
+            [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:NO];
+        }
+        
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = self.superview.frame;
             
@@ -807,6 +812,10 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             offset = self.frame.origin.y;
             
             self.userInteractionEnabled = YES;
+            
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidEndMinimizing:atMinimizedState:)]) {
+                [self.delegate mediaViewDidEndMinimizing:self atMinimizedState:NO];
+            }
             
         }];
     }
@@ -1747,15 +1756,16 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             
             self.userInteractionEnabled = YES;
             
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidDismiss:)]) {
+                [self.delegate mediaViewDidDismiss:self];
+            }
+            
             [[ABMediaView sharedManager] setCurrentMediaView:nil];
             
             if ([ABUtils notNull:completion]) {
                 completion(YES);
             }
             
-            if ([self.delegate respondsToSelector:@selector(mediaViewDidDismiss:)]) {
-                [self.delegate mediaViewDidDismiss:self];
-            }
         }];
     }
     
