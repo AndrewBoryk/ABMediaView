@@ -548,7 +548,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     [self setAudioURL:audioURL];
 }
 
-- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (NSString *)thumbnail {
+- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (UIImage *)thumbnail {
     self.image = thumbnail;
     [self setAudioURL:audioURL];
 }

@@ -257,7 +257,7 @@ extern const CGFloat ABMediaViewRatioPresetLandscape;
 - (void) setAudioURL:(NSString *)audioURL withThumbnailGifData: (NSData *)thumbnailGifData;
 
 /// Set the url where the audio can be downloaded from, as well as the thumbnail image can be found
-- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (NSString *)thumbnail;
+- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (UIImage *)thumbnail;
 
 /// Loads the video, saves to disk, and decides whether to play the video
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion;
