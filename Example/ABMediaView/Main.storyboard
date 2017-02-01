@@ -23,10 +23,31 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyz-3g-968">
-                                <rect key="frame" x="129" y="80" width="116" height="30"/>
-                                <state key="normal" title="Show MediaView"/>
+                                <rect key="frame" x="147" y="111.5" width="81" height="30"/>
+                                <state key="normal" title="Show Video"/>
                                 <connections>
                                     <action selector="showMediaViewAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="59c-Zc-LFl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pae-gG-vxi">
+                                <rect key="frame" x="114" y="165.5" width="148" height="30"/>
+                                <state key="normal" title="Pick Image/Video/GIF"/>
+                                <connections>
+                                    <action selector="pickMediaAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="NgX-fb-WZD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kSV-mC-9a9">
+                                <rect key="frame" x="147" y="470.5" width="81" height="30"/>
+                                <state key="normal" title="Show Audio"/>
+                                <connections>
+                                    <action selector="pickAudioAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="ogK-yu-iKL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZH-8j-nmv">
+                                <rect key="frame" x="151.5" y="524.5" width="72" height="30"/>
+                                <state key="normal" title="Pick Audio"/>
+                                <connections>
+                                    <action selector="showMediaViewAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="wjP-Qs-yta"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mWW-nq-RdB" customClass="ABMediaView">
@@ -73,11 +94,17 @@
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="Bf6-wa-sXD"/>
                             <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="C13-F5-29s"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="top" secondItem="Pae-gG-vxi" secondAttribute="bottom" constant="32" id="FXz-JE-dYR"/>
+                            <constraint firstItem="kSV-mC-9a9" firstAttribute="top" secondItem="mWW-nq-RdB" secondAttribute="bottom" constant="32" id="JOQ-do-hw1"/>
+                            <constraint firstItem="Pae-gG-vxi" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Jgl-C3-ahs"/>
                             <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="-20" id="KYO-R8-3Sw"/>
-                            <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="60" id="Kp1-Ym-7zD"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
+                            <constraint firstItem="Pae-gG-vxi" firstAttribute="top" secondItem="qyz-3g-968" secondAttribute="bottom" constant="24" id="UmM-dH-l5A"/>
+                            <constraint firstItem="tZH-8j-nmv" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="aah-pI-CqE"/>
                             <constraint firstItem="DcG-yi-4VF" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="fzu-CN-4b0"/>
+                            <constraint firstItem="kSV-mC-9a9" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="gZV-9Y-dId"/>
                             <constraint firstItem="sCd-An-hHo" firstAttribute="top" secondItem="C4o-zf-89b" secondAttribute="top" id="hvS-hz-zyW"/>
+                            <constraint firstItem="tZH-8j-nmv" firstAttribute="top" secondItem="kSV-mC-9a9" secondAttribute="bottom" constant="24" id="pQ3-cb-HZn"/>
                             <constraint firstItem="DcG-yi-4VF" firstAttribute="top" secondItem="C4o-zf-89b" secondAttribute="top" id="qiw-Cn-QTp"/>
                             <constraint firstItem="sCd-An-hHo" firstAttribute="leading" secondItem="C4o-zf-89b" secondAttribute="leading" id="qwD-Ki-fP2"/>
                             <constraint firstItem="C4o-zf-89b" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="sih-yD-nNE"/>
@@ -88,6 +115,9 @@
                     </view>
                     <connections>
                         <outlet property="mediaView" destination="mWW-nq-RdB" id="a6o-5Z-yB0"/>
+                        <outlet property="pickAudioButton" destination="tZH-8j-nmv" id="fJE-tb-64m"/>
+                        <outlet property="pickMediaButton" destination="Pae-gG-vxi" id="g32-Sh-Aqe"/>
+                        <outlet property="showAudioButton" destination="kSV-mC-9a9" id="3Un-qr-8Bx"/>
                         <outlet property="showMediaViewButton" destination="qyz-3g-968" id="195-Lz-9Es"/>
                     </connections>
                 </viewController>

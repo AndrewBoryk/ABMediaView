@@ -80,11 +80,15 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
     
     if (UIDeviceOrientationIsLandscape(orientation)) {
         playSize = 30.0f + (30.0f * (self.frame.size.height / self.superviewWidth));
+        closeFrame.origin = CGPointMake(0, 0);
+    }
+    else {
+        closeFrame.origin = CGPointMake(0, 0 + self.topBuffer);
     }
     
     playFrame.size = CGSizeMake(playSize, playSize);
     closeFrame.size = CGSizeMake(50.0f, 50.0f);
-    closeFrame.origin = CGPointMake(0, 0 + self.topBuffer);
+    
     
     self.videoIndicator.frame = playFrame;
     self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
@@ -124,7 +128,6 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
         [self hideCloseButton: mediaView.hideCloseButton];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         self.delegate = mediaView.delegate;
-        self.topBuffer = mediaView.topBuffer;
         
         if (mediaView.presentFromOriginRect) {
             self.originRect = mediaView.frame;
@@ -134,6 +137,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             self.originRectConverted = mediaView.originRectConverted;
         }
         
+        self.topBuffer = mediaView.topBuffer;
         self.bottomBuffer = mediaView.bottomBuffer;
         
         self.minimizedAspectRatio = mediaView.minimizedAspectRatio;

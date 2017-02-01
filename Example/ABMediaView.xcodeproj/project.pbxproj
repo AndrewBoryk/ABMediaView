@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		451306D31E424745004FA6D3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 451306D21E424745004FA6D3 /* MobileCoreServices.framework */; };
 		453162141E3E8DE400A069FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453162131E3E8DE400A069FC /* AVFoundation.framework */; };
 		453162161E3E8DE900A069FC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 453162151E3E8DE900A069FC /* MediaPlayer.framework */; };
 		455AA6171E1DA55B00F7596E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455AA6161E1DA55B00F7596E /* Launch Screen.storyboard */; };
@@ -41,6 +42,7 @@
 /* Begin PBXFileReference section */
 		0990C3564723B9CBE7C5D99E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		263A7E61C622D8B34AC006EB /* ABMediaView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ABMediaView.podspec; path = ../ABMediaView.podspec; sourceTree = "<group>"; };
+		451306D21E424745004FA6D3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		453162131E3E8DE400A069FC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		453162151E3E8DE900A069FC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		455AA6161E1DA55B00F7596E /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				451306D31E424745004FA6D3 /* MobileCoreServices.framework in Frameworks */,
 				453162161E3E8DE900A069FC /* MediaPlayer.framework in Frameworks */,
 				453162141E3E8DE400A069FC /* AVFoundation.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
@@ -136,6 +139,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				451306D21E424745004FA6D3 /* MobileCoreServices.framework */,
 				453162151E3E8DE900A069FC /* MediaPlayer.framework */,
 				453162131E3E8DE400A069FC /* AVFoundation.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
