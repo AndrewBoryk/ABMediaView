@@ -1629,6 +1629,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
 }
 
 - (void) handleMediaViewPresentation: (ABMediaView *) mediaView animated: (BOOL) animated {
+    
     if ([mediaView.delegate respondsToSelector:@selector(mediaViewWillPresent:)]) {
         [mediaView.delegate mediaViewWillPresent:mediaView];
     }
@@ -1741,6 +1742,7 @@ const CGFloat ABMediaViewRatioPresetLandscape = (9.0f/16.0f);
             [self.playerLayer removeFromSuperlayer];
             self.playerLayer = nil;
             self.player = nil;
+            self.image = nil;
             [self removeFromSuperview];
             
             self.userInteractionEnabled = YES;

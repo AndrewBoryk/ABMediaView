@@ -13,7 +13,7 @@
 @interface ABViewController : UIViewController <ABMediaViewDelegate, MPMediaPickerControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 /// Button to add a mediaView for to the queue
-@property (strong, nonatomic) IBOutlet UIButton *showMediaViewButton;
+@property (strong, nonatomic) IBOutlet UIButton *showGIFButton;
 
 /// Button to select the type of media to display
 @property (strong, nonatomic) IBOutlet UIButton *pickMediaButton;
@@ -27,8 +27,8 @@
 /// MediaView to demonstrate how mediaViews can pop up
 @property (strong, nonatomic) IBOutlet ABMediaView *mediaView;
 
-/// Adds a mediaView for a video to the queue
-- (IBAction)showMediaViewAction:(id)sender;
+/// Adds a mediaView for a GIF to the queue
+- (IBAction)showGIFAction:(id)sender;
 
 /// Pick media, then adds a mediaView for that media to the queue
 - (IBAction)pickMediaAction:(id)sender;
