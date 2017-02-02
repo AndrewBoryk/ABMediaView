@@ -133,16 +133,27 @@ NSData *gifData = ...;
 In addition, Audio support has also been made available for ABMediaView. To set Audio to an ABMediaView, simply set it via URL, where it will be downloaded and set to the view. 
 
 ```objective-c
-
 // Set the audio to be displayed in the mediaView
-[mediaView setAudioURL:@"http://yoursite/yourvideo.mp4"];
+[mediaView setAudioURL:@"http://yoursite/youraudio.mp4"];
 
 // Set both the audio and thumbnail url for the mediaView
-[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailURL:@"http://yoursite.com/yourimage.jpg"];
+[mediaView setAudioURL:@"http://yoursite/youraudio.mp4" withThumbnailURL:@"http://yoursite.com/yourimage.jpg"];
 
 // Set the audio url for the mediaViee, as well as the thumbnail image
-[mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailImage:[UIImage imageNamed: @"thumbnail.png"]];
+[mediaView setAudioURL:@"http://yoursite/youraudio.mp4" withThumbnailImage:[UIImage imageNamed:@"thumbnail.png"]];
 ```
+
+In terms of playback throughout the app, functionality has been added where you can ensure that audio will play for the user, even if their device is on vibrate. These variables are set so that audio will either be enabled or disabled when media begins and ends playing in a ABMediaView, and can be set using the ABMediaView class methods:
+
+
+```objective-c
+// Toggle this functionality to enable/disable sound to play when an ABMediaView begins playing, and the user's app is on silent
+[ABMediaView setPlaysAudioWhenPlayingMediaOnSilent:YES];
+    
+// In addition, toggle this functionality to enable/disable sound to play when an ABMediaView ends playing, and the user's app is on silent
+[ABMediaView setPlaysAudioWhenStoppingMediaOnSilent:NO];
+```
+
 
 *BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for video and audio.
 
