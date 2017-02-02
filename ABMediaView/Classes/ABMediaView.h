@@ -180,6 +180,9 @@ extern const CGFloat ABBufferTabBar;
 /// Indicator which shows that the video is being loaded
 @property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
 
+/// Custom image can be set for the play button
+@property (strong, nonatomic) UIImage *customPlayButton;
+
 /// Play button imageView which shows in the center of the video, notifies the user that a video can be played
 @property (strong, nonatomic) UIImageView *videoIndicator;
 

@@ -1394,54 +1394,60 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (UIImage *) imageForPlayButton {
-    static UIImage *playCircle = nil;
-    
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(ctx);
-    
-    CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
-    CGRect rectGIF = CGRectMake(1, 1, 58.0f, 58.0f);
-    UIColor *color = self.themeColor;
-    
-    CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
-    CGContextFillEllipseInRect(ctx, rect);
-    
-    if (!self.isFullScreen && self.pressForGIF) {
-        CGFloat thickness = 2.0;
+    if ([ABCommons notNull:self.customPlayButton]) {
+        return self.customPlayButton;
+    }
+    else {
+        static UIImage *playCircle = nil;
         
-        CGContextSetLineWidth(ctx, thickness);
-        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
         
-        CGFloat ra[] = {4,2};
-        CGContextSetLineDash(ctx, 0.0, ra, 2); // nb "2" == ra count
+        CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
+        CGRect rectGIF = CGRectMake(1, 1, 58.0f, 58.0f);
+        UIColor *color = self.themeColor;
         
-        CGContextStrokeEllipseInRect(ctx, rectGIF);
+        CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        if (!self.isFullScreen && self.pressForGIF) {
+            CGFloat thickness = 2.0;
+            
+            CGContextSetLineWidth(ctx, thickness);
+            CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+            
+            CGFloat ra[] = {4,2};
+            CGContextSetLineDash(ctx, 0.0, ra, 2); // nb "2" == ra count
+            
+            CGContextStrokeEllipseInRect(ctx, rectGIF);
+        }
+        
+        CGFloat inset = 15.0f;
+        UIBezierPath *bezierPath = [UIBezierPath bezierPath];
+        [bezierPath moveToPoint:(CGPoint){20.625f, inset}];
+        [bezierPath addLineToPoint:(CGPoint){60.0f - inset, 60.0f/2.0f}];
+        [bezierPath addLineToPoint:(CGPoint){20.625f, 60.0f - inset}];
+        [bezierPath closePath];
+        
+        CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.8f].CGColor;
+        CGContextSetFillColorWithColor(ctx, col);
+        CGContextSetStrokeColorWithColor(ctx, col);
+        CGContextSetLineWidth(ctx, 0);
+        CGContextSetLineJoin(ctx, kCGLineJoinRound);
+        CGContextSetLineCap(ctx, kCGLineCapRound);
+        CGContextAddPath(ctx, bezierPath.CGPath);
+        CGContextStrokePath(ctx);
+        CGContextAddPath(ctx, bezierPath.CGPath);
+        CGContextFillPath(ctx);
+        
+        CGContextRestoreGState(ctx);
+        playCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return playCircle;
     }
     
-    CGFloat inset = 15.0f;
-    UIBezierPath *bezierPath = [UIBezierPath bezierPath];
-    [bezierPath moveToPoint:(CGPoint){20.625f, inset}];
-    [bezierPath addLineToPoint:(CGPoint){60.0f - inset, 60.0f/2.0f}];
-    [bezierPath addLineToPoint:(CGPoint){20.625f, 60.0f - inset}];
-    [bezierPath closePath];
-    
-    CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:0.8f].CGColor;
-    CGContextSetFillColorWithColor(ctx, col);
-    CGContextSetStrokeColorWithColor(ctx, col);
-    CGContextSetLineWidth(ctx, 0);
-    CGContextSetLineJoin(ctx, kCGLineJoinRound);
-    CGContextSetLineCap(ctx, kCGLineCapRound);
-    CGContextAddPath(ctx, bezierPath.CGPath);
-    CGContextStrokePath(ctx);
-    CGContextAddPath(ctx, bezierPath.CGPath);
-    CGContextFillPath(ctx);
-    
-    CGContextRestoreGState(ctx);
-    playCircle = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return playCircle;
 }
 
 - (void) setThemeColor:(UIColor *)themeColor {
@@ -2782,6 +2788,12 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     return NO;
+}
+
+- (void) setCustomPlayButton:(UIImage *)customPlayButton {
+    _customPlayButton = customPlayButton;
+    
+    self.videoIndicator.image = [self imageForPlayButton];
 }
 
 @end
