@@ -45,6 +45,12 @@
     
     // This functionality toggles whether mediaViews with videos associated with them should autoPlay after presentation
     self.mediaView.autoPlayAfterPresentation = YES;
+    
+    // Toggle this functionality to enable/disable sound to play when an ABMediaView begins playing, and the user's app is on silent
+    [ABMediaView setPlaysAudioWhenPlayingMediaOnSilent:YES];
+    
+    // In addition, toggle this functionality to enable/disable sound to play when an ABMediaView ends playing, and the user's app is on silent
+    [ABMediaView setPlaysAudioWhenStoppingMediaOnSilent:NO];
 }
 
 - (void)didReceiveMemoryWarning

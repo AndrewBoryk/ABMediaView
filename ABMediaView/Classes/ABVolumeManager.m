@@ -33,6 +33,9 @@
     if (self = [super init]) {
         // Initialize caches
         
+        self.defaultAudioPlayingType = DefaultAudio;
+        self.defaultAudioStoppingType = DefaultAudio;
+        
         volumeBackground = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [ABCommons viewWidth], 2)];
         
         volumeBackground.backgroundColor = [UIColor darkGrayColor];
@@ -69,6 +72,8 @@
         [currentWindow addSubview:volumeBar];
         
         if (mpVolumeView) [currentWindow addSubview:mpVolumeView];
+        
+        
         
     }
     return self;
@@ -153,6 +158,14 @@
 
 - (void) updateVolumeBarColor:(UIColor *)color {
     volumeBar.backgroundColor = color;
+}
+
+- (void) setAudioWhenPlaying {
+    [[ABVolumeManager sharedManager] setAudioSession:self.defaultAudioPlayingType];
+}
+
+- (void) setAudioWhenStopping {
+    [[ABVolumeManager sharedManager] setAudioSession:self.defaultAudioStoppingType];
 }
 
 - (void) setAudioSession: (AudioType) type {

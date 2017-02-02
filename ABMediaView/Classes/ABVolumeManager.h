@@ -57,8 +57,14 @@ extern UIColor *  const COLOR_LIGHT_BLUE;
 /// Slider which records the user's volume level
 @property (retain, nonatomic) UISlider *volumeSlider;
 
-// Timer that when selector is performed, hides volumeBar
+/// Timer that when selector is performed, hides volumeBar
 @property (retain, nonatomic) NSTimer *volumeTimer;
+
+/// Default value for how audio should be handled when playing media
+@property (nonatomic) AudioType defaultAudioPlayingType;
+
+/// Default value for how audio should be handled when pausing media
+@property (nonatomic) AudioType defaultAudioStoppingType;
 
 /// Shared Manager for Volume Manager
 + (id)sharedManager;
@@ -71,6 +77,12 @@ extern UIColor *  const COLOR_LIGHT_BLUE;
 
 /// Updates color for volumebar
 - (void) updateVolumeBarColor:(UIColor *)color;
+
+/// Sets the audio when the ABPlayer is supposed to play
+- (void) setAudioWhenPlaying;
+
+/// Sets the audio when the ABPlayer is supposed to pause
+- (void) setAudioWhenStopping;
 
 /// Light color for the bar
 + (UIColor *) lightVolumeBar;

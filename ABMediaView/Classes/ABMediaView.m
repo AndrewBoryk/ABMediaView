@@ -9,6 +9,7 @@
 #import "ABMediaView.h"
 #import "ABPlayer.h"
 #import "ABCommons.h"
+#import "ABVolumeManager.h"
 
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
@@ -2829,6 +2830,24 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
+}
+
++ (void) setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent {
+    if (playAudioOnSilent) {
+        [[ABVolumeManager sharedManager] setDefaultAudioPlayingType:PlayAudioWhenSilent];
+    }
+    else {
+        [[ABVolumeManager sharedManager] setDefaultAudioPlayingType:DefaultAudio];
+    }
+}
+
++ (void) setPlaysAudioWhenStoppingMediaOnSilent:(BOOL)playAudioOnSilent {
+    if (playAudioOnSilent) {
+        [[ABVolumeManager sharedManager] setDefaultAudioStoppingType:PlayAudioWhenSilent];
+    }
+    else {
+        [[ABVolumeManager sharedManager] setDefaultAudioStoppingType:DefaultAudio];
+    }
 }
 
 @end

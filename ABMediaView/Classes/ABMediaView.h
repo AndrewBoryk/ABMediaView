@@ -14,6 +14,7 @@
 #import "VideoTrackView.h"
 #import "UIImage+animatedGIF.h"
 
+
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
@@ -358,6 +359,12 @@ extern const CGFloat ABBufferTabBar;
 
 /// Sets the close button to hidden, only allowed if isMinimizable is true
 - (void) hideCloseButton: (BOOL) hideButton;
+
+/// Determines how audio will be played when the media is playing and the app has silent mode on
++ (void) setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent;
+
+/// Determines how audio will be played when the media is stopping and the app has silent mode on
++ (void) setPlaysAudioWhenStoppingMediaOnSilent:(BOOL)playAudioOnSilent;
 
 @end
 
