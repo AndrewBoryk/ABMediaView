@@ -70,7 +70,7 @@
     // [self.mediaView setGifData:gifData];
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
-    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andThumbnailGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
     
     // Setting just the title allows for a label to be displayed at the top of the mediaView
     [self.mediaView setTitle:@"Big Buck Bunny"];

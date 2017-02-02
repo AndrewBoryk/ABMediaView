@@ -31,6 +31,9 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     /// Recognizer for when details label is tapped
     UITapGestureRecognizer *detailsTapRecognizer;
+    
+    /// Recognizer for when the thumbnail experiences a long press
+    UILongPressGestureRecognizer *gifLongPressRecognizer;
 }
 
 @synthesize isMinimized = isMinimized;
@@ -120,12 +123,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.imageViewNotReused = mediaView.imageViewNotReused;
         [self changeVideoToAspectFit:mediaView.videoAspectFit];
         [self setShowRemainingTime:mediaView.displayRemainingTime];
+        [self setFullscreen:YES];
         self.imageCache = mediaView.imageCache;
         [self setImageURL:mediaView.imageURL withCompletion:nil];
+        self.videoCache = mediaView.videoCache;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
-        self.videoCache = mediaView.videoCache;
+        self.pressForGIF = mediaView.pressForGIF;
         self.gifCache = mediaView.gifCache;
         [self setGifURL:mediaView.gifURL];
         
@@ -136,7 +141,6 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.allowLooping = mediaView.allowLooping;
         [self setCanMinimize: mediaView.isMinimizable];
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
-        [self setFullscreen:mediaView.isFullScreen];
         [self hideCloseButton: mediaView.hideCloseButton];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         self.delegate = mediaView.delegate;
@@ -262,7 +266,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         swipeRecognizer.enabled = NO;
     }
     
-    [self addGestureRecognizer:swipeRecognizer];
+    if (self.isFullScreen) {
+        [self addGestureRecognizer:swipeRecognizer];
+    }
+    
     
     if (![ABCommons notNull:self.track]) {
         self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
@@ -480,6 +487,15 @@ const CGFloat ABBufferTabBar = 49.0f;
     _imageCache = nil;
     _videoCache = nil;
     _videoURL = nil;
+    _gifURL = nil;
+    _gifData = nil;
+    _gifCache = nil;
+    
+    if ([ABCommons notNull:gifLongPressRecognizer]) {
+        if ([self.gestureRecognizers containsObject:gifLongPressRecognizer]) {
+            [self removeGestureRecognizer:gifLongPressRecognizer];
+        }
+    }
     
     self.track.hidden = YES;
     
@@ -521,7 +537,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         NSURL *iURL = [NSURL URLWithString:imageURL];
         
         if ([ABCommons notNull:self.imageCache]) {
-            self.image = self.imageCache;
+            if (!self.isLongPressing || self.isFullScreen) {
+                self.image = self.imageCache;
+            }
+            
             
             if ([ABCommons notNull:completion]) {
                 completion(self.imageCache, nil);
@@ -534,7 +553,10 @@ const CGFloat ABBufferTabBar = 49.0f;
                     
                     if (image) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            self.image = image;
+                            if (!self.isLongPressing || self.isFullScreen) {
+                                self.image = image;
+                            }
+                            
                             self.imageCache = image;
                             
                             //                        [self.loadingIndicator stopLoading];
@@ -605,6 +627,150 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail {
     self.image = thumbnail;
     [self setVideoURL:videoURL];
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andThumbnailGifURL:(NSString *)thumbnailGifURL {
+    self.image = thumbnail;
+    self.pressForGIF = YES;
+    [self setVideoURL:videoURL];
+    [self setGifURL:thumbnailGifURL];
+    
+    if (!self.isFullScreen) {
+        [self setupGifLongPress];
+        
+        self.videoIndicator.image = [self imageForPlayButton];
+    }
+    
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andThumbnailGifData:(NSData *)thumbnailGifData {
+    self.image = thumbnail;
+    self.pressForGIF = YES;
+    [self setVideoURL:videoURL];
+    [self setGifData:thumbnailGifData];
+    
+    if (!self.isFullScreen) {
+        [self setupGifLongPress];
+        
+        self.videoIndicator.image = [self imageForPlayButton];
+    }
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andThumbnailGifURL:(NSString *)thumbnailGifURL {
+    [self setImageURL:thumbnailURL withCompletion:nil];
+    self.pressForGIF = YES;
+    [self setVideoURL:videoURL];
+    [self setGifURL:thumbnailGifURL];
+    
+    if (!self.isFullScreen) {
+        [self setupGifLongPress];
+        
+        self.videoIndicator.image = [self imageForPlayButton];
+    }
+}
+
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andThumbnailGifData:(NSData *)thumbnailGifData {
+    [self setImageURL:thumbnailURL withCompletion:nil];
+    self.pressForGIF = YES;
+    [self setVideoURL:videoURL];
+    [self setGifData:thumbnailGifData];
+    
+    if (!self.isFullScreen) {
+        [self setupGifLongPress];
+        
+        self.videoIndicator.image = [self imageForPlayButton];
+    }
+}
+
+- (void) setupGifLongPress {
+    if (![ABCommons notNull:gifLongPressRecognizer]) {
+        gifLongPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleGifLongPress:)];
+        gifLongPressRecognizer.minimumPressDuration = 0.35f;
+        gifLongPressRecognizer.delegate = self;
+        gifLongPressRecognizer.delaysTouchesBegan = NO;
+    
+    }
+    
+    if (![self.gestureRecognizers containsObject:gifLongPressRecognizer]) {
+        [self addGestureRecognizer:gifLongPressRecognizer];
+    }
+    
+    if ([ABCommons notNull:self.tapRecognizer]) {
+        [self.tapRecognizer requireGestureRecognizerToFail:gifLongPressRecognizer];
+    }
+    
+    
+    
+}
+
+- (void) handleGifLongPress:(UILongPressGestureRecognizer *)gesture {
+    if (self.pressForGIF && !self.isFullScreen) {
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            self.isLongPressing = YES;
+            
+            if ([ABCommons notNull:self.gifCache] && !self.isFullScreen) {
+                self.image = self.gifCache;
+            }
+            else if ([ABCommons notNull:self.gifURL]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                    if (self.isLongPressing && !self.isFullScreen) {
+                        self.image = image;
+                    }
+                    self.gifCache = image;
+                });
+            }
+            else if ([ABCommons notNull:self.gifData]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                    if (self.isLongPressing && !self.isFullScreen) {
+                        self.image = image;
+                        
+                    }
+                    self.gifCache = image;
+                });
+            }
+            
+            [UIView animateWithDuration:0.25f animations:^{
+                self.videoIndicator.alpha = 0.2f;
+            }];
+        }
+        else if (gesture.state == UIGestureRecognizerStateEnded ||
+                 gesture.state == UIGestureRecognizerStateFailed ||
+                 gesture.state == UIGestureRecognizerStateCancelled) {
+            self.isLongPressing = NO;
+            if ([ABCommons notNull:self.imageCache]) {
+                if (!self.isLongPressing || self.isFullScreen) {
+                    self.image = self.imageCache;
+                    
+                }
+            }
+            else if ([ABCommons notNull:self.imageURL]) {
+                NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:self.imageURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    if (data) {
+                        UIImage *image = [UIImage imageWithData:data];
+                        
+                        if (image) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (!self.isLongPressing || self.isFullScreen) {
+                                    self.image = image;
+                                }
+                                
+                                self.imageCache = image;
+                            });
+                        }
+                    }
+                }];
+                
+                [task resume];
+            }
+            
+            [UIView animateWithDuration:0.25f animations:^{
+                self.videoIndicator.alpha = 1.0f;
+            }];
+        }
+        
+    }
 }
 
 - (void) setAudioURL:(NSString *)audioURL {
@@ -1178,6 +1344,10 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (![self.gestureRecognizers containsObject:self.tapRecognizer]) {
         [self addGestureRecognizer:self.tapRecognizer];
     }
+    
+    if ([ABCommons notNull:gifLongPressRecognizer]) {
+        [self.tapRecognizer requireGestureRecognizerToFail:gifLongPressRecognizer];
+    }
 }
 
 - (BOOL) hasVideo {
@@ -1204,10 +1374,23 @@ const CGFloat ABBufferTabBar = 49.0f;
     CGContextSaveGState(ctx);
     
     CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
+    CGRect rectGIF = CGRectMake(1, 1, 58.0f, 58.0f);
     UIColor *color = self.themeColor;
     
     CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
     CGContextFillEllipseInRect(ctx, rect);
+    
+    if (!self.isFullScreen && self.pressForGIF) {
+        CGFloat thickness = 2.0;
+        
+        CGContextSetLineWidth(ctx, thickness);
+        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+        
+        CGFloat ra[] = {4,2};
+        CGContextSetLineDash(ctx, 0.0, ra, 2); // nb "2" == ra count
+        
+        CGContextStrokeEllipseInRect(ctx, rectGIF);
+    }
     
     CGFloat inset = 15.0f;
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
@@ -2169,13 +2352,20 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if ([ABCommons notNull:self.gifURL]) {
         if ([ABCommons notNull:self.gifCache]) {
-            self.image = self.gifCache;
+            if (self.isLongPressing && !self.isFullScreen) {
+                self.image = self.gifCache;
+            }
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                if (self.isLongPressing && !self.isFullScreen) {
+                    self.image = image;
+                }
+                self.gifCache = image;
+            });
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
-            self.gifCache = self.image;
-        });
     }
     
 }
@@ -2186,13 +2376,21 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if ([ABCommons notNull:self.gifData]) {
         if ([ABCommons notNull:self.gifCache]) {
-            self.image = self.gifCache;
+            if (self.isLongPressing && !self.isFullScreen) {
+                self.image = self.gifCache;
+            }
+            
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:gifData];
+                if (self.isLongPressing && !self.isFullScreen) {
+                    self.image = image;
+                }
+                self.gifCache = image;
+            });
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.image = [UIImage animatedImageWithAnimatedGIFData:gifData];
-            self.gifCache = self.image;
-        });
     }
 }
 
