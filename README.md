@@ -178,6 +178,7 @@ Another bonus functionality has been added, where if a user presses and holds on
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andThumbnailGifData:(NSData *) thumbnailGifData;
 ```
 
+![alt tag](VideoPreviewUsingGIF.gif)
 
 **VERY IMPORTANT** If your application supports device rotation, place the following block of code in your application's rootviewcontroller, or in the view controller which is intializing the ABMediaView. This will allow the ABMediaView to know when the user's device is rotating, and will enable it to rotate accordingly.
 
