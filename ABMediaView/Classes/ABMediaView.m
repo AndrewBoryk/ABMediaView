@@ -632,7 +632,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.image = thumbnail;
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifURL:thumbnailGifURL];
+    [self setGifURLPress:thumbnailGifURL];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -646,7 +646,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.image = thumbnail;
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifData:thumbnailGifData];
+    [self setGifDataPress:thumbnailGifData];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -659,7 +659,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self setImageURL:thumbnailURL withCompletion:nil];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifURL:thumbnailGifURL];
+    [self setGifURLPress:thumbnailGifURL];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -672,7 +672,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self setImageURL:thumbnailURL withCompletion:nil];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifData:thumbnailGifData];
+    [self setGifDataPress:thumbnailGifData];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -2350,7 +2350,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     return (self.superviewHeight - (self.minViewHeight + 12.0f + self.bottomBuffer));
 }
 
-- (void) setGifURL:(NSString *)gifURL {
+- (void) setGifURLPress:(NSString *)gifURL {
     _gifURL = gifURL;
     
     if ([ABCommons notNull:self.gifURL]) {
@@ -2373,8 +2373,46 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
+- (void) setGifURL:(NSString *)gifURL {
+    _gifURL = gifURL;
+    
+    if ([ABCommons notNull:self.gifURL]) {
+        if ([ABCommons notNull:self.gifCache]) {
+                self.image = self.gifCache;
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                self.image = image;
+                self.gifCache = image;
+            });
+        }
+        
+    }
+    
+}
+
 
 - (void) setGifData:(NSData *)gifData {
+    _gifData = gifData;
+    
+    if ([ABCommons notNull:self.gifData]) {
+        if ([ABCommons notNull:self.gifCache]) {
+            self.image = self.gifCache;
+            
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:gifData];
+                self.image = image;
+                self.gifCache = image;
+            });
+        }
+        
+    }
+}
+
+- (void) setGifDataPress:(NSData *)gifData {
     _gifData = gifData;
     
     if ([ABCommons notNull:self.gifData]) {
