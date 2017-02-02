@@ -82,9 +82,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self updatePlayerFrame];
     
-    [self.track updateBuffer];
-    [self.track updateBarBackground];
-    [self.track updateProgress];
+    if ([self hasMedia]) {
+        [self.track updateBuffer];
+        [self.track updateProgress];
+        [self.track updateBarBackground];
+    }
     
     CGRect playFrame = self.videoIndicator.frame;
     CGRect closeFrame = self.closeButton.frame;
@@ -451,6 +453,14 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     self.backgroundColor = [ABCommons colorWithHexString:@"EFEFF4"];
 //    self.clipsToBounds = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layoutSubviews)
+                                                 name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseVideoEnteringBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    
     
 }
 - (id)initWithFrame:(CGRect)aRect
@@ -1086,11 +1096,11 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             [self layoutSubviews];
             
-            [self updatePlayerFrame];
-            [self.track updateBuffer];
-            [self.track updateProgress];
-            [self.track updateBarBackground];
-            
+//            [self updatePlayerFrame];
+//            [self.track updateBuffer];
+//            [self.track updateProgress];
+//            [self.track updateBarBackground];
+//            
             self.layer.cornerRadius = 0.0f;
             [self setBorderAlpha:0.0f];
             
@@ -1272,9 +1282,9 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([ABCommons notNull:keyPath]) {
-        //        [self print:object tag:@"Object"];
-        //        [self print:change tag:@"Change"];
-        //        [self print:keyPath tag:@"Key"];
+//        [self print:object tag:@"Object"];
+//        [self print:change tag:@"Change"];
+//        [self print:keyPath tag:@"Key"];
         if ([keyPath isEqualToString:@"currentItem.loadedTimeRanges"]) {
             
             if ([ABCommons notNull:self.player]) {
@@ -1284,7 +1294,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                     }
                     
                     
-                    //                    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
+//                    NSArray *loadedTimeRanges = self.player.currentItem.loadedTimeRanges;
                     
                     if (isnan(bufferTime)) {
                         bufferTime = 0;
@@ -1688,11 +1698,11 @@ const CGFloat ABBufferTabBar = 49.0f;
                     self.alpha = 1;
                     
                     [self layoutSubviews];
-                    
-                    [self updatePlayerFrame];
-                    [self.track updateBuffer];
-                    [self.track updateProgress];
-                    [self.track updateBarBackground];
+//                    
+//                    [self updatePlayerFrame];
+//                    [self.track updateBuffer];
+//                    [self.track updateProgress];
+//                    [self.track updateBarBackground];
                     
                     
                 } completion:^(BOOL finished) {
@@ -1891,10 +1901,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.frame = frame;
             [self layoutSubviews];
             
-            [self updatePlayerFrame];
-            [self.track updateBuffer];
-            [self.track updateProgress];
-            [self.track updateBarBackground];
+//            [self updatePlayerFrame];
+//            [self.track updateBuffer];
+//            [self.track updateProgress];
+//            [self.track updateBarBackground];
         } completion:^(BOOL finished) {
             if ([self.delegate respondsToSelector:@selector(mediaViewDidChangeMinimization:)]) {
                 [self.delegate mediaViewDidChangeMinimization:self];
@@ -2794,6 +2804,31 @@ const CGFloat ABBufferTabBar = 49.0f;
     _customPlayButton = customPlayButton;
     
     self.videoIndicator.image = [self imageForPlayButton];
+}
+
+- (void) pauseVideoEnteringBackground {
+    if ([self hasMedia]) {
+        if ([ABCommons notNull:self.player]) {
+            if ((self.player.rate != 0) && (self.player.error == nil)) {
+                [self stopVideoAnimate];
+                isLoadingVideo = false;
+                [UIView animateWithDuration:0.15f animations:^{
+                    self.videoIndicator.alpha = 1.0f;
+                }];
+                
+                
+                [self.player pause];
+                
+                [self handleTopOverlayDisplay:self];
+                
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidPauseVideo:)]) {
+                    [self.delegate mediaViewDidPauseVideo:self];
+                }
+                
+            }
+        }
+    }
+    
 }
 
 @end
