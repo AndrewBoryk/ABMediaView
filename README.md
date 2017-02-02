@@ -144,7 +144,7 @@ In addition, Audio support has also been made available for ABMediaView. To set 
 [mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailImage:[UIImage imageNamed: @"thumbnail.png"]];
 ```
 
-*BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for a video and audio
+*BONUS FUNCTIONALITY:* GIFs can also be used as the thumbnail for video and audio.
 
 ```objective-c
 // Set video for mediaView by URL, and set GIF as thumbnail by URL
@@ -159,6 +159,23 @@ In addition, Audio support has also been made available for ABMediaView. To set 
 // Set audio for mediaView by URL, and set GIF as thumbnail using NSData
 [mediaView setAudioURL:@"www.audio.com/urlHere" withThumbnailGifData:gifData];
 
+```
+
+Another bonus functionality has been added, where if a user presses and holds on an ABMediaView, a GIF preview is shown. This function is currently available for videos, and can be implemented using the following methods:
+
+```objective-c
+/// Set the url where the video can be downloaded from, as well as the image for the thumbnail, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via URL
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail andThumbnailGifURL:(NSString *) thumbnailGifURL;
+
+/// Set the url where the video can be downloaded from, as well as the image for the thumbnail, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via NSData
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail andThumbnailGifData:(NSData *) thumbnailGifData;
+
+/// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via URL
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andThumbnailGifURL:(NSString *) thumbnailGifURL;
+
+
+/// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via NSData
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andThumbnailGifData:(NSData *) thumbnailGifData;
 ```
 
 
