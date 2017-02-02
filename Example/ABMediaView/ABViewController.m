@@ -276,6 +276,8 @@
 
 - (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
     NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
+    
+    [self restrictRotation:YES];
 }
 
 - (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
