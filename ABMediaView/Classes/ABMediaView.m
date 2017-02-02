@@ -500,6 +500,16 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self registerForRotation];
     
+    self.delegate = nil;
+    self.autoPlayAfterPresentation = NO;
+    self.hideCloseButton = NO;
+    self.shouldDisplayFullscreen = NO;
+    self.allowLooping = NO;
+    self.showTrack = NO;
+    self.pressForGIF = NO;
+    [self setShowRemainingTime:NO];
+    
+    
     _imageURL = nil;
     _imageCache = nil;
     _videoCache = nil;
