@@ -131,8 +131,26 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
         self.pressForGIF = NO;
+        
         self.gifCache = mediaView.gifCache;
-        [self setGifURL:mediaView.gifURL];
+        if ([ABCommons notNull:mediaView.gifURL]) {
+            if (mediaView.pressForGIF) {
+                [self setGifURLPress:mediaView.gifURL];
+            }
+            else {
+                [self setGifURL:mediaView.gifURL];
+            }
+            
+        }
+        else if ([ABCommons notNull:mediaView.gifData]) {
+            if (mediaView.pressForGIF) {
+                [self setGifDataPress:mediaView.gifData];
+            }
+            else {
+                [self setGifData:mediaView.gifData];
+            }
+        }
+        
         
         self.themeColor = mediaView.themeColor;
         
