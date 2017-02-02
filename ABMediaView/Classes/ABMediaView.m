@@ -130,7 +130,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
-        self.pressForGIF = mediaView.pressForGIF;
+        self.pressForGIF = NO;
         self.gifCache = mediaView.gifCache;
         [self setGifURL:mediaView.gifURL];
         
@@ -266,10 +266,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         swipeRecognizer.enabled = NO;
     }
     
-    if (self.isFullScreen) {
-        [self addGestureRecognizer:swipeRecognizer];
-    }
-    
+    [self addGestureRecognizer:swipeRecognizer];
+
+    swipeRecognizer.enabled = isFullscreen;
     
     if (![ABCommons notNull:self.track]) {
         self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
@@ -685,7 +684,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setupGifLongPress {
     if (![ABCommons notNull:gifLongPressRecognizer]) {
         gifLongPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleGifLongPress:)];
-        gifLongPressRecognizer.minimumPressDuration = 0.35f;
+        gifLongPressRecognizer.minimumPressDuration = 0.25f;
         gifLongPressRecognizer.delegate = self;
         gifLongPressRecognizer.delaysTouchesBegan = NO;
     
@@ -2309,6 +2308,10 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) setFullscreen: (BOOL) fullscreen {
     isFullscreen = fullscreen;
+    
+    if ([ABCommons notNull:swipeRecognizer]) {
+        swipeRecognizer.enabled = isFullscreen;
+    }
 }
 
 - (CGFloat) superviewWidth {
