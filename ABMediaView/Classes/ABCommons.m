@@ -153,4 +153,32 @@
     return screen.size.width;
 }
 
++ (BOOL)isLandscape {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    
+    CGFloat width = screenRect.size.width;
+    CGFloat height = screenRect.size.height;
+    
+    if (UIDeviceOrientationIsPortrait(orientation)) {
+        
+        if (height < width) {
+            return YES;
+        }
+        else {
+            return NO;
+        }
+    }
+    else {
+        
+        if (height > width) {
+            return NO;
+        }
+        else {
+            return YES;
+        }
+        
+    }
+}
 @end

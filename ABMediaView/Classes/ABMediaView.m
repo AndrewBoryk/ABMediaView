@@ -94,9 +94,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     CGFloat playSize = 30.0f + (30.0f * (self.frame.size.width / self.superviewWidth));
     
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    if ([ABCommons isLandscape]) {
         playSize = 30.0f + (30.0f * (self.frame.size.height / self.superviewWidth));
         closeFrame.origin = CGPointMake(0, 0);
     }
@@ -200,9 +198,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.minimizedAspectRatio = mediaView.minimizedAspectRatio;
         self.minimizedWidthRatio = mediaView.minimizedWidthRatio;
         
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         
-        if (UIDeviceOrientationIsLandscape(orientation)) {
+        if ([ABCommons isLandscape]) {
             self.swipeRecognizer.enabled = NO;
         }
         
@@ -2274,22 +2271,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         CGFloat width = screenRect.size.width;
         CGFloat height = screenRect.size.height;
         
-        if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
-            if (height < width) {
-                mediaView.closeButton.alpha = 1;
-            }
-            else {
-                mediaView.closeButton.alpha = 0;
-            }
-            
-        }
-        else if (mediaView.hideCloseButton && mediaView.isMinimizable && UIDeviceOrientationIsLandscape(orientation)) {
-            if (height > width) {
-                mediaView.closeButton.alpha = 0;
-            }
-            else {
-                mediaView.closeButton.alpha = 1;
-            }
+        if (mediaView.hideCloseButton && mediaView.isMinimizable && ![ABCommons isLandscape]) {
+            mediaView.closeButton.alpha = 0;
         }
         else {
             mediaView.closeButton.alpha = 1;
@@ -2694,9 +2677,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             constant += 8.0f;
         }
         
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-        
-        if (UIDeviceOrientationIsLandscape(orientation)) {
+        if ([ABCommons isLandscape]) {
             constant -= self.topBuffer;
         }
         
@@ -2723,9 +2704,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if ([ABCommons notNull:self.titleLabel]) {
         CGFloat constant = 8.0f+self.topBuffer;
         
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-        
-        if (UIDeviceOrientationIsLandscape(orientation)) {
+        if ([ABCommons isLandscape]) {
             constant -= self.topBuffer;
         }
         
@@ -2750,9 +2729,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     if ([ABCommons notNull:self.topOverlay]) {
         
         CGFloat height = 50.0f+self.topBuffer;
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
         
-        if (UIDeviceOrientationIsLandscape(orientation)) {
+        if ([ABCommons isLandscape]) {
             height -= self.topBuffer;
         }
         if ([ABCommons notNull:self.topOverlayHeight]) {

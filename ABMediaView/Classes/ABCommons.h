@@ -30,6 +30,9 @@
 /// Returns true if the object is not just spaces or blank, otherwise returns false
 + (BOOL)notBlank: (NSString *) text;
 
+/// Determines if the view is in landscape mode and has rotated to landscape mode
++ (BOOL)isLandscape;
+
 #pragma mark - String Modification Oriented
 
 /*!
