@@ -152,7 +152,10 @@ extern const CGFloat ABBufferTabBar;
 @property BOOL imageViewNotReused;
 
 /// Determines whether the mediaView can be minimized into the bottom right corner, and then dismissed by swiping right on the minimized version
-@property BOOL isMinimizable;
+@property (nonatomic) BOOL isMinimizable;
+
+/// Determines whether the mediaView can be dismissed by swiping down on the view, this setting would override isMinimizable
+@property (nonatomic) BOOL isDismissable;
 
 /// Determines whether the video occupies the full screen when displayed
 @property BOOL shouldDisplayFullscreen;
@@ -333,9 +336,6 @@ extern const CGFloat ABBufferTabBar;
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
 - (void) setShowRemainingTime: (BOOL) showRemainingTime;
 
-/// Determines whether the mediaView can be minimized into the bottom right corner, and then dismissed
-- (void) setCanMinimize: (BOOL) canMinimize;
-
 /// Add a mediaView to the queue of mediaViews that will be displayed. If no mediaView is currently showing, this will display that new mediaView
 - (void) queueMediaView: (ABMediaView *) mediaView;
 
@@ -404,6 +404,18 @@ extern const CGFloat ABBufferTabBar;
 
 /// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
 - (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+
+/// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
+- (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView;
+
+/// Called when the mediaView is in the process of minimizing, and has made a change in frame
+- (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView;
+
+/// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
+- (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
+
+/// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
+- (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
 
 /// Called when the mediaView has completed downloading the image from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;

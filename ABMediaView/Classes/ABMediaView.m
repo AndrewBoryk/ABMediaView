@@ -160,7 +160,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.showTrack = mediaView.showTrack;
         [self setTrackFont:mediaView.trackFont];
         self.allowLooping = mediaView.allowLooping;
-        [self setCanMinimize: mediaView.isMinimizable];
+        self.isMinimizable = mediaView.isMinimizable;
+        self.isDismissable = mediaView.isDismissable;
+        
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         [self hideCloseButton: mediaView.hideCloseButton];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
@@ -1518,7 +1520,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 height = tempFloat;
             }
             
-            swipeRecognizer.enabled = self.isMinimizable;
+            swipeRecognizer.enabled = (self.isMinimizable || self.isDismissable);
         }
         else {
             
@@ -1614,130 +1616,179 @@ const CGFloat ABBufferTabBar = 49.0f;
             offset = self.frame.origin.y;
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
-            
-            if (isMinimized && offset == self.maxViewOffset) {
-                CGPoint vel = [gesture velocityInView:self];
-                if (self.frame.origin.x > (self.superviewWidth - (self.minViewWidth + 12.0f))) {
-                    [self handleDismissingForRecognizer: gesture];
-                }
-                else {
-                    // User dragged towards the right
-                    if (vel.x > 0)
-                    {
-                        float velocityY = vel.y;
-                        if (vel.y < 0 && fabsf(velocityY) > vel.x) {
-                            // User dragged towards the right, however, he draged upwards more than he dragged right
-                            [self handleMinimizingForRecognizer:gesture];
-                        }
-                        else {
-                            [self handleDismissingForRecognizer: gesture];
-                        }
+            if (self.isDismissable) {
+                [self handleSwipeDismissingForRecognizer:gesture];
+            }
+            else if (self.isMinimizable) {
+                if (isMinimized && offset == self.maxViewOffset) {
+                    CGPoint vel = [gesture velocityInView:self];
+                    if (self.frame.origin.x > (self.superviewWidth - (self.minViewWidth + 12.0f))) {
+                        [self handleDismissingForRecognizer: gesture];
                     }
                     else {
-                        [self handleMinimizingForRecognizer:gesture];
+                        // User dragged towards the right
+                        if (vel.x > 0)
+                        {
+                            float velocityY = vel.y;
+                            if (vel.y < 0 && fabsf(velocityY) > vel.x) {
+                                // User dragged towards the right, however, he draged upwards more than he dragged right
+                                [self handleMinimizingForRecognizer:gesture];
+                            }
+                            else {
+                                [self handleDismissingForRecognizer: gesture];
+                            }
+                        }
+                        else {
+                            [self handleMinimizingForRecognizer:gesture];
+                        }
                     }
+                    
+                    
                 }
-                
-                
+                else {
+                    // The view is not in fully minimized form, and thus can't be dismissed
+                    [self handleMinimizingForRecognizer:gesture];
+                }
             }
-            else {
-                // The view is not in fully minimized form, and thus can't be dismissed
-                [self handleMinimizingForRecognizer:gesture];
-            }
+            
         }
         else if (gesture.state == UIGestureRecognizerStateEnded ||
                  gesture.state == UIGestureRecognizerStateFailed ||
                  gesture.state == UIGestureRecognizerStateCancelled) {
             
-            self.userInteractionEnabled = NO;
-            
-            BOOL minimize = false;
-            
-            if (offsetPercentage >= 0.40f) {
-                minimize = true;
-            }
-            
-            BOOL shouldDismiss = false;
-            
-            if (self.alpha < 0.6f) {
-                shouldDismiss = true;
-            }
-            
-            if (shouldDismiss) {
-                [self dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
-                    
-                }];
-            }
-            else {
-                if ([self.delegate respondsToSelector:@selector(mediaViewWillEndMinimizing:atMinimizedState:)]) {
-                    [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:minimize];
+            if (self.isDismissable) {
+                self.userInteractionEnabled = NO;
+                
+                CGPoint gestureVelocity = [gesture velocityInView:self];
+                
+                BOOL shouldDismiss = false;
+                
+                NSLog(@"Gesture Velocity %f", gestureVelocity.y);
+                NSLog(@"Gesture Velocity Modified %f", (gestureVelocity.y*.001));
+                
+                if ((offsetPercentage + (gestureVelocity.y*.001)) >= 0.4f) {
+                    shouldDismiss = true;
                 }
                 
-                [UIView animateWithDuration:0.25f animations:^{
-                    if (minimize) {
-                        self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
-                        self.videoIndicator.alpha = 0;
-                        self.closeButton.alpha = 0;
-                        self.topOverlay.alpha = 0;
-                        self.titleLabel.alpha = 0;
-                        self.detailsLabel.alpha = 0;
-//                        self.layer.cornerRadius = 1.5f;
-                        [self setBorderAlpha:1.0f];
+                if (shouldDismiss) {
+                    if ([self.delegate respondsToSelector:@selector(mediaViewWillEndDismissing:withDismissal:)]) {
+                        [self.delegate mediaViewWillEndDismissing:self withDismissal:YES];
                     }
-                    else {
+                    
+                    [self dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
+                        if ([self.delegate respondsToSelector:@selector(mediaViewDidEndDismissing:withDismissal:)]) {
+                            [self.delegate mediaViewDidEndDismissing:self withDismissal:YES];
+                        }
+                    }];
+                }
+                else {
+                    if ([self.delegate respondsToSelector:@selector(mediaViewWillEndDismissing:withDismissal:)]) {
+                        [self.delegate mediaViewWillEndDismissing:self withDismissal:NO];
+                    }
+                    
+                    [UIView animateWithDuration:0.25f animations:^{
                         self.frame = self.superview.frame;
                         
-                        if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
-                            self.videoIndicator.alpha = 1.0f;
+                        [self layoutSubviews];
+                        
+                        
+                    } completion:^(BOOL finished) {
+                        
+                        self.tapRecognizer.enabled = YES;
+                        self.closeButton.userInteractionEnabled = YES;
+                        
+                        self.track.userInteractionEnabled = YES;
+                        offset = self.frame.origin.y;
+                        
+                        self.userInteractionEnabled = YES;
+                        
+                        if ([self.delegate respondsToSelector:@selector(mediaViewDidEndDismissing:withDismissal:)]) {
+                            [self.delegate mediaViewDidEndDismissing:self withDismissal:NO];
                         }
                         
-                        [self handleCloseButtonDisplay:self];
-                        [self handleTopOverlayDisplay:self];
-                        
-                        self.layer.cornerRadius = 0.0f;
-                        [self setBorderAlpha:0.0f];
-                    }
-                    
-                    self.alpha = 1;
-                    
-                    [self layoutSubviews];
-//                    
-//                    [self updatePlayerFrame];
-//                    [self.track updateBuffer];
-//                    [self.track updateProgress];
-//                    [self.track updateBarBackground];
-                    
-                    
-                } completion:^(BOOL finished) {
-                    
-                    isMinimized = minimize;
-                    
-                    self.tapRecognizer.enabled = YES;
-                    self.closeButton.userInteractionEnabled = YES;
-                    
-                    self.track.userInteractionEnabled = !isMinimized;
-                    offset = self.frame.origin.y;
-                    
-                    self.userInteractionEnabled = YES;
-                    
-                    if ([self.delegate respondsToSelector:@selector(mediaViewDidEndMinimizing:atMinimizedState:)]) {
-                        [self.delegate mediaViewDidEndMinimizing:self atMinimizedState:minimize];
-                    }
-                    
-                    if (self.isLoadingVideo) {
-                        [self loadVideoAnimate];
-                    }
-                    
-                }];
+                    }];
+                }
             }
-            
-            
+            else if (self.isMinimizable) {
+                self.userInteractionEnabled = NO;
+                
+                
+                BOOL minimize = false;
+                
+                if (offsetPercentage >= 0.40f) {
+                    minimize = true;
+                }
+                
+                BOOL shouldDismiss = false;
+                
+                if (self.alpha < 0.6f) {
+                    shouldDismiss = true;
+                }
+                
+                if (shouldDismiss) {
+                    [self dismissMediaViewAnimated:YES withCompletion:^(BOOL completed) {
+                        
+                    }];
+                }
+                else {
+                    if ([self.delegate respondsToSelector:@selector(mediaViewWillEndMinimizing:atMinimizedState:)]) {
+                        [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:minimize];
+                    }
+                    
+                    [UIView animateWithDuration:0.25f animations:^{
+                        if (minimize) {
+                            self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
+                            self.videoIndicator.alpha = 0;
+                            self.closeButton.alpha = 0;
+                            self.topOverlay.alpha = 0;
+                            self.titleLabel.alpha = 0;
+                            self.detailsLabel.alpha = 0;
+                            [self setBorderAlpha:1.0f];
+                        }
+                        else {
+                            self.frame = self.superview.frame;
+                            
+                            if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
+                                self.videoIndicator.alpha = 1.0f;
+                            }
+                            
+                            [self handleCloseButtonDisplay:self];
+                            [self handleTopOverlayDisplay:self];
+                            
+                            self.layer.cornerRadius = 0.0f;
+                            [self setBorderAlpha:0.0f];
+                        }
+                        
+                        self.alpha = 1;
+                        
+                        [self layoutSubviews];
+                        
+                        
+                    } completion:^(BOOL finished) {
+                        
+                        isMinimized = minimize;
+                        
+                        self.tapRecognizer.enabled = YES;
+                        self.closeButton.userInteractionEnabled = YES;
+                        
+                        self.track.userInteractionEnabled = !isMinimized;
+                        offset = self.frame.origin.y;
+                        
+                        self.userInteractionEnabled = YES;
+                        
+                        if ([self.delegate respondsToSelector:@selector(mediaViewDidEndMinimizing:atMinimizedState:)]) {
+                            [self.delegate mediaViewDidEndMinimizing:self atMinimizedState:minimize];
+                        }
+                        
+                        if (self.isLoadingVideo) {
+                            [self loadVideoAnimate];
+                        }
+                        
+                    }];
+                }
+            }
         }
     }
-    
-    
-    
-    
 }
 
 - (void) handleDismissingForRecognizer: (UIPanGestureRecognizer *) gesture {
@@ -1784,6 +1835,79 @@ const CGFloat ABBufferTabBar = 49.0f;
         ySwipePosition = [gesture locationInView:self].y;
         xSwipePosition = [gesture locationInView:self].x;
     }
+    
+}
+
+- (void) handleSwipeDismissingForRecognizer: (UIPanGestureRecognizer *) gesture {
+    
+    if (self.isFullScreen) {
+        
+        if ([self.delegate respondsToSelector:@selector(mediaViewWillChangeDismissing:)]) {
+            [self.delegate mediaViewWillChangeDismissing:self];
+        }
+        
+        CGRect frame = self.frame;
+        CGPoint origin = self.frame.origin;
+        CGSize size = self.frame.size;
+        
+        //        [self logFrame:self.superview.frame withTag:@"Superview"];
+        //        [self logFrame:frame withTag:@"Subview"];
+        
+        CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
+        CGFloat tempOffset = offset + difference;
+        offsetPercentage = tempOffset / self.superviewHeight;
+        
+        if (offsetPercentage > 1) {
+            offsetPercentage = 1;
+        }
+        else if (offsetPercentage < 0) {
+            offsetPercentage = 0;
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(mediaView:didChangeOffset:)]) {
+            [self.delegate mediaView:self didChangeOffset:offsetPercentage];
+        }
+        
+        CGFloat testOrigin = offsetPercentage * self.superviewHeight;
+        
+        
+        size.width = self.superviewWidth;
+        size.height = self.superviewHeight;
+        origin.x = 0;
+        
+        [self setBorderAlpha:0.0f];
+        
+        if (testOrigin >= self.superviewHeight) {
+            origin.y = self.superviewHeight;
+            offset = self.superviewHeight;
+        }
+        else if (testOrigin <= 0) {
+            origin.y = 0;
+            offset = 0.0f;
+        }
+        else {
+            origin.y = testOrigin;
+            offset+= difference;
+        }
+        
+        frame.origin = origin;
+        frame.size = size;
+        
+        [UIView animateWithDuration:0.0f animations:^{
+            self.frame = frame;
+            [self layoutSubviews];
+            
+        } completion:^(BOOL finished) {
+            if ([self.delegate respondsToSelector:@selector(mediaViewDidChangeDismissing:)]) {
+                [self.delegate mediaViewDidChangeDismissing:self];
+            }
+        }];
+        
+        
+        ySwipePosition = [gesture locationInView:self].y;
+        xSwipePosition = [gesture locationInView:self].x;
+    }
+    
     
 }
 
@@ -1904,10 +2028,6 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.frame = frame;
             [self layoutSubviews];
             
-//            [self updatePlayerFrame];
-//            [self.track updateBuffer];
-//            [self.track updateProgress];
-//            [self.track updateBarBackground];
         } completion:^(BOOL finished) {
             if ([self.delegate respondsToSelector:@selector(mediaViewDidChangeMinimization:)]) {
                 [self.delegate mediaViewDidChangeMinimization:self];
@@ -1954,11 +2074,19 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) setCanMinimize:(BOOL)canMinimize {
-    self.isMinimizable = canMinimize;
+- (void) setIsMinimizable:(BOOL)isMinimizable {
+    _isMinimizable = isMinimizable;
     
     if ([ABCommons notNull:swipeRecognizer]) {
-        swipeRecognizer.enabled = self.isMinimizable;
+        swipeRecognizer.enabled = (self.isMinimizable || self.isDismissable);
+    }
+}
+
+- (void) setIsDismissable:(BOOL)isDismissable {
+    _isDismissable = isDismissable;
+    
+    if ([ABCommons notNull:swipeRecognizer]) {
+        swipeRecognizer.enabled = (self.isMinimizable || self.isDismissable);
     }
 }
 
@@ -2120,14 +2248,15 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
         
         [UIView animateWithDuration:animationTime animations:^{
-            if (self.isMinimized) {
+            if (self.isDismissable) {
+                self.frame = CGRectMake(0, self.superviewHeight, self.superviewWidth, self.superviewHeight);
+            }
+            else if (self.isMinimizable && self.isMinimized) {
                 self.frame = CGRectMake(self.superviewWidth, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
-                self.alpha = 0;
                 [self setBorderAlpha:0.0f];
             }
-            else {
-                self.alpha = 0;
-            }
+            
+            self.alpha = 0;
             
         } completion:^(BOOL finished) {
             [self.player pause];
@@ -2842,7 +2971,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 height = tempFloat;
             }
             
-            swipeRecognizer.enabled = self.isMinimizable;
+            swipeRecognizer.enabled = (self.isMinimizable || self.isDismissable);
         }
         else {
             

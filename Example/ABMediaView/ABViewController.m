@@ -176,8 +176,11 @@
     // Allows toggling for funtionality which would show remaining time instead of total time on the right label on the track
     [mediaView setShowRemainingTime:YES];
     
+    // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom of the screen for dismissal. This variable overrides isMinimizable.
+    [mediaView setIsDismissable: YES];
+    
     // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits there. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
-    [mediaView setCanMinimize: YES];
+    [mediaView setIsMinimizable: YES];
     
     /// Change the font for the labels on the track
     [mediaView setTrackFont:[UIFont fontWithName:@"STHeitiTC-Medium" size:12.0f]];
@@ -303,6 +306,34 @@
     }
 }
 
+- (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView {
+    NSLog(@"MediaView will change dismissing");
+}
+
+- (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView {
+    NSLog(@"MediaView did change dismissing");
+}
+
+- (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
+    NSLog(@"MediaView will end dismissing");
+    
+    [self restrictRotation:didDismiss];
+}
+
+- (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
+    NSLog(@"MediaView did end dismissing");
+    
+    if (didDismiss) {
+        if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        }
+    }
+    else {
+        if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleLightContent) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
+    }
+}
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image {
     NSLog(@"Image: %@", image);
