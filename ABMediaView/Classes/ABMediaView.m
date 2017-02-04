@@ -133,6 +133,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
+        [self setCustomPlayButton:mediaView.customPlayButton];
+        
         self.pressForGIF = NO;
         
         self.gifCache = mediaView.gifCache;
@@ -770,7 +772,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
             
             [UIView animateWithDuration:0.25f animations:^{
-                self.videoIndicator.alpha = 0.2f;
+                self.videoIndicator.alpha = 0.0f;
             }];
         }
         else if (gesture.state == UIGestureRecognizerStateEnded ||

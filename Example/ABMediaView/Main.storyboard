@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pae-gG-vxi">
-                                <rect key="frame" x="128.5" y="111.5" width="119" height="30"/>
+                                <rect key="frame" x="128.5" y="84.5" width="119" height="30"/>
                                 <state key="normal" title="Pick Image/Video"/>
                                 <connections>
                                     <action selector="pickMediaAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="NgX-fb-WZD"/>
@@ -79,12 +79,20 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyz-3g-968">
-                                <rect key="frame" x="155" y="165.5" width="65" height="30"/>
+                                <rect key="frame" x="155" y="138.5" width="65" height="30"/>
                                 <state key="normal" title="Show GIF"/>
                                 <connections>
                                     <action selector="showGIFAction:" destination="whP-gf-Uak" eventType="touchUpInside" id="PyH-wH-gXy"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eJg-iM-3QU">
+                                <rect key="frame" x="106" y="192.5" width="163.5" height="31.5"/>
+                                <string key="text">Tap to Play
+Press and Hold for Preview</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -93,13 +101,15 @@
                             <constraint firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="2J0-wP-ceE"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="3TW-hl-Ah7"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="top" secondItem="Pae-gG-vxi" secondAttribute="bottom" constant="24" id="55O-9C-8VH"/>
-                            <constraint firstItem="mWW-nq-RdB" firstAttribute="top" secondItem="qyz-3g-968" secondAttribute="bottom" constant="32" id="8TO-dm-Uj4"/>
                             <constraint firstItem="mWW-nq-RdB" firstAttribute="leading" secondItem="TpU-gO-2f1" secondAttribute="leading" id="Bf6-wa-sXD"/>
                             <constraint firstItem="Mvr-aV-6Um" firstAttribute="top" secondItem="VvP-eB-0HN" secondAttribute="bottom" id="C13-F5-29s"/>
+                            <constraint firstItem="eJg-iM-3QU" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="G9o-fl-ZFe"/>
+                            <constraint firstItem="mWW-nq-RdB" firstAttribute="top" secondItem="eJg-iM-3QU" secondAttribute="bottom" constant="3.5" id="Id7-wt-wMi"/>
                             <constraint firstItem="kSV-mC-9a9" firstAttribute="top" secondItem="mWW-nq-RdB" secondAttribute="bottom" constant="32" id="JOQ-do-hw1"/>
                             <constraint firstItem="Pae-gG-vxi" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Jgl-C3-ahs"/>
                             <constraint firstItem="C4o-zf-89b" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="-20" id="KYO-R8-3Sw"/>
                             <constraint firstItem="qyz-3g-968" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="Leb-AB-8GE"/>
+                            <constraint firstItem="eJg-iM-3QU" firstAttribute="top" secondItem="qyz-3g-968" secondAttribute="bottom" constant="24" id="NhB-be-vSJ"/>
                             <constraint firstItem="tZH-8j-nmv" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="aah-pI-CqE"/>
                             <constraint firstItem="DcG-yi-4VF" firstAttribute="trailing" secondItem="C4o-zf-89b" secondAttribute="trailing" id="fzu-CN-4b0"/>
                             <constraint firstItem="kSV-mC-9a9" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="gZV-9Y-dId"/>
