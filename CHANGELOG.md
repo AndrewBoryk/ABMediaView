@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ####Fixed:
 * Issue where GIF from previous ABMediaView displayed was showing on the next ABMediaView
 * Changed 'ABUtils' to 'ABCommons' to avoid conflicts when using the 'ABUtils' library seperately
+* Issue where the screen was rotated, but the transition animation had not yet taken place, but the UI was adjusting as if it had.
 
 ##v0.2.4 (Includes all previous versions)
 ####Added:
