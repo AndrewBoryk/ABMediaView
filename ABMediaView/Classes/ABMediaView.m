@@ -667,11 +667,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self setVideoURL:videoURL];
 }
 
-- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andThumbnailGifURL:(NSString *)thumbnailGifURL {
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andPreviewGifURL:(NSString *)previewGifURL {
     self.image = thumbnail;
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifURLPress:thumbnailGifURL];
+    [self setGifURLPress:previewGifURL];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -681,11 +681,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
-- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andThumbnailGifData:(NSData *)thumbnailGifData {
+- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andPreviewGifData:(NSData *)previewGifData {
     self.image = thumbnail;
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifDataPress:thumbnailGifData];
+    [self setGifDataPress:previewGifData];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -694,11 +694,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andThumbnailGifURL:(NSString *)thumbnailGifURL {
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifURL:(NSString *)previewGifURL {
     [self setImageURL:thumbnailURL withCompletion:nil];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifURLPress:thumbnailGifURL];
+    [self setGifURLPress:previewGifURL];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
@@ -707,11 +707,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andThumbnailGifData:(NSData *)thumbnailGifData {
+- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifData:(NSData *)previewGifData {
     [self setImageURL:thumbnailURL withCompletion:nil];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
-    [self setGifDataPress:thumbnailGifData];
+    [self setGifDataPress:previewGifData];
     
     if (!self.isFullScreen) {
         [self setupGifLongPress];
