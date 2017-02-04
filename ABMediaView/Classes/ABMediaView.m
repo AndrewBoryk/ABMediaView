@@ -2267,13 +2267,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) handleCloseButtonDisplay: (ABMediaView *) mediaView {
     if (mediaView.isFullScreen) {
         
-        UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-        
-        CGRect screenRect = [[UIScreen mainScreen] bounds];
-        
-        CGFloat width = screenRect.size.width;
-        CGFloat height = screenRect.size.height;
-        
         if (mediaView.hideCloseButton && mediaView.isMinimizable && ![ABCommons isLandscape]) {
             mediaView.closeButton.alpha = 0;
         }
