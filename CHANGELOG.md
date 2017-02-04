@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 ***
 
-##0.3.0
+##0.3.0 (2/4/17)
 ####Added:
 * Play audio using ABMediaView
 * Manage audio playback when ABMediaView is playing, using 'setPlaysAudioWhenPlayingMediaOnSilent' and 'setPlaysAudioWhenStoppingMediaOnSilent'
