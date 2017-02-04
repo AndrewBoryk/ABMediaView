@@ -75,8 +75,10 @@
     // NSData *gifData = ...;
     // [self.mediaView setGifData:gifData];
     
-    // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video.
+    // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video. Added functionality for preview GIFs when the user presses and holds.
     [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andPreviewGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
+    
+//    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
     // Setting just the title allows for a label to be displayed at the top of the mediaView
     [self.mediaView setTitle:@"Big Buck Bunny"];
