@@ -454,8 +454,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.backgroundColor = [ABCommons colorWithHexString:@"EFEFF4"];
 //    self.clipsToBounds = YES;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layoutSubviews)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustSubviews)
                                                  name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustSubviews)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseVideoEnteringBackground)
                                                  name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -2830,6 +2833,43 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
+- (void) adjustSubviews {
+    if (self.isFullScreen) {
+        
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        
+        CGFloat width = screenRect.size.width;
+        CGFloat height = screenRect.size.height;
+        
+        if (![ABCommons isLandscape]) {
+            
+            if (height < width) {
+                CGFloat tempFloat = width;
+                width = height;
+                height = tempFloat;
+            }
+            
+            swipeRecognizer.enabled = self.isMinimizable;
+        }
+        else {
+            
+            if (height > width) {
+                CGFloat tempFloat = width;
+                width = height;
+                height = tempFloat;
+            }
+            
+            swipeRecognizer.enabled = NO;
+            
+        }
+        
+        isMinimized = NO;
+        
+        self.frame = CGRectMake(0, 0, width, height);
+    }
+    
+    [self layoutSubviews];
+}
 @end
 
 
