@@ -307,21 +307,21 @@
 }
 
 - (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will change dismissing");
+//    NSLog(@"MediaView will change dismissing");
 }
 
 - (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did change dismissing");
+//    NSLog(@"MediaView did change dismissing");
 }
 
 - (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
-    NSLog(@"MediaView will end dismissing");
+//    NSLog(@"MediaView will end dismissing");
     
     [self restrictRotation:didDismiss];
 }
 
 - (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
-    NSLog(@"MediaView did end dismissing");
+//    NSLog(@"MediaView did end dismissing");
     
     if (didDismiss) {
         if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {

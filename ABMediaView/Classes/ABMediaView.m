@@ -1666,7 +1666,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 NSLog(@"Gesture Velocity %f", gestureVelocity.y);
                 NSLog(@"Gesture Velocity Modified %f", (gestureVelocity.y*.001));
                 
-                if ((offsetPercentage + (gestureVelocity.y*.001)) >= 0.4f) {
+                if ((offsetPercentage > 0.1f && offsetPercentage < 0.4f && gestureVelocity.y > 150.0f) || offsetPercentage >= 0.4f) {
                     shouldDismiss = true;
                 }
                 
