@@ -6,7 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ##(Unreleased)
 
-Fixed:
+####Added:
+* 'resetMediaInView' which removes media from view while maintaining settings in view. ('resetVariables' removes both).
+* 'customMusicButton' which specifies a custom paly button to audio
+
+####Fixed:
 * Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
 * Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works  
 * Issue where audioURL and audioCache was not reset when 'resetVariables' is called.
