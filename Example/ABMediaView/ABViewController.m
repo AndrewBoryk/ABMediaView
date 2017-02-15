@@ -177,7 +177,7 @@
     [mediaView setShowRemainingTime:YES];
     
     // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits there. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
-    [mediaView setIsMinimizable: YES];
+    [mediaView setCanMinimize: YES];
     
     /// Change the font for the labels on the track
     [mediaView setTrackFont:[UIFont fontWithName:@"STHeitiTC-Medium" size:12.0f]];
