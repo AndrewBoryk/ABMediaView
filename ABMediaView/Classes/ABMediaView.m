@@ -132,6 +132,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
         [self setCustomPlayButton:mediaView.customPlayButton];
+        [self setCustomMusicButton:mediaView.customMusicButton];
         
         self.originalSuperview = mediaView.superview;
         
@@ -510,21 +511,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) resetVariables {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [self registerForRotation];
-    
-    self.delegate = nil;
-    self.autoPlayAfterPresentation = NO;
-    self.hideCloseButton = NO;
-    self.shouldDisplayFullscreen = NO;
-    self.allowLooping = NO;
-    self.showTrack = NO;
-    self.pressForGIF = NO;
-    [self setShowRemainingTime:NO];
-    
-    
+- (void) resetMediaInView {
     _imageURL = nil;
     _imageCache = nil;
     _videoCache = nil;
@@ -568,6 +555,25 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.detailsLabel.alpha = 0;
     
     [self stopVideoAnimate];
+    
+    self.pressForGIF = NO;
+}
+
+- (void) resetVariables {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self registerForRotation];
+    
+    self.delegate = nil;
+    self.autoPlayAfterPresentation = NO;
+    self.hideCloseButton = NO;
+    self.shouldDisplayFullscreen = NO;
+    self.allowLooping = NO;
+    self.showTrack = NO;
+    [self setShowRemainingTime:NO];
+    
+    [self resetMediaInView];
+    
 }
 
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
@@ -635,6 +641,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
+        self.videoIndicator.image = [self imageForPlayButton];
+        
         self.videoIndicator.alpha = 1;
     }
     
@@ -825,6 +833,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
+        self.videoIndicator.image = [self imageForPlayButton];
+        
         self.videoIndicator.alpha = 1;
     }
     
@@ -1411,8 +1421,11 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (UIImage *) imageForPlayButton {
-    if ([ABCommons notNull:self.customPlayButton]) {
+    if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
         return self.customPlayButton;
+    }
+    else if ([ABCommons notNull:self.customMusicButton] && [ABCommons notNull:self.audioURL]) {
+        return self.customMusicButton;
     }
     else {
         static UIImage *playCircle = nil;
@@ -2800,6 +2813,12 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) setCustomPlayButton:(UIImage *)customPlayButton {
     _customPlayButton = customPlayButton;
+    
+    self.videoIndicator.image = [self imageForPlayButton];
+}
+
+- (void) setCustomMusicButton:(UIImage *)customMusicButton {
+    _customMusicButton = customMusicButton;
     
     self.videoIndicator.image = [self imageForPlayButton];
 }

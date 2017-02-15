@@ -181,8 +181,11 @@ extern const CGFloat ABBufferTabBar;
 /// Indicator which shows that the video is being loaded
 @property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
 
-/// Custom image can be set for the play button
+/// Custom image can be set for the play button (video)
 @property (strong, nonatomic) UIImage *customPlayButton;
+
+/// Custom image can be set for the play button (music)
+@property (strong, nonatomic) UIImage *customMusicButton;
 
 /// Play button imageView which shows in the center of the video, notifies the user that a video can be played
 @property (strong, nonatomic) UIImageView *videoIndicator;
@@ -357,8 +360,11 @@ extern const CGFloat ABBufferTabBar;
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
 - (void) dismissMediaViewAnimated:(BOOL) animated withCompletion:(void (^)(BOOL completed))completion;
 
-/// Resets variables from mediaView, removing image and video data
+/// Resets variables from mediaView, removing image, video, audio and GIF data
 - (void) resetVariables;
+
+/// Removes image, video, audio and GIF data
+- (void) resetMediaInView;
 
 /// Sets the close button to hidden, only allowed if isMinimizable is true
 - (void) hideCloseButton: (BOOL) hideButton;
