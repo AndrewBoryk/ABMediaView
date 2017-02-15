@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 ##(Unreleased)
 
 Fixed:
-* Issue where isMinimizable was always set to true. Now using 'setCanMinimize:' works.
+* Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
+* Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works  
 
 ##0.3.0 (2/4/17)
 ####Added:
