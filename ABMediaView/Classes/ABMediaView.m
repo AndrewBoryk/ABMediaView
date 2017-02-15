@@ -532,6 +532,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     _gifURL = nil;
     _gifData = nil;
     _gifCache = nil;
+    _audioURL = nil;
+    _audioCache = nil;
     
     if ([ABCommons notNull:gifLongPressRecognizer]) {
         if ([self.gestureRecognizers containsObject:gifLongPressRecognizer]) {
