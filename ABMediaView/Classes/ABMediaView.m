@@ -1958,7 +1958,12 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.isMinimizable = canMinimize;
     
     if ([ABCommons notNull:swipeRecognizer]) {
-        swipeRecognizer.enabled = self.isMinimizable;
+        if (self.isMinimizable) {
+            swipeRecognizer.enabled = isFullscreen;
+        }
+        else {
+            swipeRecognizer.enabled = NO;
+        }
     }
 }
 
@@ -2336,7 +2341,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     isFullscreen = fullscreen;
     
     if ([ABCommons notNull:swipeRecognizer]) {
-        swipeRecognizer.enabled = isFullscreen;
+        if (self.isMinimizable) {
+            swipeRecognizer.enabled = isFullscreen;
+        }
+        else {
+            swipeRecognizer.enabled = NO;
+        }
+        
     }
 }
 
