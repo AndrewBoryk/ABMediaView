@@ -208,6 +208,9 @@ extern const CGFloat ABBufferTabBar;
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
 @property CGRect originRectConverted;
 
+/// Original superview for presenting mediaview
+@property (strong, nonatomic) UIView *originalSuperview;
+
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
 @property (nonatomic) CGFloat bottomBuffer;
 

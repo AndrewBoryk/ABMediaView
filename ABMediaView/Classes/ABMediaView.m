@@ -133,6 +133,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setAudioCache:mediaView.audioCache];
         [self setCustomPlayButton:mediaView.customPlayButton];
         
+        self.originalSuperview = mediaView.superview;
+        
         self.pressForGIF = NO;
         
         self.gifCache = mediaView.gifCache;
@@ -2029,7 +2031,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if (!CGRectIsEmpty(mediaView.originRect)) {
         if (CGRectIsEmpty(mediaView.originRectConverted)) {
-            mediaView.originRectConverted = [self convertRect:mediaView.originRect toView:self.mainWindow];
+            if ([ABCommons notNull:mediaView.originalSuperview]) {
+                mediaView.originRectConverted = [mediaView.originalSuperview convertRect:mediaView.originRect toView:self.mainWindow];
+            }
+            else {
+                mediaView.originRectConverted = [self convertRect:mediaView.originRect toView:self.mainWindow];
+            }
+            
         }
     }
     
