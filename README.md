@@ -425,6 +425,11 @@ If one is looking to cache the images, videos, or GIFs that are being downloaded
 
 Andrew Boryk, andrewcboryk@gmail.com
 
+Reach out to me on Twitter [![alt text][1.2]][1]
+
+[1.2]: http://i.imgur.com/wWzX9uB.png (twitter icon without padding)
+[1]: http://www.twitter.com/trepislife
+
 ## License
 
 ABMediaView is available under the MIT license. See the LICENSE file for more info.
