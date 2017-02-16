@@ -584,6 +584,10 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
+- (void) setImageURL:(NSString *)imageURL {
+    [self setImageURL:imageURL withCompletion:nil];
+}
+
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
     _imageURL = imageURL;
     
