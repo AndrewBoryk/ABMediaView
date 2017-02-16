@@ -8,7 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ####Added:
 * 'resetMediaInView' which removes media from view while maintaining settings in view. ('resetVariables' removes both).
-* 'customMusicButton' which specifies a custom paly button to audio
+* 'customMusicButton' which specifies a custom paly button to audio.
+* Add delegate method 'mediaView:didSetImage:' to listen for when the 'image' property is set on the mediaView.
 
 ####Fixed:
 * Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
