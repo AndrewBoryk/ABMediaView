@@ -303,17 +303,20 @@
     }
 }
 
+- (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *)image {
+    NSLog(@"Did set Image: %@", image);
+}
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image {
-    NSLog(@"Image: %@", image);
+    NSLog(@"Did download Image: %@", image);
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadVideo:(NSString *)video {
-    NSLog(@"Video path: %@", video);
+    NSLog(@"Did download Video path: %@", video);
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif {
-    NSLog(@"Gif: %@", gif);
+    NSLog(@"Did download Gif: %@", gif);
 }
 
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {

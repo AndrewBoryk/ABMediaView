@@ -576,6 +576,14 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
+- (void) setImage:(UIImage *)image {
+    [super setImage:image];
+    
+    if ([self.delegate respondsToSelector:@selector(mediaView:didSetImage:)]) {
+        [self.delegate mediaView:self didSetImage:self.image];
+    }
+}
+
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
     _imageURL = imageURL;
     
