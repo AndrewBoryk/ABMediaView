@@ -13,8 +13,9 @@ All notable changes to this project will be documented in this file.
 
 ####Fixed:
 * Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
-* Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works  
+* Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works.
 * Issue where audioURL and audioCache was not reset when 'resetVariables' is called.
+* Calling 'setImageURL' now has the same effect as 'setImageURL:withCompletion' with nil completion.
 
 ##0.3.0 (2/4/17)
 ####Added:
