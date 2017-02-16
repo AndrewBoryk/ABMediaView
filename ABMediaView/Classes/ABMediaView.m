@@ -117,6 +117,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if (self) {
         
+        self.image = mediaView.image;
+        
         // Transfer over all attributes from the previous mediaView
         self.contentMode = mediaView.contentMode;
         self.backgroundColor = mediaView.backgroundColor;
