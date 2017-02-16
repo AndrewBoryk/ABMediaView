@@ -126,7 +126,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setShowRemainingTime:mediaView.displayRemainingTime];
         [self setFullscreen:YES];
         self.imageCache = mediaView.imageCache;
-        [self setImageURL:mediaView.imageURL withCompletion:nil];
+        [self setImageURL:mediaView.imageURL];
         self.videoCache = mediaView.videoCache;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
@@ -674,7 +674,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     [self setVideoURL:videoURL];
 }
 
@@ -721,7 +721,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifURL:(NSString *)previewGifURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
     [self setGifURLPress:previewGifURL];
@@ -734,7 +734,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifData:(NSData *)previewGifData {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
     [self setGifDataPress:previewGifData];
@@ -862,7 +862,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     [self setAudioURL:audioURL];
 }
 
