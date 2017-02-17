@@ -557,7 +557,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self stopVideoAnimate];
     
     self.pressForGIF = NO;
-    self.videoFileFromDirectory = NO;
+    self.fileFromDirectory = NO;
 }
 
 - (void) resetVariables {
@@ -897,7 +897,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
         
-        if (self.videoFileFromDirectory) {
+        if (self.fileFromDirectory) {
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
         }
         
