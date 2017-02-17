@@ -544,9 +544,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.playerLayer = nil;
     isLoadingVideo = false;
     
-    if (!self.imageViewNotReused) {
-        self.image = nil;
-    }
+    self.image = nil;
     
     bufferTime = 0;
     
