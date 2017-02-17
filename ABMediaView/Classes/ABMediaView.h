@@ -271,6 +271,9 @@ extern const CGFloat ABBufferTabBar;
 /// Determines whether user is long pressing thumbnail
 @property (nonatomic) BOOL isLongPressing;
 
+/// Video file is from directory
+@property (nonatomic) BOOL videoFileFromDirectory;
+
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 

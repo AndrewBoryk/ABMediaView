@@ -557,6 +557,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self stopVideoAnimate];
     
     self.pressForGIF = NO;
+    self.videoFileFromDirectory = NO;
 }
 
 - (void) resetVariables {
@@ -895,6 +896,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self removeObservers];
         
         AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+        
+        if (self.videoFileFromDirectory) {
+            vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
+        }
         
         if ([ABCommons notNull:self.videoCache]) {
             AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
