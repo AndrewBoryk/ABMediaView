@@ -104,6 +104,9 @@ ABMediaView comes with Lazy-loading functionality, where all that is needed to b
 
 ```objective-c
 // Set the image to be displayed in the mediaView, which will be downloaded and available for caching
+[mediaView setImageURL:@"http://yoursite.com/yourimage.jpg"];
+
+// Similar to the preview method, with a completion handler for when the image has completed downloading
 [mediaView setImageURL:@"http://yoursite.com/yourimage.jpg" withCompletion:^(UIImage *image, NSError *error) {
     // Execute code upon completion
 }];
@@ -216,6 +219,17 @@ Another bonus functionality has been added, where if a user presses and holds on
 In relation to screen rotation, if your application's UI requires Portrait orientation, but you want the ABMediaView to be viewable in Landscape mode, methodology for handling this case has been included in the Example project. This is popular functionality, so it is included to make developing easier for such a functionality. The method leverages the delegate methods for ABMediaView to determine when the app should restrict rotation.
 
   
+Lastly, when one is complete with an ABMediaView and wishes to wipe it clean to make room for new content to be displayed, a few methods are available for easily handling this task.
+
+```objective-c
+/// Removes image, video, audio and GIF data from the mediaView
+- (void) resetMediaInView;
+
+/// Resets all variables from mediaView, removing image, video, audio and GIF data
+- (void) resetVariables;
+```
+
+
 ***
 ### Customization
 ABMediaView also comes with an option for toggling the functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits minimized. Video and audio continues to play if already playing, and the user can swipe right to dismiss the minimized view.
@@ -414,6 +428,31 @@ The following delegate methods are useful when looking to determine if the ABMed
 ```
 
 
+On the other hand, if one has the 'isDismissable' value set on their ABMediaView, delegate methods are provided to listen for when the mediaView will and has begun/ended the dismissing process.
+
+```objective-c
+/// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
+- (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView;
+
+/// Called when the mediaView is in the process of minimizing, and has made a change in frame
+- (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView;
+
+/// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
+- (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
+
+/// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
+- (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
+```
+
+
+If one is looking to detect if the image contained in the ABMediaView has been set or changed, they can listen to the following delegate method.
+
+```objective-c
+/// Called when the mediaView 'image' property has been set or changed
+- (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *) image;
+```
+
+
 If one is looking to cache the images, videos, or GIFs that are being downloaded via the ABMediaView, delegates have been made handle to get these objects.
 
 
@@ -427,6 +466,13 @@ If one is looking to cache the images, videos, or GIFs that are being downloaded
 /// Called when the mediaView has completed downloading the GIF from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
 ```
+
+## Complimentary Libraries
+
+* [ABVolumeControl](https://github.com/AndrewBoryk/ABVolumeControl): Overrides MPVolumeView with differents styles for a volumeView, as well as a delegate to implement one's own custom volumeView.
+* [ABUtils](https://github.com/AndrewBoryk/ABUtils): A collections of useful methods that can be dropped into any project.
+* [ABKeyboardAccessory](https://github.com/AndrewBoryk/ABKeyboardAccessory): UIView subclass which can be used as an 'inputAccessory', with delegate methods for knowing when keyboard frame changes, such as for appearance and disappearance.
+
 
 ## Author
 
