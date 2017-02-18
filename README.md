@@ -215,13 +215,20 @@ Another bonus functionality has been added, where if a user presses and holds on
 
 In relation to screen rotation, if your application's UI requires Portrait orientation, but you want the ABMediaView to be viewable in Landscape mode, methodology for handling this case has been included in the Example project. This is popular functionality, so it is included to make developing easier for such a functionality. The method leverages the delegate methods for ABMediaView to determine when the app should restrict rotation.
 
-
+  
 ***
 ### Customization
-ABMediaView also comes with an option for toggling the functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits minimized. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
+ABMediaView also comes with an option for toggling the functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits minimized. Video and audio continues to play if already playing, and the user can swipe right to dismiss the minimized view.
 
 ```objective-c
-[mediaView setCanMinimize: YES];
+[mediaView setIsMinimizable: YES];
+```
+
+
+For content such as images and GIFs, the variable 'isDismissable' can be set, which allows the user to swipe down to dismiss the view instead of minimize it. When set, this variable supersedes 'isMinimizable', and is useful for content that doesn't require constant playback.
+
+```objective-c
+[mediaView setIsDismissable: YES];
 ```
 
 
