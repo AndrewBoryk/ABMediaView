@@ -7,13 +7,14 @@ All notable changes to this project will be documented in this file.
 ##(Unreleased)
 
 ####Added:
+* Set the value 'isDismissable' on an ABMediaView and it will add functionality to swipe down to dismiss a view. This value overrides 'isMinimizable' for a view, and can be utilized for content like images and gifs, that don't necessarily need the minimizing functionality the same way that videos and audio do.
 * 'resetMediaInView' which removes media from view while maintaining settings in view. ('resetVariables' removes both).
 * 'customMusicButton' which specifies a custom play button to audio.
 * Add delegate method 'mediaView:didSetImage:' to listen for when the 'image' property is set on the mediaView.
 * Added option 'fileFromDirectory'. If set to true, then the file URL will be sourced from the Documents Directory when playing in the player.
 
 ####Fixed:
-* Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
+* Issue where isMinimizable was always set to true. Changed the function 'setCanMinimize' to 'setIsMinimizable', in order to avoid confusion with just setting the 'isMinimizable' value before and not getting the functionality.
 * Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works.
 * Issue where audioURL and audioCache was not reset when 'resetVariables' is called.
 * Calling 'setImageURL' now has the same effect as 'setImageURL:withCompletion' with nil completion.
