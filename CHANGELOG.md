@@ -4,6 +4,10 @@
 All notable changes to this project will be documented in this file.
 ***
 
+#### Next Release:
+* Automated caching
+
+
 ##0.3.1
 
 ####Added:
