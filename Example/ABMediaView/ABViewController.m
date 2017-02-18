@@ -306,6 +306,10 @@
     }
 }
 
+- (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *)image {
+    NSLog(@"Did set Image: %@", image);
+}
+
 - (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView {
 //    NSLog(@"MediaView will change dismissing");
 }

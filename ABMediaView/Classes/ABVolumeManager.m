@@ -34,16 +34,6 @@
         
         mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-50, -50, 0, 0)];
         
-        [[mpVolumeView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if ([obj isKindOfClass:[UISlider class]]) {
-                volumeSlider = obj;
-                *stop = YES;
-            }
-        }];
-        
-        // Notification when volume is changed
-        [volumeSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
-        
         UIWindow* currentWindow = [UIApplication sharedApplication].keyWindow;
         
         if (mpVolumeView) [currentWindow addSubview:mpVolumeView];

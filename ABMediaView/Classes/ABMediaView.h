@@ -417,6 +417,9 @@ extern const CGFloat ABBufferTabBar;
 /// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
 - (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
 
+/// Called when the 'image' value of the UIImageView has been set
+- (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *) image;
+
 /// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
 - (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView;
 
