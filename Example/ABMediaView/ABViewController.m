@@ -224,7 +224,7 @@
 #pragma mark - ABMediaView Delegate
 
 - (void) mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage {
-    NSLog(@"MediaView offset changed: %f", offsetPercentage);
+//    NSLog(@"MediaView offset changed: %f", offsetPercentage);
     
     if (![[UIApplication sharedApplication] isStatusBarHidden]) {
         if (offsetPercentage < (statusBarHeightPercentage*0.66f)) {
@@ -242,19 +242,19 @@
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
-    NSLog(@"MediaView did play video");
+//    NSLog(@"MediaView did play video");
 }
 
 - (void) mediaViewDidPauseVideo:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did pause video");
+//    NSLog(@"MediaView did pause video");
 }
 
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will present");
+//    NSLog(@"MediaView will present");
 }
 
 - (void) mediaViewDidPresent:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will present");
+//    NSLog(@"MediaView will present");
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -263,7 +263,7 @@
 }
 
 - (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will dismiss");
+//    NSLog(@"MediaView will dismiss");
     
     // Disable rotation when the ABMediaView is being dismissed. For this application, we want the ABMediaView to rotate when in fullscreen, in order to watch landscape videos. However, our app's interface in portrait, so when leaving the ABMediaView, we want rotation to be restricted
     [self restrictRotation:YES];
@@ -273,26 +273,26 @@
 }
 
 - (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did dismiss");
+//    NSLog(@"MediaView did dismiss");
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will minimize to a certain value");
+//    NSLog(@"MediaView will minimize to a certain value");
 }
 
 - (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did minimize to a certain value");
+//    NSLog(@"MediaView did minimize to a certain value");
 }
 
 - (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
-    NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
+//    NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
     
     [self restrictRotation:isMinimized];
 }
 
 - (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
-    NSLog(@"MediaView snapped to minimized mode? %i", isMinimized);
+//    NSLog(@"MediaView snapped to minimized mode? %i", isMinimized);
     
     if (isMinimized) {
         if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {

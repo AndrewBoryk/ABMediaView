@@ -1120,7 +1120,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:NO];
         }
         
-        [UIView animateWithDuration:0.25f animations:^{
+        [UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
             self.frame = self.superview.frame;
             
             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
@@ -1697,10 +1697,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 
                 BOOL shouldDismiss = false;
                 
-                NSLog(@"Gesture Velocity %f", gestureVelocity.y);
-                NSLog(@"Gesture Velocity Modified %f", (gestureVelocity.y*.001));
-                
-                if ((offsetPercentage > 0.1f && offsetPercentage < 0.4f && gestureVelocity.y > 150.0f) || offsetPercentage >= 0.4f) {
+                if ((offsetPercentage > 0.25f && offsetPercentage < 0.35f && gestureVelocity.y > 300.0f) || offsetPercentage >= 0.35f) {
                     shouldDismiss = true;
                 }
                 
@@ -1720,11 +1717,10 @@ const CGFloat ABBufferTabBar = 49.0f;
                         [self.delegate mediaViewWillEndDismissing:self withDismissal:NO];
                     }
                     
-                    [UIView animateWithDuration:0.25f animations:^{
+                    [UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
                         self.frame = self.superview.frame;
                         
                         [self layoutSubviews];
-                        
                         
                     } completion:^(BOOL finished) {
                         
@@ -1769,7 +1765,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                         [self.delegate mediaViewWillEndMinimizing:self atMinimizedState:minimize];
                     }
                     
-                    [UIView animateWithDuration:0.25f animations:^{
+                    [UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
                         if (minimize) {
                             self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
                             self.videoIndicator.alpha = 0;
@@ -2219,7 +2215,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             animationTime = 0.5f;
         }
         
-        [UIView animateWithDuration:animationTime animations:^{
+        [UIView animateWithDuration:animationTime delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
             //            mediaView.videoIndicator.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
             [mediaView handleCloseButtonDisplay:mediaView];
@@ -2255,7 +2251,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         if (animated) {
             animationTime = 0.25f;
         }
-        [UIView animateWithDuration:animationTime animations:^{
+        [UIView animateWithDuration:animationTime delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
             mediaView.alpha = 1;
             [mediaView handleCloseButtonDisplay:mediaView];
             if (!mediaView.autoPlayAfterPresentation) {
@@ -2292,7 +2288,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             animationTime = 0.25f;
         }
         
-        [UIView animateWithDuration:animationTime animations:^{
+        [UIView animateWithDuration:animationTime delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
             if (self.isDismissable) {
                 self.frame = CGRectMake(0, self.superviewHeight, self.superviewWidth, self.superviewHeight);
             }
@@ -2483,7 +2479,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) handleTopOverlayDisplay: (ABMediaView *) mediaView {
-    [UIView animateWithDuration:0.20 animations:^{
+    [UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
         if (mediaView.isFullScreen) {
             if ([self isPlayingVideo] || ![self hasTitle:self]) {
                 mediaView.topOverlay.alpha = 0;
@@ -2501,6 +2497,8 @@ const CGFloat ABBufferTabBar = 49.0f;
             mediaView.titleLabel.alpha = 0;
             mediaView.detailsLabel.alpha = 0;
         }
+    } completion:^(BOOL finished) {
+        
     }];
     
 }
