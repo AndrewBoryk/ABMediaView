@@ -41,9 +41,6 @@
             }
         }];
         
-        // Notification when volume is changed
-        [volumeSlider addTarget:self action:@selector(handleVolumeChanged:) forControlEvents:UIControlEventValueChanged];
-        
         UIWindow* currentWindow = [UIApplication sharedApplication].keyWindow;
         
         if (mpVolumeView) [currentWindow addSubview:mpVolumeView];
