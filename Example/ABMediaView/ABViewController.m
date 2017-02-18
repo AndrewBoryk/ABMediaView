@@ -176,9 +176,6 @@
     // Allows toggling for funtionality which would show remaining time instead of total time on the right label on the track
     [mediaView setShowRemainingTime:YES];
     
-    // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom of the screen for dismissal. This variable overrides isMinimizable.
-    [mediaView setIsDismissable: YES];
-    
     // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom right corner, and allows the user to interact with the underlying interface while the mediaView sits there. Video continues to play if already playing, and the user can swipe right to dismiss the minimized view.
     [mediaView setIsMinimizable: YES];
     
@@ -424,8 +421,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         // Sets functionality for this demonstration, visit the function to see different functionality
         [self initializeSettingsForMediaView:mediaView];
         
-        // Adjust the size ratio for the minimized view of the fullscreen popup. By default, the minimized view is ABMediaViewRatioPresetLandscape. Aspect ratio can be custom calculated using Height/Width
-        mediaView.minimizedAspectRatio = image.size.height/image.size.width;
+        // Allows toggling for functionality which would allow the mediaView to be swiped away to the bottom of the screen for dismissal. This variable overrides isMinimizable.
+        [mediaView setIsDismissable: YES];
         
         // Set the image for the mediaView
         [mediaView setImage:image];
