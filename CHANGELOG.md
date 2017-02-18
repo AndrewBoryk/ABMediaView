@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 ***
 
-##(Unreleased)
+##0.3.1
 
 ####Added:
 * Set the value 'isDismissable' on an ABMediaView and it will add functionality to swipe down to dismiss a view instead of minimize it. This value supersedes 'isMinimizable' for the view, and can be utilized for content like images and GIFs, which don't necessarily need the minimizing functionality the same way that videos and audio do.
