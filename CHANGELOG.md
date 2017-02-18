@@ -19,6 +19,9 @@ All notable changes to this project will be documented in this file.
 * Calling 'setImageURL' now has the same effect as 'setImageURL:withCompletion' with nil completion.
 * Made sure that 'image' property is being transferred to mediaView being presented from mediaView that is presenting.
 
+####Removed:
+* Removed the custom volumeView that replaced MPVolumeView. If the functionality is desired, check out the [ABVolumeControl](https://github.com/AndrewBoryk/ABVolumeControl) library, which provides the same functionality with much more customization.
+
 ##0.3.0 (2/4/17)
 ####Added:
 * Play audio using ABMediaView
