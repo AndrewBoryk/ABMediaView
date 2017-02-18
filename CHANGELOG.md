@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ##(Unreleased)
 
 ####Added:
-* Set the value 'isDismissable' on an ABMediaView and it will add functionality to swipe down to dismiss a view. This value overrides 'isMinimizable' for a view, and can be utilized for content like images and gifs, that don't necessarily need the minimizing functionality the same way that videos and audio do.
+* Set the value 'isDismissable' on an ABMediaView and it will add functionality to swipe down to dismiss a view instead of minimize it. This value supersedes 'isMinimizable' for the view, and can be utilized for content like images and GIFs, which don't necessarily need the minimizing functionality the same way that videos and audio do.
 * 'resetMediaInView' which removes media from view while maintaining settings in view. ('resetVariables' removes both).
 * 'customMusicButton' which specifies a custom play button to audio.
 * Add delegate method 'mediaView:didSetImage:' to listen for when the 'image' property is set on the mediaView.
