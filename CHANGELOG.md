@@ -4,6 +4,24 @@
 All notable changes to this project will be documented in this file.
 ***
 
+##(Unreleased)
+
+####Added:
+* 'resetMediaInView' which removes media from view while maintaining settings in view. ('resetVariables' removes both).
+* 'customMusicButton' which specifies a custom play button to audio.
+* Add delegate method 'mediaView:didSetImage:' to listen for when the 'image' property is set on the mediaView.
+* Added option 'fileFromDirectory'. If set to true, then the file URL will be sourced from the Documents Directory when playing in the player.
+
+####Fixed:
+* Issue where isMinimizable was always set to true. Using 'setCanMinimize:' now works.
+* Issue where ABMediaView was not presenting from converted originRect in dynamic views. Using 'originRect' and 'setPresentFromOriginRect:' now works.
+* Issue where audioURL and audioCache was not reset when 'resetVariables' is called.
+* Calling 'setImageURL' now has the same effect as 'setImageURL:withCompletion' with nil completion.
+* Made sure that 'image' property is being transferred to mediaView being presented from mediaView that is presenting.
+
+####Removed:
+* Removed the custom volumeView that replaced MPVolumeView. If the functionality is desired, check out the [ABVolumeControl](https://github.com/AndrewBoryk/ABVolumeControl) library, which provides the same functionality with much more customization.
+
 ##0.3.0 (2/4/17)
 ####Added:
 * Play audio using ABMediaView

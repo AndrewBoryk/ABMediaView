@@ -8,6 +8,7 @@ xcode_project: Example/ABMediaView.xcworkspace #3
 xcode_scheme: ABMediaView-Example #4
 xcode_sdk: iphonesimulator9.3
 
+
 notifications:
   email: false
 
@@ -19,3 +20,4 @@ notifications:
 script:
 - set -o pipefail && xcodebuild test -workspace Example/ABMediaView.xcworkspace -scheme ABMediaView-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' -sdk iphonesimulator10.2 ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
+- bundle exec danger

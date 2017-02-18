@@ -16,49 +16,20 @@ typedef NS_ENUM(NSInteger, AudioType) {
     DefaultAudio,
 };
 
-#define ABVolumeBarColorLight [ABCommons colorWithHexString:@"FFFFFF"];
-#define ABVolumeBarColorDark = 
-
 @interface ABVolumeManager : NSObject {
-    
-    /// Bar which shows volume level
-    UIView *volumeBar;
     
     /// View which handles volume change
     MPVolumeView *mpVolumeView;
     
     /// Slider which records the user's volume level
     UISlider *volumeSlider;
-    
-    // Timer that when selector is performed, hides volumeBar
-    NSTimer *volumeTimer;
-    
-    /// Determines whether volume bar should be shown
-    BOOL dontShowVolumeBar;
-    
-    /// Background for volume bar
-    UIView *volumeBackground;
 }
-
-extern UIColor *  const COLOR_LIGHT_BLUE;
-
-/// Determines whether volume bar should be shown
-@property BOOL dontShowVolumeBar;
-
-/// Background for volume bar
-@property (retain, nonatomic) UIView *volumeBackground;
-
-/// Bar which shows volume level
-@property (retain, nonatomic) UIView *volumeBar;
 
 /// View which handles volume change
 @property (retain, nonatomic) MPVolumeView *mpVolumeView;
 
 /// Slider which records the user's volume level
 @property (retain, nonatomic) UISlider *volumeSlider;
-
-/// Timer that when selector is performed, hides volumeBar
-@property (retain, nonatomic) NSTimer *volumeTimer;
 
 /// Default value for how audio should be handled when playing media
 @property (nonatomic) AudioType defaultAudioPlayingType;
@@ -69,26 +40,11 @@ extern UIColor *  const COLOR_LIGHT_BLUE;
 /// Shared Manager for Volume Manager
 + (id)sharedManager;
 
-/// Hides volume bar for 2.5 seconds
-- (void) dontShowVolumebar;
-
-/// Shows volume bar
-- (void) showVolumeBar;
-
-/// Updates color for volumebar
-- (void) updateVolumeBarColor:(UIColor *)color;
-
 /// Sets the audio when the ABPlayer is supposed to play
 - (void) setAudioWhenPlaying;
 
 /// Sets the audio when the ABPlayer is supposed to pause
 - (void) setAudioWhenStopping;
-
-/// Light color for the bar
-+ (UIColor *) lightVolumeBar;
-
-/// Dark color for the bar
-+ (UIColor *) darkVolumeBar;
 
 /// Set the audio session type to play audio when video is playing, and mute it when not
 - (void) setAudioSession: (AudioType) type;

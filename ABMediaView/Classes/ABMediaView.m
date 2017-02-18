@@ -117,6 +117,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if (self) {
         
+        self.image = mediaView.image;
+        
         // Transfer over all attributes from the previous mediaView
         self.contentMode = mediaView.contentMode;
         self.backgroundColor = mediaView.backgroundColor;
@@ -126,12 +128,15 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setShowRemainingTime:mediaView.displayRemainingTime];
         [self setFullscreen:YES];
         self.imageCache = mediaView.imageCache;
-        [self setImageURL:mediaView.imageURL withCompletion:nil];
+        [self setImageURL:mediaView.imageURL];
         self.videoCache = mediaView.videoCache;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
         [self setAudioCache:mediaView.audioCache];
         [self setCustomPlayButton:mediaView.customPlayButton];
+        [self setCustomMusicButton:mediaView.customMusicButton];
+        
+        self.originalSuperview = mediaView.superview;
         
         self.pressForGIF = NO;
         
@@ -510,21 +515,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) resetVariables {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [self registerForRotation];
-    
-    self.delegate = nil;
-    self.autoPlayAfterPresentation = NO;
-    self.hideCloseButton = NO;
-    self.shouldDisplayFullscreen = NO;
-    self.allowLooping = NO;
-    self.showTrack = NO;
-    self.pressForGIF = NO;
-    [self setShowRemainingTime:NO];
-    
-    
+- (void) resetMediaInView {
     _imageURL = nil;
     _imageCache = nil;
     _videoCache = nil;
@@ -532,6 +523,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     _gifURL = nil;
     _gifData = nil;
     _gifCache = nil;
+    _audioURL = nil;
+    _audioCache = nil;
     
     if ([ABCommons notNull:gifLongPressRecognizer]) {
         if ([self.gestureRecognizers containsObject:gifLongPressRecognizer]) {
@@ -553,9 +546,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.playerLayer = nil;
     isLoadingVideo = false;
     
-    if (!self.imageViewNotReused) {
-        self.image = nil;
-    }
+    self.image = nil;
     
     bufferTime = 0;
     
@@ -566,6 +557,38 @@ const CGFloat ABBufferTabBar = 49.0f;
     self.detailsLabel.alpha = 0;
     
     [self stopVideoAnimate];
+    
+    self.pressForGIF = NO;
+    self.fileFromDirectory = NO;
+}
+
+- (void) resetVariables {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self registerForRotation];
+    
+    self.delegate = nil;
+    self.autoPlayAfterPresentation = NO;
+    self.hideCloseButton = NO;
+    self.shouldDisplayFullscreen = NO;
+    self.allowLooping = NO;
+    self.showTrack = NO;
+    [self setShowRemainingTime:NO];
+    
+    [self resetMediaInView];
+    
+}
+
+- (void) setImage:(UIImage *)image {
+    [super setImage:image];
+    
+    if ([self.delegate respondsToSelector:@selector(mediaView:didSetImage:)]) {
+        [self.delegate mediaView:self didSetImage:self.image];
+    }
+}
+
+- (void) setImageURL:(NSString *)imageURL {
+    [self setImageURL:imageURL withCompletion:nil];
 }
 
 - (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion {
@@ -633,6 +656,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
+        self.videoIndicator.image = [self imageForPlayButton];
+        
         self.videoIndicator.alpha = 1;
     }
     
@@ -652,7 +677,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     [self setVideoURL:videoURL];
 }
 
@@ -699,7 +724,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifURL:(NSString *)previewGifURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
     [self setGifURLPress:previewGifURL];
@@ -712,7 +737,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifData:(NSData *)previewGifData {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     self.pressForGIF = YES;
     [self setVideoURL:videoURL];
     [self setGifDataPress:previewGifData];
@@ -823,6 +848,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
+        self.videoIndicator.image = [self imageForPlayButton];
+        
         self.videoIndicator.alpha = 1;
     }
     
@@ -838,7 +865,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL {
-    [self setImageURL:thumbnailURL withCompletion:nil];
+    [self setImageURL:thumbnailURL];
     [self setAudioURL:audioURL];
 }
 
@@ -871,6 +898,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self removeObservers];
         
         AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+        
+        if (self.fileFromDirectory) {
+            vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
+        }
         
         if ([ABCommons notNull:self.videoCache]) {
             AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
@@ -1409,8 +1440,11 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (UIImage *) imageForPlayButton {
-    if ([ABCommons notNull:self.customPlayButton]) {
+    if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
         return self.customPlayButton;
+    }
+    else if ([ABCommons notNull:self.customMusicButton] && [ABCommons notNull:self.audioURL]) {
+        return self.customMusicButton;
     }
     else {
         static UIImage *playCircle = nil;
@@ -2152,7 +2186,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     if (!CGRectIsEmpty(mediaView.originRect)) {
         if (CGRectIsEmpty(mediaView.originRectConverted)) {
-            mediaView.originRectConverted = [self convertRect:mediaView.originRect toView:self.mainWindow];
+            if ([ABCommons notNull:mediaView.originalSuperview]) {
+                mediaView.originRectConverted = [mediaView.originalSuperview convertRect:mediaView.originRect toView:self.mainWindow];
+            }
+            else {
+                mediaView.originRectConverted = [self convertRect:mediaView.originRect toView:self.mainWindow];
+            }
+            
         }
     }
     
@@ -2465,7 +2505,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     isFullscreen = fullscreen;
     
     if ([ABCommons notNull:swipeRecognizer]) {
-        swipeRecognizer.enabled = isFullscreen;
+        if (self.isMinimizable) {
+            swipeRecognizer.enabled = isFullscreen;
+        }
+        else {
+            swipeRecognizer.enabled = NO;
+        }
+        
     }
 }
 
@@ -2908,6 +2954,12 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) setCustomPlayButton:(UIImage *)customPlayButton {
     _customPlayButton = customPlayButton;
+    
+    self.videoIndicator.image = [self imageForPlayButton];
+}
+
+- (void) setCustomMusicButton:(UIImage *)customMusicButton {
+    _customMusicButton = customMusicButton;
     
     self.videoIndicator.image = [self imageForPlayButton];
 }

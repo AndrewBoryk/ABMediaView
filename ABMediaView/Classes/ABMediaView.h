@@ -184,8 +184,11 @@ extern const CGFloat ABBufferTabBar;
 /// Indicator which shows that the video is being loaded
 @property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
 
-/// Custom image can be set for the play button
+/// Custom image can be set for the play button (video)
 @property (strong, nonatomic) UIImage *customPlayButton;
+
+/// Custom image can be set for the play button (music)
+@property (strong, nonatomic) UIImage *customMusicButton;
 
 /// Play button imageView which shows in the center of the video, notifies the user that a video can be played
 @property (strong, nonatomic) UIImageView *videoIndicator;
@@ -210,6 +213,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
 @property CGRect originRectConverted;
+
+/// Original superview for presenting mediaview
+@property (strong, nonatomic) UIView *originalSuperview;
 
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
 @property (nonatomic) CGFloat bottomBuffer;
@@ -267,6 +273,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Determines whether user is long pressing thumbnail
 @property (nonatomic) BOOL isLongPressing;
+
+/// File being played is from directory
+@property (nonatomic) BOOL fileFromDirectory;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
@@ -354,8 +363,11 @@ extern const CGFloat ABBufferTabBar;
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
 - (void) dismissMediaViewAnimated:(BOOL) animated withCompletion:(void (^)(BOOL completed))completion;
 
-/// Resets variables from mediaView, removing image and video data
+/// Resets variables from mediaView, removing image, video, audio and GIF data
 - (void) resetVariables;
+
+/// Removes image, video, audio and GIF data
+- (void) resetMediaInView;
 
 /// Sets the close button to hidden, only allowed if isMinimizable is true
 - (void) hideCloseButton: (BOOL) hideButton;
