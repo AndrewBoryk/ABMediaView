@@ -29,9 +29,17 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 * Display for image, video, GIF, and Audio
 * Easy Lazy-loading for images, videos, and GIFs
-* Fullscreen display with minimization
+* Fullscreen display with minimization and dismissal
 * Queue for presenting mediaViews in fullscreen
 * Track for buffer, progress, and scrubbing
+
+## Future Features
+
+- [x] Swipe down to dismiss  
+- [ ] Automated caching  
+- [ ] Zoom
+
+Tweet me [@TrepIsLife](https://twitter.com/TrepIsLife) if you have further feature suggestions!
 
 ## Installation
 
@@ -119,6 +127,13 @@ ABMediaView comes with Lazy-loading functionality, where all that is needed to b
 
 // Set the video url for the mediaView , downloading it and making it available for caching, as well as the thumbnail image
 [mediaView setVideoURL:@"http://yoursite/yourvideo.mp4" withThumbnailImage:[UIImage imageNamed: @"thumbnail.png"]];
+```
+
+If a file is being loaded off of the documents directory, (let's say you downloaded a video from the web and now want to display it), sourcing the content's NSURL from the directory can be specified by setting the 'fileFromDirectory' variable on the ABMediaView.
+
+```objective-c
+// Designates that the file is sourced from the Documents Directory of the user's device
+[mediaView setFileFromDirectory:YES];
 ```
 
 
