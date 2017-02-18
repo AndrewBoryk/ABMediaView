@@ -24,7 +24,7 @@ ABMediaView can display images, videos, as well as now GIFs and Audio! It subcla
 DESC
 
   s.homepage         = 'https://github.com/andrewboryk/ABMediaView'
-  s.screenshots      = 'https://raw.githubusercontent.com/AndrewBoryk/ABMediaView/dev/ABMediaViewScreenshot.gif', 'https://raw.githubusercontent.com/AndrewBoryk/ABMediaView/dev/ABMediaViewScrubScreenshot.gif'
+  s.screenshots      = 'https://raw.githubusercontent.com/AndrewBoryk/ABMediaView/dev/ABMediaViewDemoScreenshot.gif', 'https://raw.githubusercontent.com/AndrewBoryk/ABMediaView/dev/ABMediaViewScrubScreenshot.gif'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Andrew Boryk' => 'andrewcboryk@gmail.com' }
   s.source           = { :git => 'https://github.com/andrewboryk/ABMediaView.git', :tag => s.version.to_s }
