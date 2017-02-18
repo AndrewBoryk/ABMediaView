@@ -493,10 +493,10 @@ If one is looking to cache the images, videos, or GIFs that are being downloaded
 
 Andrew Boryk, andrewcboryk@gmail.com
 
-Reach out to me on Twitter [![alt text][1.2]][1]
+Reach out to me on Twitter: [@TrepIsLife](https://twitter.com/TrepIsLife) [![alt text][1.2]][1]
 
 [1.2]: http://i.imgur.com/wWzX9uB.png (twitter icon without padding)
-[1]: http://www.twitter.com/trepislife
+[1]: http://www.twitter.com/TrepIsLife
 
 ## License
 

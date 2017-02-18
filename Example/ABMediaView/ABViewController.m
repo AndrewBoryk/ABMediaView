@@ -94,7 +94,6 @@
     // Rect that specifies where the mediaView's frame will originate from when presenting, and needs to be converted into its position in the mainWindow
 //    self.mediaView.originRect = self.mediaView.frame;
     
-    
 }
 
 - (IBAction)showGIFAction:(id)sender {
