@@ -213,13 +213,13 @@
                             NSData *imageData = [NSData dataWithContentsOfURL:url];
                             UIImage *image = [UIImage animatedImageWithAnimatedGIFData:imageData];
                             
-                            if ([ABCommons notNull:urlString] && [ABCommons notNull:imageData]) {
-                                [[ABCacheManager sharedManager] setCache:type object:imageData forKey:urlString];
+                            if ([ABCommons notNull:urlString] && [ABCommons notNull:image]) {
+                                [[ABCacheManager sharedManager] setCache:type object:image forKey:urlString];
                             }
                             
                             [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                             
-                            if(completionBlock) completionBlock(imageData, urlString, nil);
+                            if(completionBlock) completionBlock(image, urlString, nil);
                         });
                     }
                     else {
@@ -261,11 +261,19 @@
                                 
                                 if (image) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:image]) {
+                                            [[ABCacheManager sharedManager] setCache:type object:image forKey:urlString];
+                                        }
+                                        
+                                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                        
                                         if(completionBlock) completionBlock(image, urlString, nil);
                                     });
                                 }
                             }
                         }];
+                        
+                        [task resume];
                     }
                     else {
                         if(completionBlock) completionBlock(nil, nil, nil);
@@ -309,6 +317,12 @@
                                     [urlData writeToFile:filePath atomically:YES];
                                     
                                     NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                        [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
+                                    }
+                                    
+                                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                     
                                     if(completionBlock) completionBlock(cachedURL, urlString, nil);
                                 });
@@ -357,6 +371,12 @@
                                     [urlData writeToFile:filePath atomically:YES];
                                     
                                     NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                        [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
+                                    }
+                                    
+                                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                     
                                     if(completionBlock) completionBlock(cachedURL, urlString, nil);
                                 });

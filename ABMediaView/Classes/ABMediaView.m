@@ -10,6 +10,7 @@
 #import "ABPlayer.h"
 #import "ABCommons.h"
 #import "ABVolumeManager.h"
+#import "ABCacheManager.h"
 
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
