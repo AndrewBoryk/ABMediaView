@@ -191,185 +191,191 @@
 }
 
 + (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock {
-    
-    if ([ABCommons notNull:urlString]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
         
-        NSURL *url = [NSURL URLWithString:urlString];
-        
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+        if ([ABCommons notNull:urlString]) {
             
-            if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+            NSURL *url = [NSURL URLWithString:urlString];
             
-        }
-        else {
-            if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
-                if ([ABCommons notNull:url]) {
-                    
-                    [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
-                    
-                    dispatch_queue_t downloadQueue = dispatch_queue_create("com.linute.processsmagequeue", NULL);
-                    dispatch_async(downloadQueue, ^{
-                        NSData *imageData = [NSData dataWithContentsOfURL:url];
-                        UIImage *image = [UIImage animatedImageWithAnimatedGIFData:imageData];
-                        
-                        if ([ABCommons notNull:urlString] && [ABCommons notNull:imageData]) {
-                            [[ABCacheManager sharedManager] setCache:type object:imageData forKey:urlString];
-                        }
-                        
-                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                        
-                        if(completionBlock) completionBlock(imageData, urlString, nil);
-                    });
-                }
-                else {
-                    if(completionBlock) completionBlock(nil, nil, nil);
-                }
-            }
-            else {
+            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+                
+                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
                 
             }
+            else {
+                if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
+                    if ([ABCommons notNull:url]) {
+                        
+                        [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
+                        
+                        dispatch_queue_t downloadQueue = dispatch_queue_create("com.linute.processsmagequeue", NULL);
+                        dispatch_async(downloadQueue, ^{
+                            NSData *imageData = [NSData dataWithContentsOfURL:url];
+                            UIImage *image = [UIImage animatedImageWithAnimatedGIFData:imageData];
+                            
+                            if ([ABCommons notNull:urlString] && [ABCommons notNull:imageData]) {
+                                [[ABCacheManager sharedManager] setCache:type object:imageData forKey:urlString];
+                            }
+                            
+                            [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                            
+                            if(completionBlock) completionBlock(imageData, urlString, nil);
+                        });
+                    }
+                    else {
+                        if(completionBlock) completionBlock(nil, nil, nil);
+                    }
+                }
+                else {
+                    
+                }
+            }
         }
-    }
-    else {
-        if(completionBlock) completionBlock(nil, nil, nil);
-    }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
     
-    
+    });
     
 }
 
 + (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock {
-    
-    if ([ABCommons notBlank:urlString]) {
-        
-        NSURL *url = [NSURL URLWithString:urlString];
-        
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-            if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([ABCommons notBlank:urlString]) {
             
-        }
-        else {
-            if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
-                if ([ABCommons notNull:url]) {
-                    
-                    [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
-                    
-                    NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                        if (data) {
-                            UIImage *image = [UIImage imageWithData:data];
-                            
-                            if (image) {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    if(completionBlock) completionBlock(image, urlString, nil);
-                                });
-                            }
-                        }
-                    }];
-                }
-                else {
-                    if(completionBlock) completionBlock(nil, nil, nil);
-                }
-            }
-            else {
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
                 
             }
+            else {
+                if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
+                    if ([ABCommons notNull:url]) {
+                        
+                        [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
+                        
+                        NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                            if (data) {
+                                UIImage *image = [UIImage imageWithData:data];
+                                
+                                if (image) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if(completionBlock) completionBlock(image, urlString, nil);
+                                    });
+                                }
+                            }
+                        }];
+                    }
+                    else {
+                        if(completionBlock) completionBlock(nil, nil, nil);
+                    }
+                }
+                else {
+                    
+                }
+            }
         }
-    }
-    else {
-        if(completionBlock) completionBlock(nil, nil, nil);
-    }
-    
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
+
 }
 
 + (void)loadVideo:(NSString *)urlString type:(CacheType)type completion:(VideoDataBlock)completionBlock {
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-            if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
+            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+            }
+            else {
+                [ABCacheManager detectIfURL:url isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
+                    if (isValidURL) {
+                        //download the file in a seperate thread.
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                            NSData *urlData = [NSData dataWithContentsOfURL:url];
+                            if (urlData)
+                            {
+                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                NSString *documentsDirectory = [paths objectAtIndex:0];
+                                
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                                
+                                //saving is done on main thread
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [urlData writeToFile:filePath atomically:YES];
+                                    
+                                    NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    
+                                    if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                });
+                            }
+                            
+                        });
+                    }
+                    else {
+                        if(completionBlock) completionBlock(nil, nil, nil);
+                    }
+                }];
+                
+                
+            }
         }
         else {
-            [ABCacheManager detectIfURL:url isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
-                if (isValidURL) {
-                    //download the file in a seperate thread.
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        NSData *urlData = [NSData dataWithContentsOfURL:url];
-                        if (urlData)
-                        {
-                            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                            NSString *documentsDirectory = [paths objectAtIndex:0];
-                            
-                            NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
-                            
-                            //saving is done on main thread
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [urlData writeToFile:filePath atomically:YES];
-                                
-                                NSURL *cachedURL = [NSURL URLWithString:filePath];
-                                
-                                if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                            });
-                        }
-                        
-                    });
-                }
-                else {
-                    if(completionBlock) completionBlock(nil, nil, nil);
-                }
-            }];
-            
-            
+            if(completionBlock) completionBlock(nil, nil, nil);
         }
-    }
-    else {
-        if(completionBlock) completionBlock(nil, nil, nil);
-    }
+    });
     
 }
 
 + (void) loadAudio:(NSString *)urlString type:(CacheType)type completion:(AudioDataBlock)completionBlock {
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-            if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
+            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+            }
+            else {
+                [ABCacheManager detectIfURL:url isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
+                    if (isValidURL) {
+                        //download the file in a seperate thread.
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                            NSData *urlData = [NSData dataWithContentsOfURL:url];
+                            if (urlData)
+                            {
+                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                NSString *documentsDirectory = [paths objectAtIndex:0];
+                                
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                                
+                                //saving is done on main thread
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [urlData writeToFile:filePath atomically:YES];
+                                    
+                                    NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    
+                                    if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                });
+                            }
+                            
+                        });
+                    }
+                    else {
+                        if(completionBlock) completionBlock(nil, nil, nil);
+                    }
+                }];
+                    
+                
+            }
         }
         else {
-            [ABCacheManager detectIfURL:url isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
-                if (isValidURL) {
-                    //download the file in a seperate thread.
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        NSData *urlData = [NSData dataWithContentsOfURL:url];
-                        if (urlData)
-                        {
-                            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                            NSString *documentsDirectory = [paths objectAtIndex:0];
-                            
-                            NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
-                            
-                            //saving is done on main thread
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [urlData writeToFile:filePath atomically:YES];
-                                
-                                NSURL *cachedURL = [NSURL URLWithString:filePath];
-                                
-                                if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                            });
-                        }
-                        
-                    });
-                }
-                else {
-                    if(completionBlock) completionBlock(nil, nil, nil);
-                }
-            }];
-                
-            
+            if(completionBlock) completionBlock(nil, nil, nil);
         }
-    }
-    else {
-        if(completionBlock) completionBlock(nil, nil, nil);
-    }
+    });
 }
 
 + (void) removeDocumentsVideos {
@@ -440,9 +446,6 @@
          
          if ([data length] >0 && error == nil)
          {
-             
-             // DO YOUR WORK HERE
-             // This will get the NSURLResponse into NSHTTPURLResponse format
              NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
              
              if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
