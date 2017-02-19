@@ -190,7 +190,7 @@
     
 }
 
-- (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock {
++ (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock {
     
     if ([ABCommons notNull:urlString]) {
         
@@ -238,7 +238,7 @@
     
 }
 
-- (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock {
++ (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock {
     
     if ([ABCommons notBlank:urlString]) {
         
@@ -265,53 +265,6 @@
                             }
                         }
                     }];
-                    
-//                    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//                    manager.responseSerializer = [AFImageResponseSerializer serializer];
-//                    
-//                    manager.requestSerializer.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
-//                    
-//                    //                    NSLog(@"URL %@", url);
-//                    
-//                    [manager GET:url.absoluteString parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-//                        
-//                        if (type == PostImageOriginal || type == ArticleImage) {
-//                            NSURL *notificationURL = [[CacheManager sharedManager] imageURL:image type:type];
-//                            if ([Utils notNull:notificationURL]) {
-//                                
-//                                NSNumber *progressNumber = [NSNumber numberWithFloat:downloadProgress.fractionCompleted];
-//                                NSString *progressImage = image;
-//                                
-//                                NSDictionary *progressDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:progressNumber, @"progress", progressImage, @"image", nil];
-//                                
-//                                NSString *notificationString = [NSString stringWithFormat:@"Progress:%@", notificationURL.relativeString];
-//                                [[NSNotificationCenter defaultCenter] postNotificationName:notificationString object:progressDictionary];
-//                            }
-//                        }
-//                        
-//                        
-//                    } success:^(NSURLSessionTask *task, id responseObject) {
-//                        UIImage *responseImage = responseObject;
-//                        
-//                        if ([Utils notNull:image] && [Utils notNull:responseImage]) {
-//                            [Defaults cache:type setObject:responseImage forKey:image];
-//                        }
-//                        
-//                        [[CacheManager sharedManager] removeFromQueue:type forKey:image];
-//                        
-//                        NSURL *notificationURL = [[CacheManager sharedManager] imageURL:image type:type];
-//                        if ([Utils notNull:notificationURL]) {
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:notificationURL.relativeString object:nil];
-//                        }
-//                        
-//                        if(completionBlock) completionBlock(responseImage, image, nil);
-//                        
-//                    } failure:^(NSURLSessionTask *operation, NSError *error) {
-//                        
-//                        NSLog(@"FAILURE %@", url);
-//                        [[CacheManager sharedManager] removeFromQueue:type forKey:image];
-//                        if(completionBlock) completionBlock(nil, nil, error);
-//                    }];
                 }
                 else {
                     if(completionBlock) completionBlock(nil, nil, nil);
@@ -328,9 +281,7 @@
     
 }
 
-- (void)loadVideo:(NSString *)urlString type:(CacheType)type completion:(VideoDataBlock)completionBlock {
-    
-    
++ (void)loadVideo:(NSString *)urlString type:(CacheType)type completion:(VideoDataBlock)completionBlock {
     NSURL *url = [NSURL URLWithString:urlString];
     
     if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
@@ -338,42 +289,87 @@
             if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
         }
         else {
-//            AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//            
-//            NSURLRequest *request = [NSURLRequest requestWithURL:url];
-//            
-//            NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
-//                
-//                //        if(progressBlock) {
-//                //            progressBlock ([NSNumber numberWithDouble:downloadProgress.fractionCompleted]);
-//                //        }
-//                
-//            } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-//                
-//                NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-//                return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
-//                
-//            } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-//                
-//                if(error) {
-//                    if(completionBlock) completionBlock(nil, nil, error);
-//                }
-//                else {
-//                    if ([Utils notNull:filePath.relativePath] && [Utils notNull:video]) {
-//                        [Defaults cache:type setObject:filePath.relativePath forKey:video];
-//                    }
-//                    if(completionBlock) completionBlock(filePath.relativePath, video, nil);
-//                }
-//                
-//            }];
-//            
-//            [downloadTask resume];
+            [ABCacheManager detectIfURL:url isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
+                if (isValidURL) {
+                    //download the file in a seperate thread.
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        NSData *urlData = [NSData dataWithContentsOfURL:url];
+                        if (urlData)
+                        {
+                            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                            NSString *documentsDirectory = [paths objectAtIndex:0];
+                            
+                            NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                            
+                            //saving is done on main thread
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [urlData writeToFile:filePath atomically:YES];
+                                
+                                NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                
+                                if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                            });
+                        }
+                        
+                    });
+                }
+                else {
+                    if(completionBlock) completionBlock(nil, nil, nil);
+                }
+            }];
+            
+            
         }
     }
     else {
         if(completionBlock) completionBlock(nil, nil, nil);
     }
     
+}
+
++ (void) loadAudio:(NSString *)urlString type:(CacheType)type completion:(AudioDataBlock)completionBlock {
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
+        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
+            if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+        }
+        else {
+            [ABCacheManager detectIfURL:url isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
+                if (isValidURL) {
+                    //download the file in a seperate thread.
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        NSData *urlData = [NSData dataWithContentsOfURL:url];
+                        if (urlData)
+                        {
+                            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                            NSString *documentsDirectory = [paths objectAtIndex:0];
+                            
+                            NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                            
+                            //saving is done on main thread
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [urlData writeToFile:filePath atomically:YES];
+                                
+                                NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                
+                                if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                            });
+                        }
+                        
+                    });
+                }
+                else {
+                    if(completionBlock) completionBlock(nil, nil, nil);
+                }
+            }];
+                
+            
+        }
+    }
+    else {
+        if(completionBlock) completionBlock(nil, nil, nil);
+    }
 }
 
 + (void) removeDocumentsVideos {
@@ -432,4 +428,55 @@
     }
 }
 
++ (void) detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock {
+    NSURLRequest *request = [NSURLRequest requestWithURL: url];
+    [NSURLConnection
+     sendAsynchronousRequest:request
+     queue:[[NSOperationQueue alloc] init]
+     completionHandler:^(NSURLResponse *response,
+                         NSData *data,
+                         NSError *error)
+     {
+         
+         if ([data length] >0 && error == nil)
+         {
+             
+             // DO YOUR WORK HERE
+             // This will get the NSURLResponse into NSHTTPURLResponse format
+             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+             
+             if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
+                 NSDictionary *dictionary = [httpResponse allHeaderFields];
+                 if ([ABCommons notNull:[dictionary valueForKey:@"content-type"]]) {
+                     NSString *contentType = [dictionary valueForKey:@"content-type"];
+                     if ([contentType containsString:@"video/"] && type == VideoCache) {
+                         if (completionBlock) completionBlock(YES);
+                     }
+                     else if ([contentType containsString:@"audio/"] && type == AudioCache) {
+                         if (completionBlock) completionBlock(YES);
+                     }
+                     else {
+                         if (completionBlock) completionBlock(NO);
+                     }
+                 }
+                 else {
+                     if (completionBlock) completionBlock(NO);
+                 }
+             }
+             else {
+                 if (completionBlock) completionBlock(NO);
+             }
+         }
+         else if ([data length] == 0 && error == nil)
+         {
+             NSLog(@"Nothing was downloaded.");
+             if (completionBlock) completionBlock(NO);
+         }
+         else if (error != nil){
+             NSLog(@"Error = %@", error);
+             if (completionBlock) completionBlock(NO);
+         }
+         
+     }];
+}
 @end
