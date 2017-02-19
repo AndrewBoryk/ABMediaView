@@ -455,6 +455,12 @@
                      else if ([contentType containsString:@"audio/"] && type == AudioCache) {
                          if (completionBlock) completionBlock(YES);
                      }
+                     else if ([contentType containsString:@"image/gif"] && type == GIFCache) {
+                         if (completionBlock) completionBlock(YES);
+                     }
+                     else if ([contentType containsString:@"image/"] && type == ImageCache) {
+                         if (completionBlock) completionBlock(YES);
+                     }
                      else {
                          if (completionBlock) completionBlock(NO);
                      }
