@@ -116,13 +116,13 @@ extern const CGFloat ABBufferTabBar;
 @property (strong, nonatomic) NSString *videoURL;
 
 /// Video location on disk that was cached after loading
-@property (strong, nonatomic) NSString *videoCache;
+@property (strong, nonatomic) NSURL *videoCache;
 
 /// URL endpoint for audio
 @property (strong, nonatomic) NSString *audioURL;
 
 /// Audio location on disk that was cached after loading
-@property (strong, nonatomic) NSString *audioCache;
+@property (strong, nonatomic) NSURL *audioCache;
 
 /// URL endpoint for gif
 @property (strong, nonatomic) NSString *gifURL;
@@ -439,7 +439,10 @@ extern const CGFloat ABBufferTabBar;
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;
 
 /// Called when the mediaView has completed downloading the video from the web
-- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSString *)video;
+- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSURL *)video;
+
+/// Called when the mediaView has completed downloading the audio from the web
+- (void) mediaView:(ABMediaView *)mediaView didDownloadAudio:(NSURL *)audio;
 
 /// Called when the mediaView has completed downloading the gif from the web
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;

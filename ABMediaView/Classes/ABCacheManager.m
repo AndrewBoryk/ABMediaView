@@ -324,7 +324,7 @@
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [urlData writeToFile:filePath atomically:YES];
                                     
-                                    NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath isDirectory:YES];
                                     
                                     if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
@@ -378,7 +378,7 @@
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [urlData writeToFile:filePath atomically:YES];
                                     
-                                    NSURL *cachedURL = [NSURL URLWithString:filePath];
+                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath isDirectory:YES];
                                     
                                     if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];

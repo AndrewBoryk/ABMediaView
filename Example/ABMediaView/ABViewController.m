@@ -31,6 +31,9 @@
 {
     [super viewDidLoad];
     
+    // Cache media when downloaded
+    [[ABMediaView sharedManager] setShouldCacheMedia:YES];
+    
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];
     
