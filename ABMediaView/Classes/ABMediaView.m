@@ -933,6 +933,11 @@ const CGFloat ABBufferTabBar = 49.0f;
                                                          name:AVPlayerItemDidPlayToEndTimeNotification
                                                        object:[self.player currentItem]];
             
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(loadVideoAnimate)
+                                                         name:AVPlayerItemPlaybackStalledNotification
+                                                       object:[self.player currentItem]];
+            
             self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
             self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             self.playerLayer.videoGravity = [self getVideoGravity];
@@ -1043,6 +1048,11 @@ const CGFloat ABBufferTabBar = 49.0f;
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(playerItemDidReachEnd:)
                                                          name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[self.player currentItem]];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(loadVideoAnimate)
+                                                         name:AVPlayerItemPlaybackStalledNotification
                                                        object:[self.player currentItem]];
             
             self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
@@ -3059,6 +3069,10 @@ const CGFloat ABBufferTabBar = 49.0f;
     _shouldCacheMedia = shouldCacheMedia;
     
     [[ABCacheManager sharedManager] setCacheMediaWhenDownloaded:self.shouldCacheMedia];
+}
+
+- (void) failedToPlayToEnd {
+    NSLog(@"Failed to play %@", self.player.currentItem);
 }
 @end
 
