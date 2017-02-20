@@ -204,7 +204,7 @@
                         dispatch_async(downloadQueue, ^{
                             UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:url];
                             
-                            if ([ABCommons notNull:urlString] && [ABCommons notNull:image]) {
+                            if ([ABCommons notNull:urlString] && [ABCommons notNull:image] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                 [[ABCacheManager sharedManager] setCache:type object:image forKey:urlString];
                             }
                             
@@ -269,7 +269,7 @@
                                 
                                 if (image) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:image]) {
+                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:image] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                             [[ABCacheManager sharedManager] setCache:type object:image forKey:urlString];
                                         }
                                         
@@ -326,7 +326,7 @@
                                     
                                     NSURL *cachedURL = [NSURL URLWithString:filePath];
                                     
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
                                     }
                                     
@@ -380,7 +380,7 @@
                                     
                                     NSURL *cachedURL = [NSURL URLWithString:filePath];
                                     
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
                                     }
                                     

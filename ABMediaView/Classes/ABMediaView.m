@@ -665,7 +665,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if (self.shouldAutomateCaching && [ABCommons notNull:self.videoURL]) {
+    if (self.shouldCacheMedia && [ABCommons notNull:self.videoURL]) {
         [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
             if ([ABCommons notNull:videoPath]) {
                 self.videoCache = videoPath;
@@ -848,7 +848,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if (self.shouldAutomateCaching && [ABCommons notNull:self.audioURL]) {
+    if (self.shouldCacheMedia && [ABCommons notNull:self.audioURL]) {
         [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
             if ([ABCommons notNull:audioPath]) {
                 self.audioCache = audioPath;
