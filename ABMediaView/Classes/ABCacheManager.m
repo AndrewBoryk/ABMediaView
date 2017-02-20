@@ -33,15 +33,7 @@
 - (id)init {
     if (self = [super init]) {
         // Initialize caches
-        imageCache = [[NSCache alloc] init];
-        videoCache = [[NSCache alloc] init];
-        audioCache = [[NSCache alloc] init];
-        gifCache = [[NSCache alloc] init];
-        
-        imageQueue = [[NSCache alloc] init];
-        videoQueue = [[NSCache alloc] init];
-        audioQueue = [[NSCache alloc] init];
-        gifQueue = [[NSCache alloc] init];
+        [self resetAllCaches];
     }
     return self;
 }
@@ -208,10 +200,9 @@
                         
                         [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
                         
-                        dispatch_queue_t downloadQueue = dispatch_queue_create("com.linute.processsmagequeue", NULL);
+                        dispatch_queue_t downloadQueue = dispatch_queue_create("com.abdev.processimagequeue", NULL);
                         dispatch_async(downloadQueue, ^{
-                            NSData *imageData = [NSData dataWithContentsOfURL:url];
-                            UIImage *image = [UIImage animatedImageWithAnimatedGIFData:imageData];
+                            UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:url];
                             
                             if ([ABCommons notNull:urlString] && [ABCommons notNull:image]) {
                                 [[ABCacheManager sharedManager] setCache:type object:image forKey:urlString];
@@ -237,6 +228,23 @@
     
     });
     
+}
+
++ (void)loadGIFData:(NSData *)data type:(CacheType)type completion:(GIFDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+    
+        if ([ABCommons notNull:data]) {
+            
+            dispatch_queue_t downloadQueue = dispatch_queue_create("com.abdev.processimagequeue", NULL);
+            dispatch_async(downloadQueue, ^{
+                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:data];
+                if(completionBlock) completionBlock(image, nil, nil);
+            });
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
 }
 
 + (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock {
@@ -507,5 +515,25 @@
          }
          
      }];
+}
+
+- (void) setCacheMediaWhenDownloaded:(BOOL)cacheMediaWhenDownloaded {
+    _cacheMediaWhenDownloaded = cacheMediaWhenDownloaded;
+    
+    if (!self.cacheMediaWhenDownloaded) {
+        [self resetAllCaches];
+    }
+}
+
+- (void) resetAllCaches {
+    imageCache = [[NSCache alloc] init];
+    videoCache = [[NSCache alloc] init];
+    audioCache = [[NSCache alloc] init];
+    gifCache = [[NSCache alloc] init];
+    
+    imageQueue = [[NSCache alloc] init];
+    videoQueue = [[NSCache alloc] init];
+    audioQueue = [[NSCache alloc] init];
+    gifQueue = [[NSCache alloc] init];
 }
 @end

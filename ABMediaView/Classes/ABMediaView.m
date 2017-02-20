@@ -600,42 +600,35 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     if ([ABCommons notNull:imageURL]) {
-        NSURL *iURL = [NSURL URLWithString:imageURL];
-        
-        if ([ABCommons notNull:self.imageCache]) {
-            if (!self.isLongPressing || self.isFullScreen) {
-                self.image = self.imageCache;
-            }
+        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL]]) {
             
-            
-            if ([ABCommons notNull:completion]) {
-                completion(self.imageCache, nil);
-            }
         }
         else {
-            NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:iURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                if (data) {
-                    UIImage *image = [UIImage imageWithData:data];
-                    
-                    if (image) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (!self.isLongPressing || self.isFullScreen) {
-                                self.image = image;
-                            }
-                            
-                            self.imageCache = image;
-                            
-                            //                        [self.loadingIndicator stopLoading];
-                            
-                            if ([ABCommons notNull:completion]) {
-                                completion(image, error);
-                            }
-                        });
-                    }
+            if ([ABCommons notNull:self.imageCache]) {
+                if (!self.isLongPressing || self.isFullScreen) {
+                    self.image = self.imageCache;
                 }
-            }];
-            
-            [task resume];
+                
+                
+                if ([ABCommons notNull:completion]) {
+                    completion(self.imageCache, nil);
+                }
+            }
+            else {
+                [ABCacheManager loadImage:imageURL type:ImageCache completion:^(UIImage *image, NSString *key, NSError *error) {
+                    if (!self.isLongPressing || self.isFullScreen) {
+                        self.image = image;
+                    }
+                    
+                    self.imageCache = image;
+                    
+                    if ([ABCommons notNull:completion]) {
+                        completion(image, error);
+                    }
+                }];
+                
+            }
+
         }
         
         
@@ -672,9 +665,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    //    if ([self stableWiFiConnection]) {
-    //        [self loadVideoWithPlay:NO withCompletion:nil];
-    //    }
+    if (self.shouldAutomateCaching && [ABCommons notNull:self.videoURL]) {
+        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:videoPath]) {
+                self.videoCache = videoPath;
+            }
+        }];
+    }
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
@@ -780,23 +777,20 @@ const CGFloat ABBufferTabBar = 49.0f;
                 self.image = self.gifCache;
             }
             else if ([ABCommons notNull:self.gifURL]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
                     if (self.isLongPressing && !self.isFullScreen) {
-                        self.image = image;
+                        self.image = gif;
                     }
-                    self.gifCache = image;
-                });
+                    self.gifCache = gif;
+                }];
             }
             else if ([ABCommons notNull:self.gifData]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+                [ABCacheManager loadGIFData:self.gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
                     if (self.isLongPressing && !self.isFullScreen) {
-                        self.image = image;
-                        
+                        self.image = gif;
                     }
-                    self.gifCache = image;
-                });
+                    self.gifCache = gif;
+                }];
             }
             
             [UIView animateWithDuration:0.25f animations:^{
@@ -814,23 +808,13 @@ const CGFloat ABBufferTabBar = 49.0f;
                 }
             }
             else if ([ABCommons notNull:self.imageURL]) {
-                NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:self.imageURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                    if (data) {
-                        UIImage *image = [UIImage imageWithData:data];
-                        
-                        if (image) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                if (!self.isLongPressing || self.isFullScreen) {
-                                    self.image = image;
-                                }
-                                
-                                self.imageCache = image;
-                            });
-                        }
+                [ABCacheManager loadImage:self.imageURL type:ImageCache completion:^(UIImage *image, NSString *key, NSError *error) {
+                    if (!self.isLongPressing || self.isFullScreen) {
+                        self.image = image;
                     }
+                    
+                    self.imageCache = image;
                 }];
-                
-                [task resume];
             }
             
             [UIView animateWithDuration:0.25f animations:^{
@@ -862,6 +846,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         if ([ABCommons notNull:self.track.tapRecognizer]) {
             [self.tapRecognizer requireGestureRecognizerToFail:self.track.tapRecognizer];
         }
+    }
+    
+    if (self.shouldAutomateCaching && [ABCommons notNull:self.audioURL]) {
+        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:audioPath]) {
+                self.audioCache = audioPath;
+            }
+        }];
     }
 }
 
@@ -906,6 +898,12 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         if ([ABCommons notNull:self.videoCache]) {
             AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoCache] options:nil];
+            if ([ABCommons notNull:cachedVideo]) {
+                vidAsset = cachedVideo;
+            }
+        }
+        else if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]]) {
+            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL] options:nil];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
@@ -1016,11 +1014,16 @@ const CGFloat ABBufferTabBar = 49.0f;
                 audAsset = cachedAudio;
             }
         }
+        else if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL]]) {
+            AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:[[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL] options:nil];
+            if ([ABCommons notNull:cachedAudio]) {
+                audAsset = cachedAudio;
+            }
+        }
         
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:audAsset];
         
         self.player = [[ABPlayer alloc] initWithPlayerItem:playerItem];
-        
         
         if ([ABCommons notNull:self.player]) {
             
@@ -1389,19 +1392,6 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-
-//- (void) showProgress: (float) progress {
-//    if ([ABCommons notNull:self.imageView.image]) {
-//        [self.loader stopLoading];
-//    }
-//    else {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//
-//            [self.loader setLoaderProgress:progress animate:YES];
-//        });
-//    }
-//
-//}
 
 - (void) addTapGesture {
     //initializes gestures
@@ -2565,13 +2555,12 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
         }
         else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
+            [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
                 if (self.isLongPressing && !self.isFullScreen) {
-                    self.image = image;
+                    self.image = gif;
                 }
-                self.gifCache = image;
-            });
+                self.gifCache = gif;
+            }];
         }
         
     }
@@ -2586,13 +2575,11 @@ const CGFloat ABBufferTabBar = 49.0f;
                 self.image = self.gifCache;
         }
         else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString: self.gifURL]];
-                self.image = image;
-                self.gifCache = image;
-            });
+            [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+                self.image = gif;
+                self.gifCache = gif;
+            }];
         }
-        
     }
     
 }
@@ -2607,11 +2594,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             
         }
         else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:gifData];
-                self.image = image;
-                self.gifCache = image;
-            });
+            [ABCacheManager loadGIFData:self.gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+                self.image = gif;
+                self.gifCache = gif;
+            }];
         }
         
     }
@@ -2628,13 +2614,12 @@ const CGFloat ABBufferTabBar = 49.0f;
             
         }
         else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:gifData];
+            [ABCacheManager loadGIFData:gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
                 if (self.isLongPressing && !self.isFullScreen) {
-                    self.image = image;
+                    self.image = gif;
                 }
-                self.gifCache = image;
-            });
+                self.gifCache = gif;
+            }];
         }
         
     }
@@ -3047,6 +3032,12 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     [self layoutSubviews];
+}
+
+- (void) setShouldCacheMedia:(BOOL)shouldCacheMedia {
+    _shouldCacheMedia = shouldCacheMedia;
+    
+    [[ABCacheManager sharedManager] setCacheMediaWhenDownloaded:self.shouldCacheMedia];
 }
 @end
 

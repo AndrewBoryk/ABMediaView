@@ -73,6 +73,9 @@ typedef NS_ENUM(NSInteger, CacheType) {
 /// Cache which holds paths to audio on disk
 @property (retain, nonatomic) NSCache *audioCache;
 
+/// Determines whether media should be cached when downloaded
+@property (nonatomic) BOOL cacheMediaWhenDownloaded;
+
 /// Shared Manager for Media Cache
 + (id)sharedManager;
 
@@ -105,6 +108,9 @@ typedef NS_ENUM(NSInteger, CacheType) {
 
 /// Load GIF and store in cache, or retrieve gif from cache if already stored
 + (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock;
+
+/// Load GIF using data and store in cache, or retrieve gif from cache if already stored
++ (void)loadGIFData:(NSData *)data type:(CacheType)type completion:(GIFDataBlock)completionBlock;
 
 /// Remove videos from documents directory
 + (void) removeDocumentsVideos;

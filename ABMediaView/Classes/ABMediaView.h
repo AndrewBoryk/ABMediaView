@@ -133,6 +133,9 @@ extern const CGFloat ABBufferTabBar;
 /// Gif cached after loading
 @property (strong, nonatomic) UIImage *gifCache;
 
+/// Automate caching for media
+@property (nonatomic) BOOL shouldCacheMedia;
+
 /// Theme color which will show on the play button and progress track for videos
 @property (strong, nonatomic) UIColor *themeColor;
 
