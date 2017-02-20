@@ -673,13 +673,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.videoURL]) {
-        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:videoPath]) {
-                self.videoCache = videoPath;
-            }
-        }];
-    }
+//    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.videoURL]) {
+//        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+//            if ([ABCommons notNull:videoPath]) {
+//                self.videoCache = videoPath;
+//            }
+//        }];
+//    }
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
@@ -856,13 +856,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.audioURL]) {
-        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:audioPath]) {
-                self.audioCache = audioPath;
-            }
-        }];
-    }
+//    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.audioURL]) {
+//        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+//            if ([ABCommons notNull:audioPath]) {
+//                self.audioCache = audioPath;
+//            }
+//        }];
+//    }
 }
 
 - (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL {
@@ -904,17 +904,17 @@ const CGFloat ABBufferTabBar = 49.0f;
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
         }
         
-        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
-            self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
-            NSLog(@"Video Cache %@", self.videoCache.relativeString);
-            AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
-            NSLog(@"URLAsset %@", cachedVideo);
+        if ([ABCommons notNull:self.videoCache]) {
+            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:self.videoCache options:nil];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
         }
-        else if ([ABCommons notNull:self.videoCache]) {
-            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:self.videoCache options:nil];
+        else if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
+            self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
+            NSLog(@"Video Cache %@", self.videoCache.relativeString);
+            AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
+            NSLog(@"URLAsset %@", cachedVideo);
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }

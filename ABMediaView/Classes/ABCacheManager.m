@@ -318,7 +318,13 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                                NSString *prefixString = @"ABMediaView";
+                                
+                                NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, guid];
+
+                                
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
                                 
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -372,7 +378,13 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, url.relativeString];
+                                NSString *prefixString = @"ABMediaView";
+                                
+                                NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, guid];
+                                
+                                
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
                                 
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
