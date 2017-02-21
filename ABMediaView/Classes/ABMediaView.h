@@ -14,6 +14,12 @@
 #import "VideoTrackView.h"
 #import "UIImage+animatedGIF.h"
 
+/// Different types of directory items
+typedef NS_ENUM(NSInteger, DirectoryItemType) {
+    VideoDirectoryItems,
+    AudioDirectoryItems,
+    AllDirectoryItems,
+};
 
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
@@ -284,7 +290,7 @@ extern const CGFloat ABBufferTabBar;
 @property (nonatomic) BOOL fileFromDirectory;
 
 /// Clears all meda that have been downloaded to the directory
-+ (void) clearABMediaDirectory;
++ (void) clearABMediaDirectory:(DirectoryItemType)directoryType;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;

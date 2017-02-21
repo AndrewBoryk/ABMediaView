@@ -3073,8 +3073,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     NSLog(@"Failed to play %@", self.player.currentItem);
 }
 
-+ (void) clearABMediaDirectory {
-    [ABCacheManager clearDirectory];
++ (void) clearABMediaDirectory:(DirectoryItemType)directoryType {
+    [ABCacheManager clearDirectory:directoryType];
 }
 @end
 

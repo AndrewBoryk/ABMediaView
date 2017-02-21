@@ -113,7 +113,7 @@ typedef NS_ENUM(NSInteger, CacheType) {
 + (void)loadGIFData:(NSData *)data type:(CacheType)type completion:(GIFDataBlock)completionBlock;
 
 /// Remove videos from documents directory
-+ (void) clearDirectory;
++ (void) clearDirectory:(NSInteger)type;
 
 /// Determines if the url should be downloaded for the cache type
 + (void) detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock;

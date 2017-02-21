@@ -21,6 +21,13 @@
 @synthesize audioQueue;
 @synthesize gifQueue;
 
+/// Different types of directory items
+typedef NS_ENUM(NSInteger, DirectoryItemType) {
+    VideoDirectoryItems,
+    AudioDirectoryItems,
+    AllDirectoryItems,
+};
+
 + (id)sharedManager {
     static ABCacheManager *sharedMyManager = nil;
     static dispatch_once_t onceToken;
@@ -318,14 +325,12 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia", documentsDirectory];
+                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Video", documentsDirectory];
                                 
                                 if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
                                     [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
                                 
-                                NSString *prefixString = @"Video";
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
-
+                                NSString *uniqueFileName = urlString.lastPathComponent;
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
                                 
@@ -383,14 +388,12 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia", documentsDirectory];
+                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
                                 
                                 if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
                                     [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
                                 
-                                NSString *prefixString = @"Audio";
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
-                                
+                                NSString *uniqueFileName = urlString.lastPathComponent;
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
                                 
@@ -430,17 +433,24 @@
     });
 }
 
-+ (void) clearDirectory {
-    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/"];
++ (void) clearDirectory:(NSInteger)type {
+    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/"];
+    
+    if (type == VideoDirectoryItems) {
+        path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Video/"];
+    }
+    else if (type == AudioDirectoryItems) {
+        path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Audio/"];
+    }
+    
     NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
     for (NSString *string in array) {
         NSString *fullPath = [path stringByAppendingPathComponent:string];
         
         NSLog(@"Full path %@", fullPath);
         /// Make sure not to remove realm file
-        if ([fullPath containsString:@"ABMedia"]) {
-            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-        }
+        [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+        
 //
     }
 }

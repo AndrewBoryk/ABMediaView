@@ -30,8 +30,14 @@
 {
     [super viewDidLoad];
     
-    // Clear directory of cached items
-    [ABMediaView clearABMediaDirectory];
+    // Clear all of the directory of cached items
+//    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+    
+    // Clear the video directory of cached items
+//    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];
+    
+    // Clear the audio directory of cached items
+    [ABMediaView clearABMediaDirectory:AudioDirectoryItems];
     
     // Cache media when downloaded
     [[ABMediaView sharedManager] setShouldCacheMedia:YES];
