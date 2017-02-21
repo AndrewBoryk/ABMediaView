@@ -82,8 +82,14 @@ typedef NS_ENUM(NSInteger, CacheType) {
 /// Get object within cache (image, GIF, video or audio location)
 - (id)getCache:(CacheType)type objectForKey:(NSString *)key;
 
+/// Class method for checking if an object is in the cache
++ (id)getCache:(CacheType)type objectForKey:(NSString *)key;
+
 /// Set an object to a desired cache (image, GIF, video or audio location)
 - (void)setCache:(CacheType)type object:(id)object forKey:(NSString *)key;
+
+/// Class method for setting an object to a cache
++ (void)setCache:(CacheType)type object:(id)object forKey:(NSString *)key;
 
 /// Remove an object within a desired cache
 - (void)removeCache:(CacheType)type forKey:(NSString *)key;
@@ -98,19 +104,19 @@ typedef NS_ENUM(NSInteger, CacheType) {
 - (void)removeFromQueue:(CacheType)type forKey:(NSString *)key;
 
 /// Load image and store in cache, or retrieve image from cache if already stored
-+ (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock;
++ (void)loadImage:(NSString *)urlString completion:(ImageDataBlock)completionBlock;
 
 /// Load video and store in cache, or retrieve video from cache if already stored
-+ (void)loadVideo:(NSString *)urlString type:(CacheType)type completion:(VideoDataBlock)completionBlock;
++ (void)loadVideo:(NSString *)urlString completion:(VideoDataBlock)completionBlock;
 
 /// Load audio and store in cache, or retrieve audio from cache if already stored
-+ (void)loadAudio:(NSString *)urlString type:(CacheType)type completion:(AudioDataBlock)completionBlock;
++ (void)loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock;
 
 /// Load GIF and store in cache, or retrieve gif from cache if already stored
-+ (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock;
++ (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock;
 
 /// Load GIF using data and store in cache, or retrieve gif from cache if already stored
-+ (void)loadGIFData:(NSData *)data type:(CacheType)type completion:(GIFDataBlock)completionBlock;
++ (void)loadGIFData:(NSData *)data completion:(GIFDataBlock)completionBlock;
 
 /// Remove videos from documents directory
 + (void) clearDirectory:(NSInteger)type;

@@ -189,17 +189,17 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
-+ (void)loadGIF:(NSString *)urlString type:(CacheType) type completion:(GIFDataBlock)completionBlock {
++ (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = GIFCache;
         
         if ([ABCommons notNull:urlString]) {
             
             NSURL *url = [NSURL URLWithString:urlString];
             
-            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-                
-                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
-                
+            UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
+            if ([ABCommons notNull: fileImage]) {
+                if(completionBlock) completionBlock(fileImage, urlString, nil);
             }
             else {
                 if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
@@ -237,7 +237,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
-+ (void)loadGIFData:(NSData *)data type:(CacheType)type completion:(GIFDataBlock)completionBlock {
++ (void)loadGIFData:(NSData *)data completion:(GIFDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
     
         if ([ABCommons notNull:data]) {
@@ -254,15 +254,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     });
 }
 
-+ (void)loadImage:(NSString *)urlString type:(CacheType)type completion:(ImageDataBlock)completionBlock {
++ (void)loadImage:(NSString *)urlString completion:(ImageDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = ImageCache;
         if ([ABCommons notBlank:urlString]) {
-            
             NSURL *url = [NSURL URLWithString:urlString];
             
-            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
-                
+            UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
+            if ([ABCommons notNull: fileImage]) {
+                if(completionBlock) completionBlock(fileImage, urlString, nil);
             }
             else {
                 if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
@@ -306,124 +306,156 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 
 }
 
-+ (void)loadVideo:(NSString *)urlString type:(CacheType)type completion:(VideoDataBlock)completionBlock {
++ (void)loadVideo:(NSString *)urlString completion:(VideoDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSURL *url = [NSURL URLWithString:urlString];
+        CacheType type = VideoCache;
         
-        if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
-            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
-            }
-            else {
-                [ABCacheManager detectIfURL:url isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
-                    if (isValidURL) {
-                        //download the file in a seperate thread.
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                            NSData *urlData = [NSData dataWithContentsOfURL:url];
-                            if (urlData)
-                            {
-                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                                NSString *documentsDirectory = [paths objectAtIndex:0];
-                                
-                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Video", documentsDirectory];
-                                
-                                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
-                                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
-                                
-                                NSString *uniqueFileName = urlString.lastPathComponent;
-                                
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
-                                
-                                //saving is done on main thread
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    NSError * error = nil;
-                                    BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
-                                    NSLog(@"Success = %d, error = %@", success, error);
-                                    
-                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
-                                    
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
-                                        [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
-                                    }
-                                    
-                                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                                    
-                                    if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                                });
-                            }
-                            
-                        });
+        if ([ABCommons notNull:urlString]) {
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            if ([ABCommons notNull:url]) {
+                
+                NSString *testFilePath = [self directory:VideoDirectoryItems containsFile:url.lastPathComponent];
+                if ([ABCommons notNull:testFilePath]) {
+                    
+                    [[ABCacheManager sharedManager] setCache:type object:testFilePath forKey:urlString];
+                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                    if(completionBlock) completionBlock(testFilePath, urlString, nil);
+                }
+                else {
+                    NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+                    if ([ABCommons notNull: filePath]) {
+                        if(completionBlock) completionBlock(filePath, urlString, nil);
                     }
                     else {
-                        if(completionBlock) completionBlock(nil, nil, nil);
+                        [ABCacheManager detectIfURL:url isValidForCacheType:type completion:^(BOOL isValidURL) {
+                            if (isValidURL) {
+                                //download the file in a seperate thread.
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                    NSData *urlData = [NSData dataWithContentsOfURL:url];
+                                    if (urlData)
+                                    {
+                                        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                        NSString *documentsDirectory = [paths objectAtIndex:0];
+                                        
+                                        NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Video", documentsDirectory];
+                                        
+                                        if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                                            [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
+                                        
+                                        NSString *uniqueFileName = urlString.lastPathComponent;
+                                        
+                                        NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+                                        
+                                        //saving is done on main thread
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            NSError * error = nil;
+                                            BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
+                                            NSLog(@"Success = %d, error = %@", success, error);
+                                            
+                                            NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
+                                            
+                                            if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                                [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
+                                            }
+                                            
+                                            [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                            
+                                            if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                        });
+                                    }
+                                    
+                                });
+                            }
+                            else {
+                                if(completionBlock) completionBlock(nil, nil, nil);
+                            }
+                        }];
+                        
+                        
                     }
-                }];
-                
-                
+                }
+            }
+            else {
+                if(completionBlock) completionBlock(nil, nil, nil);
             }
         }
         else {
             if(completionBlock) completionBlock(nil, nil, nil);
         }
+        
+        
     });
     
 }
 
-+ (void) loadAudio:(NSString *)urlString type:(CacheType)type completion:(AudioDataBlock)completionBlock {
++ (void) loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = AudioCache;
         NSURL *url = [NSURL URLWithString:urlString];
         
         if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
-            if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:type objectForKey:urlString]]) {
-                if(completionBlock) completionBlock([[ABCacheManager sharedManager] getCache:type objectForKey:urlString], urlString, nil);
+            NSString *testFilePath = [self directory:AudioDirectoryItems containsFile:url.lastPathComponent];
+            if ([ABCommons notNull:testFilePath]) {
+                
+                [[ABCacheManager sharedManager] setCache:type object:testFilePath forKey:urlString];
+                [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                if(completionBlock) completionBlock(testFilePath, urlString, nil);
             }
             else {
-                [ABCacheManager detectIfURL:url isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
-                    if (isValidURL) {
-                        //download the file in a seperate thread.
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                            NSData *urlData = [NSData dataWithContentsOfURL:url];
-                            if (urlData)
-                            {
-                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                                NSString *documentsDirectory = [paths objectAtIndex:0];
-                                
-                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
-                                
-                                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
-                                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
-                                
-                                NSString *uniqueFileName = urlString.lastPathComponent;
-                                
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
-                                
-                                //saving is done on main thread
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    NSError * error = nil;
-                                    BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
-                                    NSLog(@"Success = %d, error = %@", success, error);
+                NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+                if ([ABCommons notNull: filePath]) {
+                    if(completionBlock) completionBlock(filePath, urlString, nil);
+                }
+                else {
+                    [ABCacheManager detectIfURL:url isValidForCacheType:type completion:^(BOOL isValidURL) {
+                        if (isValidURL) {
+                            //download the file in a seperate thread.
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                                NSData *urlData = [NSData dataWithContentsOfURL:url];
+                                if (urlData)
+                                {
+                                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                    NSString *documentsDirectory = [paths objectAtIndex:0];
                                     
-                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
+                                    NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
                                     
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
-                                        [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
-                                    }
+                                    if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                                        [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
                                     
-                                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                    NSString *uniqueFileName = urlString.lastPathComponent;
                                     
-                                    if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                                });
-                            }
-                            
-                        });
-                    }
-                    else {
-                        if(completionBlock) completionBlock(nil, nil, nil);
-                    }
-                }];
+                                    NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+                                    
+                                    //saving is done on main thread
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        NSError * error = nil;
+                                        BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
+                                        NSLog(@"Success = %d, error = %@", success, error);
+                                        
+                                        NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
+                                        
+                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                            [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
+                                        }
+                                        
+                                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                        
+                                        if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                    });
+                                }
+                                
+                            });
+                        }
+                        else {
+                            if(completionBlock) completionBlock(nil, nil, nil);
+                        }
+                    }];
                     
-                
+                    
+                }
             }
+            
         }
         else {
             if(completionBlock) completionBlock(nil, nil, nil);
@@ -447,9 +479,37 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         
         /// Make sure not to remove realm file
         [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-        
-//
     }
+}
+
++ (NSString *) directory:(DirectoryItemType)type containsFile:(NSString *)fileEndingComponent {
+    if ([ABCommons notNull:fileEndingComponent]) {
+        NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/"];
+        
+        if (type == VideoDirectoryItems) {
+            path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Video/"];
+            [[ABCacheManager sharedManager] resetCache:VideoCache];
+        }
+        else if (type == AudioDirectoryItems) {
+            path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Audio/"];
+            [[ABCacheManager sharedManager] resetCache:AudioCache];
+        }
+        else {
+            [[ABCacheManager sharedManager] resetCache:VideoCache];
+            [[ABCacheManager sharedManager] resetCache:AudioCache];
+        }
+        
+        NSString *filePath = [NSString stringWithFormat:@"%@%@", path, fileEndingComponent];
+        
+        NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+        if ([array containsObject:filePath]) {
+            return filePath;
+        }
+    }
+    
+    return nil;
+            
+    
 }
 
 - (NSCache *) cacheForType: (CacheType) type {
@@ -557,6 +617,26 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     }
 }
 
+- (void) resetCache:(CacheType)type {
+    switch (type) {
+        case ImageCache:
+            imageCache = [[NSCache alloc] init];
+            break;
+        case VideoCache:
+            videoCache = [[NSCache alloc] init];
+            break;
+        case GIFCache:
+            gifCache = [[NSCache alloc] init];
+            break;
+        case AudioCache:
+            audioCache = [[NSCache alloc] init];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void) resetAllCaches {
     imageCache = [[NSCache alloc] init];
     videoCache = [[NSCache alloc] init];
@@ -567,5 +647,23 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     videoQueue = [[NSCache alloc] init];
     audioQueue = [[NSCache alloc] init];
     gifQueue = [[NSCache alloc] init];
+}
+
++ (id)getCache:(CacheType)type objectForKey:(NSString *)key {
+    id cacheObject = [[ABCacheManager sharedManager] getCache:type objectForKey:key];
+    
+    if (type == VideoCache && [ABCommons isNull:cacheObject]) {
+        if ([ABCommons notNull:key]) {
+            NSURL *url = [NSURL URLWithString:key];
+            
+            cacheObject = [self directory:VideoDirectoryItems containsFile:url.lastPathComponent];
+        }
+    }
+    
+    return cacheObject;
+}
+
++ (void)setCache:(CacheType)type object:(id)object forKey:(NSString *)key {
+    [[ABCacheManager sharedManager] setCache:type object:object forKey:key];
 }
 @end

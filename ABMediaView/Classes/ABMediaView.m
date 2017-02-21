@@ -600,8 +600,9 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     if ([ABCommons notNull:imageURL]) {
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL]]) {
-            self.imageCache = [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL];
+        UIImage *fileImage = [ABCacheManager getCache:ImageCache objectForKey:imageURL];
+        if ([ABCommons notNull: fileImage]) {
+            self.imageCache = fileImage;
             
             if (!self.isLongPressing || self.isFullScreen) {
                 self.image = self.imageCache;
@@ -623,7 +624,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 }
             }
             else {
-                [ABCacheManager loadImage:imageURL type:ImageCache completion:^(UIImage *image, NSString *key, NSError *error) {
+                [ABCacheManager loadImage:imageURL completion:^(UIImage *image, NSString *key, NSError *error) {
                     if (!self.isLongPressing || self.isFullScreen) {
                         self.image = image;
                     }
@@ -781,7 +782,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 self.image = self.gifCache;
             }
             else if ([ABCommons notNull:self.gifURL]) {
-                [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+                [ABCacheManager loadGIF:self.gifURL completion:^(UIImage *gif, NSString *key, NSError *error) {
                     if (self.isLongPressing && !self.isFullScreen) {
                         self.image = gif;
                     }
@@ -789,7 +790,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 }];
             }
             else if ([ABCommons notNull:self.gifData]) {
-                [ABCacheManager loadGIFData:self.gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+                [ABCacheManager loadGIFData:self.gifData completion:^(UIImage *gif, NSString *key, NSError *error) {
                     if (self.isLongPressing && !self.isFullScreen) {
                         self.image = gif;
                     }
@@ -812,7 +813,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 }
             }
             else if ([ABCommons notNull:self.imageURL]) {
-                [ABCacheManager loadImage:self.imageURL type:ImageCache completion:^(UIImage *image, NSString *key, NSError *error) {
+                [ABCacheManager loadImage:self.imageURL completion:^(UIImage *image, NSString *key, NSError *error) {
                     if (!self.isLongPressing || self.isFullScreen) {
                         self.image = image;
                     }
@@ -896,8 +897,9 @@ const CGFloat ABBufferTabBar = 49.0f;
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
         }
         
-        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]]) {
-            self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
+        NSString *filePath = [ABCacheManager getCache:VideoCache objectForKey:self.videoURL];
+        if ([ABCommons notNull:filePath]) {
+            self.videoURL = filePath;
             AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
@@ -1013,8 +1015,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *audAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioURL] options:nil];
         
-        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL]]) {
-            self.audioCache = [[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL];
+        NSString *filePath = [ABCacheManager getCache:AudioCache objectForKey:self.audioURL];
+        if ([ABCommons notNull:filePath]) {
+            self.audioCache = filePath;
             AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:self.audioCache options:nil];
             if ([ABCommons notNull:cachedAudio]) {
                 audAsset = cachedAudio;
@@ -2566,7 +2569,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
         }
         else {
-            [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+            [ABCacheManager loadGIF:self.gifURL completion:^(UIImage *gif, NSString *key, NSError *error) {
                 if (self.isLongPressing && !self.isFullScreen) {
                     self.image = gif;
                 }
@@ -2586,7 +2589,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 self.image = self.gifCache;
         }
         else {
-            [ABCacheManager loadGIF:self.gifURL type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+            [ABCacheManager loadGIF:self.gifURL completion:^(UIImage *gif, NSString *key, NSError *error) {
                 self.image = gif;
                 self.gifCache = gif;
             }];
@@ -2605,7 +2608,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
         }
         else {
-            [ABCacheManager loadGIFData:self.gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+            [ABCacheManager loadGIFData:self.gifData completion:^(UIImage *gif, NSString *key, NSError *error) {
                 self.image = gif;
                 self.gifCache = gif;
             }];
@@ -2625,7 +2628,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
         }
         else {
-            [ABCacheManager loadGIFData:gifData type:GIFCache completion:^(UIImage *gif, NSString *key, NSError *error) {
+            [ABCacheManager loadGIFData:gifData completion:^(UIImage *gif, NSString *key, NSError *error) {
                 if (self.isLongPressing && !self.isFullScreen) {
                     self.image = gif;
                 }
@@ -3067,7 +3070,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) preloadVideo {
     if ([ABCommons notNull:self.videoURL]) {
-        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+        [ABCacheManager loadVideo:self.videoURL completion:^(NSURL *videoPath, NSString *key, NSError *error) {
             if ([ABCommons notNull:videoPath]) {
                 self.videoCache = videoPath;
             }
@@ -3077,13 +3080,14 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) preloadAudio {
     if ([ABCommons notNull:self.audioURL]) {
-        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+        [ABCacheManager loadAudio:self.audioURL completion:^(NSURL *audioPath, NSString *key, NSError *error) {
             if ([ABCommons notNull:audioPath]) {
                 self.audioCache = audioPath;
             }
         }];
     }
 }
+
 @end
 
 
