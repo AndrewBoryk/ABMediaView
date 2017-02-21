@@ -10,7 +10,6 @@
 #import "ABAppDelegate.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-
 @interface ABViewController () {
     
     /// Width of the screen in pixels
@@ -30,6 +29,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Clear directory of cached items
+    [ABMediaView clearABMediaDirectory];
     
     // Cache media when downloaded
     [[ABMediaView sharedManager] setShouldCacheMedia:YES];

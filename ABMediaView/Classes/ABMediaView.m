@@ -3072,6 +3072,10 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) failedToPlayToEnd {
     NSLog(@"Failed to play %@", self.player.currentItem);
 }
+
++ (void) clearABMediaDirectory {
+    [ABCacheManager clearDirectory];
+}
 @end
 
 

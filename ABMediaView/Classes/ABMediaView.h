@@ -283,6 +283,9 @@ extern const CGFloat ABBufferTabBar;
 /// File being played is from directory
 @property (nonatomic) BOOL fileFromDirectory;
 
+/// Clears all meda that have been downloaded to the directory
++ (void) clearABMediaDirectory;
+
 /// Allows functionality to change the videoGravity to aspectFit on the fly
 - (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
 

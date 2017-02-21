@@ -318,12 +318,16 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABMedia/Video";
+                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia", documentsDirectory];
                                 
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@/%@", prefixString, urlString.lastPathComponent];
+                                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
+                                
+                                NSString *prefixString = @"Video";
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
 
                                 
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
                                 
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -379,12 +383,16 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABMedia/Audio";
+                                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia", documentsDirectory];
                                 
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@/%@", prefixString, urlString.lastPathComponent];
+                                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
+                                
+                                NSString *prefixString = @"Audio";
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
                                 
                                 
-                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
+                                NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
                                 
                                 NSLog(@"File Path: %@", filePath);
                                 
@@ -422,17 +430,18 @@
     });
 }
 
-+ (void) removeDocumentsVideos {
++ (void) clearDirectory {
     NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/"];
     NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
     for (NSString *string in array) {
         NSString *fullPath = [path stringByAppendingPathComponent:string];
         
+        NSLog(@"Full path %@", fullPath);
         /// Make sure not to remove realm file
-        if (![fullPath containsString:@"realm"]) {
+        if ([fullPath containsString:@"ABMedia"]) {
             [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
         }
-        
+//
     }
 }
 
