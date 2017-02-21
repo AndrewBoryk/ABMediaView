@@ -342,7 +342,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                     
                                     NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
                                     
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
                                     }
                                     
@@ -407,7 +407,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                     
                                     NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
                                     
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
+                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
                                     }
                                     

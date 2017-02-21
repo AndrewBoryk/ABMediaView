@@ -31,19 +31,19 @@
     [super viewDidLoad];
     
     // Clear all of the directory of cached items
-//    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
     
     // Clear the video directory of cached items
 //    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];
     
     // Clear the audio directory of cached items
-    [ABMediaView clearABMediaDirectory:AudioDirectoryItems];
+//    [ABMediaView clearABMediaDirectory:AudioDirectoryItems];
     
     // Cache media when downloaded
     [[ABMediaView sharedManager] setShouldCacheMedia:YES];
     
     // Loads the videos and audio before playing
-    [[ABMediaView sharedManager] setPreloadVideoAndAudio:YES];
+    [[ABMediaView sharedManager] setShouldPreloadVideoAndAudio:YES];
     
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];

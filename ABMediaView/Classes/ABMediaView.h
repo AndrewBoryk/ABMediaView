@@ -140,7 +140,7 @@ extern const CGFloat ABBufferTabBar;
 @property (strong, nonatomic) UIImage *gifCache;
 
 /// Download video and audio before playing
-@property (nonatomic) BOOL preloadVideoAndAudio;
+@property (nonatomic) BOOL shouldPreloadVideoAndAudio;
 
 /// Automate caching for media
 @property (nonatomic) BOOL shouldCacheMedia;

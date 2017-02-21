@@ -600,7 +600,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     if ([ABCommons notNull:imageURL]) {
-        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
+        if ([ABCommons notNull: [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL]]) {
             self.imageCache = [[ABCacheManager sharedManager] getCache:ImageCache objectForKey:imageURL];
             
             if (!self.isLongPressing || self.isFullScreen) {
@@ -673,12 +673,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.videoURL] && [[ABMediaView sharedManager] preloadVideoAndAudio]) {
-        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:videoPath]) {
-                self.videoCache = videoPath;
-            }
-        }];
+    if ([[ABMediaView sharedManager] shouldPreloadVideoAndAudio]) {
+        [self preloadVideo];
     }
 }
 
@@ -856,12 +852,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.audioURL] && [[ABMediaView sharedManager] preloadVideoAndAudio]) {
-        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:audioPath]) {
-                self.audioCache = audioPath;
-            }
-        }];
+    if ([[ABMediaView sharedManager] shouldPreloadVideoAndAudio]) {
+        [self preloadAudio];
     }
 }
 
@@ -904,15 +896,15 @@ const CGFloat ABBufferTabBar = 49.0f;
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
         }
         
-        if ([ABCommons notNull:self.videoCache]) {
-            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:self.videoCache options:nil];
+        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]]) {
+            self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
+            AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
         }
-        else if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
-            self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
-            AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
+        else if ([ABCommons notNull:self.videoCache]) {
+            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:self.videoCache options:nil];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
@@ -1021,7 +1013,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *audAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioURL] options:nil];
         
-        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
+        if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL]]) {
             self.audioCache = [[ABCacheManager sharedManager] getCache:AudioCache objectForKey:self.audioURL];
             AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:self.audioCache options:nil];
             if ([ABCommons notNull:cachedAudio]) {
@@ -3069,12 +3061,28 @@ const CGFloat ABBufferTabBar = 49.0f;
     [[ABCacheManager sharedManager] setCacheMediaWhenDownloaded:self.shouldCacheMedia];
 }
 
-- (void) failedToPlayToEnd {
-    NSLog(@"Failed to play %@", self.player.currentItem);
-}
-
 + (void) clearABMediaDirectory:(DirectoryItemType)directoryType {
     [ABCacheManager clearDirectory:directoryType];
+}
+
+- (void) preloadVideo {
+    if ([ABCommons notNull:self.videoURL]) {
+        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:videoPath]) {
+                self.videoCache = videoPath;
+            }
+        }];
+    }
+}
+
+- (void) preloadAudio {
+    if ([ABCommons notNull:self.audioURL]) {
+        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:audioPath]) {
+                self.audioCache = audioPath;
+            }
+        }];
+    }
 }
 @end
 
