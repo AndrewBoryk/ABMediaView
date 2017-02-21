@@ -318,9 +318,9 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABVideo";
+                                NSString *prefixString = @"ABMedia/Video";
                                 
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@/%@", prefixString, urlString.lastPathComponent];
 
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
@@ -379,9 +379,9 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABAudio";
+                                NSString *prefixString = @"ABMedia/Audio";
                                 
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@/%@", prefixString, urlString.lastPathComponent];
                                 
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
