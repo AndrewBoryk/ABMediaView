@@ -318,19 +318,20 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABMediaView";
+                                NSString *prefixString = @"ABVideo";
                                 
-                                NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, guid];
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
 
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
                                 
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [urlData writeToFile:filePath atomically:YES];
+                                    NSError * error = nil;
+                                    BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
+                                    NSLog(@"Success = %d, error = %@", success, error);
                                     
-                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath isDirectory:YES];
+                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
                                     
                                     if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];
@@ -378,19 +379,22 @@
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 NSString *documentsDirectory = [paths objectAtIndex:0];
                                 
-                                NSString *prefixString = @"ABMediaView";
+                                NSString *prefixString = @"ABAudio";
                                 
-                                NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
-                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, guid];
+                                NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@", prefixString, urlString.lastPathComponent];
                                 
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, uniqueFileName];
                                 
+                                NSLog(@"File Path: %@", filePath);
+                                
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [urlData writeToFile:filePath atomically:YES];
+                                    NSError * error = nil;
+                                    BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
+                                    NSLog(@"Success = %d, error = %@", success, error);
                                     
-                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath isDirectory:YES];
+                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
                                     
                                     if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
                                         [[ABCacheManager sharedManager] setCache:type object:cachedURL forKey:urlString];

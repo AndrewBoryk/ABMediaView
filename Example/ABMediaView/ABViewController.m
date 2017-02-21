@@ -34,6 +34,9 @@
     // Cache media when downloaded
     [[ABMediaView sharedManager] setShouldCacheMedia:YES];
     
+    // Loads the videos and audio before playing
+    [[ABMediaView sharedManager] setPreloadVideoAndAudio:YES];
+    
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];
     

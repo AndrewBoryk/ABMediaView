@@ -673,13 +673,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-//    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.videoURL]) {
-//        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
-//            if ([ABCommons notNull:videoPath]) {
-//                self.videoCache = videoPath;
-//            }
-//        }];
-//    }
+    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.videoURL] && [[ABMediaView sharedManager] preloadVideoAndAudio]) {
+        [ABCacheManager loadVideo:self.videoURL type:VideoCache completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:videoPath]) {
+                self.videoCache = videoPath;
+            }
+        }];
+    }
 }
 
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL {
@@ -856,13 +856,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-//    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.audioURL]) {
-//        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
-//            if ([ABCommons notNull:audioPath]) {
-//                self.audioCache = audioPath;
-//            }
-//        }];
-//    }
+    if ([[ABMediaView sharedManager] shouldCacheMedia] && [ABCommons notNull:self.audioURL] && [[ABMediaView sharedManager] preloadVideoAndAudio]) {
+        [ABCacheManager loadAudio:self.audioURL type:AudioCache completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+            if ([ABCommons notNull:audioPath]) {
+                self.audioCache = audioPath;
+            }
+        }];
+    }
 }
 
 - (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL {
@@ -912,9 +912,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
         else if ([ABCommons notNull:[[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL]] && [[ABMediaView sharedManager] shouldCacheMedia]) {
             self.videoCache = [[ABCacheManager sharedManager] getCache:VideoCache objectForKey:self.videoURL];
-            NSLog(@"Video Cache %@", self.videoCache.relativeString);
             AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
-            NSLog(@"URLAsset %@", cachedVideo);
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
@@ -2089,13 +2087,13 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) willRotate: (NSNotification *) notification {
-//    NSLog(@"Rotation began");
+//    Rotation began
     [self orientationChanged:nil];
     
 }
 
 - (void) didRotate: (NSNotification *) notification {
-//    NSLog(@"Rotation complete");
+//    Rotation ended
     [self orientationChanged:nil];
     
 }

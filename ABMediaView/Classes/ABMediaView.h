@@ -133,6 +133,9 @@ extern const CGFloat ABBufferTabBar;
 /// Gif cached after loading
 @property (strong, nonatomic) UIImage *gifCache;
 
+/// Download video and audio before playing
+@property (nonatomic) BOOL preloadVideoAndAudio;
+
 /// Automate caching for media
 @property (nonatomic) BOOL shouldCacheMedia;
 
