@@ -31,7 +31,7 @@
     [super viewDidLoad];
     
     // Clear all of the directory of cached items
-//    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
     
     // Clear the video directory of cached items
 //    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];

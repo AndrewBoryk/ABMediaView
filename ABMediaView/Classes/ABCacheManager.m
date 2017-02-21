@@ -343,17 +343,25 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                     dispatch_async(dispatch_get_main_queue(), ^{
                                         NSError * error = nil;
                                         BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
-                                        NSLog(@"Success = %d, error = %@", success, error);
+//                                        NSLog(@"Success = %d, error = %@", success, error);
                                         
-                                        NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
-                                        
-                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
-                                            [ABCacheManager setCache:type object:cachedURL forKey:urlString];
+                                        if (success) {
+                                            NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
+                                            
+                                            if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                                [ABCacheManager setCache:type object:cachedURL forKey:urlString];
+                                            }
+                                            
+                                            [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                            
+                                            if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                        }
+                                        else {
+                                            [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                            
+                                            if(completionBlock) completionBlock(nil, urlString, nil);
                                         }
                                         
-                                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                                        
-                                        if(completionBlock) completionBlock(cachedURL, urlString, nil);
                                     });
                                 }
                                 
@@ -415,17 +423,23 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     NSError * error = nil;
                                     BOOL success = [urlData writeToFile:filePath options:NSDataWritingAtomic error:&error];
-                                    NSLog(@"Success = %d, error = %@", success, error);
-                                    
-                                    NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
-                                    
-                                    if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
-                                        [ABCacheManager setCache:type object:cachedURL forKey:urlString];
+//                                    NSLog(@"Success = %d, error = %@", success, error);
+                                    if (success) {
+                                        NSURL *cachedURL = [NSURL fileURLWithPath:filePath];
+                                        
+                                        if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
+                                            [ABCacheManager setCache:type object:cachedURL forKey:urlString];
+                                        }
+                                        
+                                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                        
+                                        if(completionBlock) completionBlock(cachedURL, urlString, nil);
                                     }
-                                    
-                                    [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                                    
-                                    if(completionBlock) completionBlock(cachedURL, urlString, nil);
+                                    else {
+                                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                                        
+                                        if(completionBlock) completionBlock(nil, urlString, nil);
+                                    }
                                 });
                             }
                             
