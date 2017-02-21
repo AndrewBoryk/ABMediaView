@@ -12,9 +12,6 @@
 
 @implementation ABVolumeManager
 
-@synthesize mpVolumeView;
-@synthesize volumeSlider;
-
 + (id)sharedManager {
     static ABVolumeManager *sharedMyManager = nil;
     static dispatch_once_t onceToken;
@@ -32,18 +29,18 @@
         self.defaultAudioPlayingType = DefaultAudio;
         self.defaultAudioStoppingType = DefaultAudio;
         
-        mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-50, -50, 0, 0)];
+        self.mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-50, -50, 0, 0)];
         
-        [[mpVolumeView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [[self.mpVolumeView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             if ([obj isKindOfClass:[UISlider class]]) {
-                volumeSlider = obj;
+                self.volumeSlider = obj;
                 *stop = YES;
             }
         }];
         
         UIWindow* currentWindow = [UIApplication sharedApplication].keyWindow;
         
-        if (mpVolumeView) [currentWindow addSubview:mpVolumeView];
+        if (self.mpVolumeView) [currentWindow addSubview:self.mpVolumeView];
         
         
         

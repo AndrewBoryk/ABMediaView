@@ -16,20 +16,13 @@ typedef NS_ENUM(NSInteger, AudioType) {
     DefaultAudio,
 };
 
-@interface ABVolumeManager : NSObject {
-    
-    /// View which handles volume change
-    MPVolumeView *mpVolumeView;
-    
-    /// Slider which records the user's volume level
-    UISlider *volumeSlider;
-}
+@interface ABVolumeManager : NSObject
 
 /// View which handles volume change
-@property (retain, nonatomic) MPVolumeView *mpVolumeView;
+@property (strong, nonatomic) MPVolumeView *mpVolumeView;
 
 /// Slider which records the user's volume level
-@property (retain, nonatomic) UISlider *volumeSlider;
+@property (strong, nonatomic) UISlider *volumeSlider;
 
 /// Default value for how audio should be handled when playing media
 @property (nonatomic) AudioType defaultAudioPlayingType;

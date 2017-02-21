@@ -40,10 +40,10 @@
 //    [ABMediaView clearABMediaDirectory:AudioDirectoryItems];
     
     // Cache media when downloaded
-    [[ABMediaView sharedManager] setShouldCacheMedia:YES];
+//    [[ABMediaView sharedManager] setShouldCacheMedia:YES];
     
     // Loads the videos and audio before playing
-    [[ABMediaView sharedManager] setShouldPreloadVideoAndAudio:YES];
+//    [[ABMediaView sharedManager] setShouldPreloadVideoAndAudio:YES];
     
     // Sets functionality for this demonstration, visit the function to see different functionality
     [self initializeSettingsForMediaView:self.mediaView];
@@ -253,6 +253,10 @@
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
     NSLog(@"MediaView did play video");
+}
+
+- (void) mediaViewDidFailToPlayVideo:(ABMediaView *)mediaView {
+    NSLog(@"MediaView did fail to play video");
 }
 
 - (void) mediaViewDidPauseVideo:(ABMediaView *)mediaView {

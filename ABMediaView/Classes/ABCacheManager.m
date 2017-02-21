@@ -11,16 +11,6 @@
 
 @implementation ABCacheManager
 
-@synthesize imageCache;
-@synthesize videoCache;
-@synthesize audioCache;
-@synthesize gifCache;
-
-@synthesize imageQueue;
-@synthesize videoQueue;
-@synthesize audioQueue;
-@synthesize gifQueue;
-
 /// Different types of directory items
 typedef NS_ENUM(NSInteger, DirectoryItemType) {
     VideoDirectoryItems,
@@ -49,16 +39,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                return [imageCache objectForKey:key];
+                return [self.imageCache objectForKey:key];
                 break;
             case VideoCache:
-                return [videoCache objectForKey:key];
+                return [self.videoCache objectForKey:key];
                 break;
             case AudioCache:
-                return [audioCache objectForKey:key];
+                return [self.audioCache objectForKey:key];
                 break;
             case GIFCache:
-                return [gifCache objectForKey:key];
+                return [self.gifCache objectForKey:key];
                 break;
                 
             default:
@@ -73,16 +63,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:object] && [ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                [imageCache setObject:object forKey:key];
+                [self.imageCache setObject:object forKey:key];
                 break;
             case VideoCache:
-                [videoCache setObject:object forKey:key];
+                [self.videoCache setObject:object forKey:key];
                 break;
             case AudioCache:
-                [audioCache setObject:object forKey:key];
+                [self.audioCache setObject:object forKey:key];
                 break;
             case GIFCache:
-                [gifCache setObject:object forKey:key];
+                [self.gifCache setObject:object forKey:key];
                 break;
             default:
                 
@@ -96,16 +86,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                [imageCache removeObjectForKey:key];
+                [self.imageCache removeObjectForKey:key];
                 break;
             case VideoCache:
-                [videoCache removeObjectForKey:key];
+                [self.videoCache removeObjectForKey:key];
                 break;
             case AudioCache:
-                [audioCache removeObjectForKey:key];
+                [self.audioCache removeObjectForKey:key];
                 break;
             case GIFCache:
-                [gifCache removeObjectForKey:key];
+                [self.gifCache removeObjectForKey:key];
                 break;
             
                 
@@ -121,16 +111,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                return [imageQueue objectForKey:key];
+                return [self.imageQueue objectForKey:key];
                 break;
             case VideoCache:
-                return [videoQueue objectForKey:key];
+                return [self.videoQueue objectForKey:key];
                 break;
             case AudioCache:
-                return [audioQueue objectForKey:key];
+                return [self.audioQueue objectForKey:key];
                 break;
             case GIFCache:
-                return [gifQueue objectForKey:key];
+                return [self.gifQueue objectForKey:key];
                 break;
                 
             default:
@@ -145,16 +135,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:object] && [ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                [imageQueue setObject:object forKey:key];
+                [self.imageQueue setObject:object forKey:key];
                 break;
             case VideoCache:
-                [videoQueue setObject:object forKey:key];
+                [self.videoQueue setObject:object forKey:key];
                 break;
             case AudioCache:
-                [audioQueue setObject:object forKey:key];
+                [self.audioQueue setObject:object forKey:key];
                 break;
             case GIFCache:
-                [gifQueue setObject:object forKey:key];
+                [self.gifQueue setObject:object forKey:key];
                 break;
                 
             default:
@@ -169,16 +159,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ([ABCommons notNull:key]) {
         switch (type) {
             case ImageCache:
-                [imageQueue removeObjectForKey:key];
+                [self.imageQueue removeObjectForKey:key];
                 break;
             case VideoCache:
-                [videoQueue removeObjectForKey:key];
+                [self.videoQueue removeObjectForKey:key];
                 break;
             case AudioCache:
-                [audioQueue removeObjectForKey:key];
+                [self.audioQueue removeObjectForKey:key];
                 break;
             case GIFCache:
-                [gifQueue removeObjectForKey:key];
+                [self.gifQueue removeObjectForKey:key];
                 break;
                 
             default:
@@ -514,16 +504,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 - (NSCache *) cacheForType: (CacheType) type {
     switch (type) {
         case ImageCache:
-            return imageCache;
+            return self.imageCache;
             break;
         case VideoCache:
-            return videoCache;
+            return self.videoCache;
             break;
         case AudioCache:
-            return audioCache;
+            return self.audioCache;
             break;
         case GIFCache:
-            return gifCache;
+            return self.gifCache;
             break;
             
         default:
@@ -535,16 +525,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 - (NSCache *) queueForType: (CacheType) type {
     switch (type) {
         case ImageCache:
-            return imageQueue;
+            return self.imageQueue;
             break;
         case VideoCache:
-            return videoQueue;
+            return self.videoQueue;
             break;
         case AudioCache:
-            return audioQueue;
+            return self.audioQueue;
             break;
         case GIFCache:
-            return gifQueue;
+            return self.gifQueue;
             break;
             
         default:
@@ -619,16 +609,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 - (void) resetCache:(CacheType)type {
     switch (type) {
         case ImageCache:
-            imageCache = [[NSCache alloc] init];
+            self.imageCache = [[NSCache alloc] init];
             break;
         case VideoCache:
-            videoCache = [[NSCache alloc] init];
+            self.videoCache = [[NSCache alloc] init];
             break;
         case GIFCache:
-            gifCache = [[NSCache alloc] init];
+            self.gifCache = [[NSCache alloc] init];
             break;
         case AudioCache:
-            audioCache = [[NSCache alloc] init];
+            self.audioCache = [[NSCache alloc] init];
             break;
             
         default:
@@ -637,15 +627,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 }
 
 - (void) resetAllCaches {
-    imageCache = [[NSCache alloc] init];
-    videoCache = [[NSCache alloc] init];
-    audioCache = [[NSCache alloc] init];
-    gifCache = [[NSCache alloc] init];
+    self.imageCache = [[NSCache alloc] init];
+    self.videoCache = [[NSCache alloc] init];
+    self.audioCache = [[NSCache alloc] init];
+    self.gifCache = [[NSCache alloc] init];
     
-    imageQueue = [[NSCache alloc] init];
-    videoQueue = [[NSCache alloc] init];
-    audioQueue = [[NSCache alloc] init];
-    gifQueue = [[NSCache alloc] init];
+    self.imageQueue = [[NSCache alloc] init];
+    self.videoQueue = [[NSCache alloc] init];
+    self.audioQueue = [[NSCache alloc] init];
+    self.gifQueue = [[NSCache alloc] init];
 }
 
 + (id)getCache:(CacheType)type objectForKey:(NSString *)key {

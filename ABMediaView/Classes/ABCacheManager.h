@@ -23,55 +23,31 @@ typedef NS_ENUM(NSInteger, CacheType) {
     GIFCache,
 };
 
-@interface ABCacheManager : NSObject {
-    /// Queue which holds requests for downloading images
-    NSCache *imageQueue;
-    
-    /// Queue which holds requests for downloading videos
-    NSCache *videoQueue;
-    
-    /// Queue which holds requests for downloading GIFs
-    NSCache *gifQueue;
-    
-    /// Queue which holds requests for downloading audio
-    NSCache *audioQueue;
-    
-    /// Cache which holds images
-    NSCache *imageCache;
-    
-    /// Cache which holds paths to videos on disk
-    NSCache *videoCache;
-    
-    /// Cache which holds GIFs
-    NSCache *gifCache;
-    
-    /// Cache which holds paths to audio on disk
-    NSCache *audioCache;
-}
+@interface ABCacheManager : NSObject
 
 /// Queue which holds requests for downloading images
-@property (retain, nonatomic) NSCache *imageQueue;
+@property (strong, nonatomic) NSCache *imageQueue;
 
 /// Queue which holds requests for downloading videos
-@property (retain, nonatomic) NSCache *videoQueue;
+@property (strong, nonatomic) NSCache *videoQueue;
 
 /// Queue which holds requests for downloading GIFs
-@property (retain, nonatomic) NSCache *gifQueue;
+@property (strong, nonatomic) NSCache *gifQueue;
 
 /// Queue which holds requests for downloading audio
-@property (retain, nonatomic) NSCache *audioQueue;
+@property (strong, nonatomic) NSCache *audioQueue;
 
 /// Cache which holds images
-@property (retain, nonatomic) NSCache *imageCache;
+@property (strong, nonatomic) NSCache *imageCache;
 
 /// Cache which holds paths to videos on disk
-@property (retain, nonatomic) NSCache *videoCache;
+@property (strong, nonatomic) NSCache *videoCache;
 
 /// Cache which holds GIFs
-@property (retain, nonatomic) NSCache *gifCache;
+@property (strong, nonatomic) NSCache *gifCache;
 
 /// Cache which holds paths to audio on disk
-@property (retain, nonatomic) NSCache *audioCache;
+@property (strong, nonatomic) NSCache *audioCache;
 
 /// Determines whether media should be cached when downloaded
 @property (nonatomic) BOOL cacheMediaWhenDownloaded;

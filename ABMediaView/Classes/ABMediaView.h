@@ -413,6 +413,9 @@ extern const CGFloat ABBufferTabBar;
 /// When the mediaView begins playing a video
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
 
+/// When the mediaView fails to play a video
+- (void) mediaViewDidFailToPlayVideo: (ABMediaView *) mediaView;
+
 /// When the mediaView pauses a video
 - (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
 

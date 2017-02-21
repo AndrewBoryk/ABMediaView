@@ -36,6 +36,9 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     /// Recognizer for when the thumbnail experiences a long press
     UILongPressGestureRecognizer *gifLongPressRecognizer;
+    
+    /// Determines if the play has failed to play media
+    BOOL failedToPlayMedia;
 }
 
 @synthesize isMinimized = isMinimized;
@@ -490,6 +493,12 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) removeObservers {
     @try{
+        [self.player removeObserver:self forKeyPath:@"currentItem.status"];
+    }@catch(id anException){
+        //do nothing, not an observer
+    }
+    
+    @try{
         [self.player removeObserver:self forKeyPath:@"currentItem.loadedTimeRanges"];
     }@catch(id anException){
         //do nothing, not an observer
@@ -519,6 +528,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     _imageCache = nil;
     _videoCache = nil;
     _videoURL = nil;
+    failedToPlayMedia = NO;
     _gifURL = nil;
     _gifData = nil;
     _gifCache = nil;
@@ -651,6 +661,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) setVideoURL:(NSString *)videoURL {
     _videoURL = videoURL;
+    failedToPlayMedia = NO;
     
     self.track.hidden = YES;
     [self.track setProgress: @0 withDuration: 0];
@@ -937,11 +948,14 @@ const CGFloat ABBufferTabBar = 49.0f;
                 
                 [self handleTopOverlayDisplay:self];
                 
-                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                    [self.delegate mediaViewDidPlayVideo:self];
+                if (!failedToPlayMedia) {
+                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                        [self.delegate mediaViewDidPlayVideo:self];
+                    }
                 }
             }
             
+            [self.player.currentItem addObserver:self forKeyPath:@"status" options:0 context:nil];
             
             [self.player addObserver:self
                           forKeyPath:@"currentItem.loadedTimeRanges"
@@ -1049,11 +1063,14 @@ const CGFloat ABBufferTabBar = 49.0f;
                 
                 [self handleTopOverlayDisplay:self];
                 
-                if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                    [self.delegate mediaViewDidPlayVideo:self];
+                if (!failedToPlayMedia) {
+                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                        [self.delegate mediaViewDidPlayVideo:self];
+                    }
                 }
             }
             
+            [self.player addObserver:self forKeyPath:@"status" options:0 context:nil];
             
             [self.player addObserver:self
                           forKeyPath:@"currentItem.loadedTimeRanges"
@@ -1165,7 +1182,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
         else {
             if ([ABCommons notNull:self.player]) {
-                if ((self.player.rate != 0) && (self.player.error == nil)) {
+                if ((self.player.rate != 0) && (self.player.currentItem.error == nil)) {
                     [self stopVideoAnimate];
                     isLoadingVideo = false;
                     [UIView animateWithDuration:0.15f animations:^{
@@ -1190,8 +1207,10 @@ const CGFloat ABBufferTabBar = 49.0f;
                     
                     [self handleTopOverlayDisplay:self];
                     
-                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                        [self.delegate mediaViewDidPlayVideo:self];
+                    if (!failedToPlayMedia) {
+                        if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                            [self.delegate mediaViewDidPlayVideo:self];
+                        }
                     }
                     
                 }
@@ -1202,8 +1221,10 @@ const CGFloat ABBufferTabBar = 49.0f;
                     
                     [self handleTopOverlayDisplay:self];
                     
-                    if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
-                        [self.delegate mediaViewDidPlayVideo: self];
+                    if (!failedToPlayMedia) {
+                        if ([self.delegate respondsToSelector:@selector(mediaViewDidPlayVideo:)]) {
+                            [self.delegate mediaViewDidPlayVideo:self];
+                        }
                     }
                 }
             }
@@ -1234,9 +1255,16 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [self stopVideoAnimate];
     
-    [self animateVideo];
+    if (failedToPlayMedia) {
+        self.videoIndicator.alpha = 1.0f;
+        self.videoIndicator.image = [self imageForPlayButton];
+    }
+    else {
+        [self animateVideo];
+        
+        self.animateTimer = [NSTimer scheduledTimerWithTimeInterval:0.751f target:self selector:@selector(animateVideo) userInfo:nil repeats:YES];
+    }
     
-    self.animateTimer = [NSTimer scheduledTimerWithTimeInterval:0.751f target:self selector:@selector(animateVideo) userInfo:nil repeats:YES];
 }
 
 - (void)stopVideoAnimate {
@@ -1245,14 +1273,20 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) hideVideoAnimated:(BOOL) animated {
-    if (animated) {
-        [UIView animateWithDuration:0.15f animations:^{
-            self.videoIndicator.alpha = 0.0f;
-        }];
+    if (failedToPlayMedia) {
+        self.videoIndicator.alpha = 1.0f;
     }
     else {
-        self.videoIndicator.alpha = 0.0f;
+        if (animated) {
+            [UIView animateWithDuration:0.15f animations:^{
+                self.videoIndicator.alpha = 0.0f;
+            }];
+        }
+        else {
+            self.videoIndicator.alpha = 0.0f;
+        }
     }
+    
     
 }
 
@@ -1266,21 +1300,28 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     }
     
-    if (showAnimation) {
-        if (self.videoIndicator.alpha == 1.0f) {
-            [UIView animateWithDuration:0.75f animations:^{
-                self.videoIndicator.alpha = 0.4f;
-            }];
-        }
-        else {
-            [UIView animateWithDuration:0.75f animations:^{
-                self.videoIndicator.alpha = 1.0f;
-            }];
-        }
+    if (failedToPlayMedia) {
+        self.videoIndicator.alpha = 1.0f;
     }
     else {
-        self.videoIndicator.alpha = 0.0f;
+        if (showAnimation) {
+            if (self.videoIndicator.alpha == 1.0f) {
+                [UIView animateWithDuration:0.75f animations:^{
+                    self.videoIndicator.alpha = 0.4f;
+                }];
+            }
+            else {
+                [UIView animateWithDuration:0.75f animations:^{
+                    self.videoIndicator.alpha = 1.0f;
+                }];
+            }
+        }
+        else {
+            self.videoIndicator.alpha = 0.0f;
+        }
     }
+    
+    
     
 }
 
@@ -1389,6 +1430,62 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
             isLoadingVideo = false;
         }
+        else if (object == self.player.currentItem && [keyPath isEqualToString:@"status"]) {
+            if (self.player.currentItem.status == AVPlayerStatusReadyToPlay) {
+                failedToPlayMedia = NO;
+                self.videoIndicator.image = [self imageForPlayButton];
+                self.videoIndicator.alpha = 0;
+                
+            } else if (self.player.currentItem.status == AVPlayerStatusFailed) {
+                NSLog(@"AVPlayer Error %@", self.player.currentItem.error);
+                failedToPlayMedia = YES;
+                
+                isLoadingVideo = false;
+                
+                [self stopVideoAnimate];
+                self.videoIndicator.image = [self imageForPlayButton];
+                self.videoIndicator.alpha = 1;
+                
+                [self.player pause];
+                
+                if (self.isFullScreen) {
+                    if ([self hasTitle:self]) {
+                        self.topOverlay.alpha = 1;
+                        self.titleLabel.alpha = 1;
+                        self.detailsLabel.alpha = 1;
+                    }
+                }
+                
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidFailToPlayVideo:)]) {
+                    [self.delegate mediaViewDidFailToPlayVideo:self];
+                }
+                
+                [self removeObservers];
+                self.player = nil;
+                
+            }
+            else if (self.player.currentItem.status == AVPlayerItemStatusUnknown) {
+                NSLog(@"AVPlayer Unknown");
+                failedToPlayMedia = YES;
+                
+                isLoadingVideo = false;
+                
+                [self stopVideoAnimate];
+                self.videoIndicator.image = [self imageForPlayButton];
+                self.videoIndicator.alpha = 1;
+                
+                [self.player pause];
+                
+                if ([self.delegate respondsToSelector:@selector(mediaViewDidFailToPlayVideo:)]) {
+                    [self.delegate mediaViewDidFailToPlayVideo:self];
+                }
+                
+                [self removeObservers];
+                self.player = nil;
+            
+                
+            }
+        }
     }
 }
 
@@ -1421,6 +1518,10 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (BOOL) isPlayingVideo {
     
+    if (failedToPlayMedia) {
+        return NO;
+    }
+    
     if ([ABCommons notNull:self.player]) {
         if (((self.player.rate != 0) && (self.player.error == nil)) || self.isLoadingVideo) {
             return YES;
@@ -1431,7 +1532,52 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (UIImage *) imageForPlayButton {
-    if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
+    if (failedToPlayMedia) {
+        static UIImage *playCircle = nil;
+        
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(ctx);
+        
+        CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
+        UIColor *color = self.themeColor;
+        
+        CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
+        CGContextFillEllipseInRect(ctx, rect);
+        
+        UIBezierPath *leftPath = [UIBezierPath bezierPath];
+        [leftPath moveToPoint:(CGPoint){18, 18}];
+        [leftPath addLineToPoint:(CGPoint){42, 42}];
+        [leftPath closePath];
+        
+        UIBezierPath *rightPath = [UIBezierPath bezierPath];
+        [rightPath moveToPoint:(CGPoint){18, 42}];
+        [rightPath addLineToPoint:(CGPoint){42, 18}];
+        [rightPath closePath];
+        
+        CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
+        CGContextSetFillColorWithColor(ctx, col);
+        CGContextSetStrokeColorWithColor(ctx, col);
+        CGContextSetLineWidth(ctx, 1.5f);
+        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
+        CGContextSetLineJoin(ctx, kCGLineJoinRound);
+        CGContextSetLineCap(ctx, kCGLineCapRound);
+        CGContextAddPath(ctx, rightPath.CGPath);
+        CGContextStrokePath(ctx);
+        CGContextAddPath(ctx, rightPath.CGPath);
+        CGContextFillPath(ctx);
+        CGContextAddPath(ctx, leftPath.CGPath);
+        CGContextStrokePath(ctx);
+        CGContextAddPath(ctx, leftPath.CGPath);
+        CGContextFillPath(ctx);
+        
+        CGContextRestoreGState(ctx);
+        playCircle = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return playCircle;
+    }
+    else if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
         return self.customPlayButton;
     }
     else if ([ABCommons notNull:self.customMusicButton] && [ABCommons notNull:self.audioURL]) {
