@@ -205,6 +205,9 @@ extern const CGFloat ABBufferTabBar;
 /// Custom image can be set for the play button (music)
 @property (strong, nonatomic) UIImage *customMusicButton;
 
+/// Custom image can be set for when media fails to play
+@property (strong, nonatomic) UIImage *customFailedButton;
+
 /// Play button imageView which shows in the center of the video, notifies the user that a video can be played
 @property (strong, nonatomic) UIImageView *videoIndicator;
 

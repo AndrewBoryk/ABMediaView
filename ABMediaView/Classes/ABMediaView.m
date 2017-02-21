@@ -1533,49 +1533,54 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (UIImage *) imageForPlayButton {
     if (failedToPlayMedia) {
-        static UIImage *playCircle = nil;
-        
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
-        CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSaveGState(ctx);
-        
-        CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
-        UIColor *color = self.themeColor;
-        
-        CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
-        CGContextFillEllipseInRect(ctx, rect);
-        
-        UIBezierPath *leftPath = [UIBezierPath bezierPath];
-        [leftPath moveToPoint:(CGPoint){18, 18}];
-        [leftPath addLineToPoint:(CGPoint){42, 42}];
-        [leftPath closePath];
-        
-        UIBezierPath *rightPath = [UIBezierPath bezierPath];
-        [rightPath moveToPoint:(CGPoint){18, 42}];
-        [rightPath addLineToPoint:(CGPoint){42, 18}];
-        [rightPath closePath];
-        
-        CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
-        CGContextSetFillColorWithColor(ctx, col);
-        CGContextSetStrokeColorWithColor(ctx, col);
-        CGContextSetLineWidth(ctx, 1.5f);
-        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
-        CGContextSetLineJoin(ctx, kCGLineJoinRound);
-        CGContextSetLineCap(ctx, kCGLineCapRound);
-        CGContextAddPath(ctx, rightPath.CGPath);
-        CGContextStrokePath(ctx);
-        CGContextAddPath(ctx, rightPath.CGPath);
-        CGContextFillPath(ctx);
-        CGContextAddPath(ctx, leftPath.CGPath);
-        CGContextStrokePath(ctx);
-        CGContextAddPath(ctx, leftPath.CGPath);
-        CGContextFillPath(ctx);
-        
-        CGContextRestoreGState(ctx);
-        playCircle = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        return playCircle;
+        if ([ABCommons notNull:self.customFailedButton]) {
+            return self.customFailedButton;
+        }
+        else {
+            static UIImage *playCircle = nil;
+            
+            UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
+            CGContextRef ctx = UIGraphicsGetCurrentContext();
+            CGContextSaveGState(ctx);
+            
+            CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
+            UIColor *color = self.themeColor;
+            
+            CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
+            CGContextFillEllipseInRect(ctx, rect);
+            
+            UIBezierPath *leftPath = [UIBezierPath bezierPath];
+            [leftPath moveToPoint:(CGPoint){18, 18}];
+            [leftPath addLineToPoint:(CGPoint){42, 42}];
+            [leftPath closePath];
+            
+            UIBezierPath *rightPath = [UIBezierPath bezierPath];
+            [rightPath moveToPoint:(CGPoint){18, 42}];
+            [rightPath addLineToPoint:(CGPoint){42, 18}];
+            [rightPath closePath];
+            
+            CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
+            CGContextSetFillColorWithColor(ctx, col);
+            CGContextSetStrokeColorWithColor(ctx, col);
+            CGContextSetLineWidth(ctx, 1.5f);
+            CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
+            CGContextSetLineJoin(ctx, kCGLineJoinRound);
+            CGContextSetLineCap(ctx, kCGLineCapRound);
+            CGContextAddPath(ctx, rightPath.CGPath);
+            CGContextStrokePath(ctx);
+            CGContextAddPath(ctx, rightPath.CGPath);
+            CGContextFillPath(ctx);
+            CGContextAddPath(ctx, leftPath.CGPath);
+            CGContextStrokePath(ctx);
+            CGContextAddPath(ctx, leftPath.CGPath);
+            CGContextFillPath(ctx);
+            
+            CGContextRestoreGState(ctx);
+            playCircle = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            return playCircle;
+        }
     }
     else if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
         return self.customPlayButton;
