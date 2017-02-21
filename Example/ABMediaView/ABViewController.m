@@ -31,7 +31,7 @@
     [super viewDidLoad];
     
     // Clear all of the directory of cached items
-    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+//    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
     
     // Clear the video directory of cached items
 //    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];
@@ -317,7 +317,7 @@
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *)image {
-    NSLog(@"Did set Image: %@", image);
+//    NSLog(@"Did set Image: %@", image);
 }
 
 - (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView {
@@ -350,7 +350,7 @@
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image {
-    NSLog(@"Did download Image: %@", image);
+//    NSLog(@"Did download Image: %@", image);
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadVideo:(NSString *)video {
@@ -358,7 +358,7 @@
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif {
-    NSLog(@"Did download Gif: %@", gif);
+//    NSLog(@"Did download Gif: %@", gif);
 }
 
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {

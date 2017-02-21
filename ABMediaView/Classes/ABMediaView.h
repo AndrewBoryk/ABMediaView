@@ -139,6 +139,9 @@ extern const CGFloat ABBufferTabBar;
 /// Gif cached after loading
 @property (strong, nonatomic) UIImage *gifCache;
 
+/// If all media is sourced from the same location, then the ABCacheManager will search the Directory for files with the same name when getting cached objects, since they all have the same remote location
+@property (nonatomic) BOOL allMediaFromSameLocation;
+
 /// Download video and audio before playing
 @property (nonatomic) BOOL shouldPreloadVideoAndAudio;
 

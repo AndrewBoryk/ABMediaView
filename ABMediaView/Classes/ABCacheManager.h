@@ -76,6 +76,9 @@ typedef NS_ENUM(NSInteger, CacheType) {
 /// Determines whether media should be cached when downloaded
 @property (nonatomic) BOOL cacheMediaWhenDownloaded;
 
+/// If all media is sourced from the same location, then the ABCacheManager will search the Directory for files with the same name when getting cache (only applies to Audio and Video)
+@property (nonatomic) BOOL isAllMediaFromSameLocation;
+
 /// Shared Manager for Media Cache
 + (id)sharedManager;
 

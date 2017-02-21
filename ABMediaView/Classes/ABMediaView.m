@@ -130,10 +130,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setFullscreen:YES];
         self.imageCache = mediaView.imageCache;
         [self setImageURL:mediaView.imageURL];
-        self.videoCache = mediaView.videoCache;
         [self setVideoURL:mediaView.videoURL];
         [self setAudioURL:mediaView.audioURL];
-        [self setAudioCache:mediaView.audioCache];
         [self setCustomPlayButton:mediaView.customPlayButton];
         [self setCustomMusicButton:mediaView.customMusicButton];
         
@@ -897,16 +895,10 @@ const CGFloat ABBufferTabBar = 49.0f;
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
         }
         
-        NSString *filePath = [ABCacheManager getCache:VideoCache objectForKey:self.videoURL];
+        NSURL *filePath = [ABCacheManager getCache:VideoCache objectForKey:self.videoURL];
         if ([ABCommons notNull:filePath]) {
-            self.videoURL = filePath;
+            self.videoCache = filePath;
             AVURLAsset *cachedVideo = [AVURLAsset assetWithURL:self.videoCache];
-            if ([ABCommons notNull:cachedVideo]) {
-                vidAsset = cachedVideo;
-            }
-        }
-        else if ([ABCommons notNull:self.videoCache]) {
-            AVURLAsset *cachedVideo = [AVURLAsset URLAssetWithURL:self.videoCache options:nil];
             if ([ABCommons notNull:cachedVideo]) {
                 vidAsset = cachedVideo;
             }
@@ -1015,16 +1007,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         AVURLAsset *audAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioURL] options:nil];
         
-        NSString *filePath = [ABCacheManager getCache:AudioCache objectForKey:self.audioURL];
+        NSURL *filePath = [ABCacheManager getCache:AudioCache objectForKey:self.audioURL];
         if ([ABCommons notNull:filePath]) {
             self.audioCache = filePath;
             AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:self.audioCache options:nil];
-            if ([ABCommons notNull:cachedAudio]) {
-                audAsset = cachedAudio;
-            }
-        }
-        else if ([ABCommons notNull:self.audioCache]) {
-            AVURLAsset *cachedAudio = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.audioCache] options:nil];
             if ([ABCommons notNull:cachedAudio]) {
                 audAsset = cachedAudio;
             }
@@ -3070,24 +3056,21 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) preloadVideo {
     if ([ABCommons notNull:self.videoURL]) {
-        [ABCacheManager loadVideo:self.videoURL completion:^(NSURL *videoPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:videoPath]) {
-                self.videoCache = videoPath;
-            }
-        }];
+        [ABCacheManager loadVideo:self.videoURL completion:nil];
     }
 }
 
 - (void) preloadAudio {
     if ([ABCommons notNull:self.audioURL]) {
-        [ABCacheManager loadAudio:self.audioURL completion:^(NSURL *audioPath, NSString *key, NSError *error) {
-            if ([ABCommons notNull:audioPath]) {
-                self.audioCache = audioPath;
-            }
-        }];
+        [ABCacheManager loadAudio:self.audioURL completion:nil];
     }
 }
 
+- (void) setAllMediaFromSameLocation:(BOOL)allMediaFromSameLocation {
+    _allMediaFromSameLocation = allMediaFromSameLocation;
+    
+    [[ABCacheManager sharedManager] setIsAllMediaFromSameLocation:YES];
+}
 @end
 
 
