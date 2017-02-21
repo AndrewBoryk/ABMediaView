@@ -397,8 +397,6 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
                                 
-                                NSLog(@"File Path: %@", filePath);
-                                
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     NSError * error = nil;
@@ -447,7 +445,6 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     for (NSString *string in array) {
         NSString *fullPath = [path stringByAppendingPathComponent:string];
         
-        NSLog(@"Full path %@", fullPath);
         /// Make sure not to remove realm file
         [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
         

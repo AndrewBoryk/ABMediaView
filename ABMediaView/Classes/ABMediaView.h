@@ -326,6 +326,8 @@ extern const CGFloat ABBufferTabBar;
 /// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via NSData
 - (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andPreviewGifData:(NSData *) previewGifData;
 
+/// Download the video associated with this ABMediaView
+- (void) preloadVideo;
 
 /// Set the url where the audio can be downloaded from, as well as the url where the thumbnail image can be found
 - (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL;
@@ -338,6 +340,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Set the url where the audio can be downloaded from, as well as the thumbnail image can be found
 - (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (UIImage *)thumbnail;
+
+/// Download the audio associated with this ABMediaView
+- (void) preloadAudio;
 
 /// Loads the video, saves to disk, and decides whether to play the video
 - (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion;
