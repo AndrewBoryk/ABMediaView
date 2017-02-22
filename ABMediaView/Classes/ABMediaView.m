@@ -1273,8 +1273,32 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) exportAssetURL:(NSString *)urlString withType:(CacheType)type {
     
+    NSString *path = [[NSURL URLWithString:urlString] path];
+    NSString *extension = [path pathExtension];
+    
+    if (type == AudioCache) {
+//        if (!([extension isEqualToString:@"m4a"] || [extension isEqualToString:@"mov"])) {
+            return;
+//        }
+    }
+    
     if ([ABCommons isNull:[ABCacheManager getCache:type objectForKey:urlString]]) {
-        AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetHighestQuality];
+        AVAssetExportSession *exporter;
+        
+        if (type == VideoCache) {
+            exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetHighestQuality];
+        }
+        else if (type == AudioCache) {
+            exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetAppleM4A];
+            
+            // get the first audio track
+            NSArray *tracks = [self.player.currentItem.asset tracksWithMediaType:AVMediaTypeAudio];
+            if ([tracks count] == 0) return;
+            
+            AVAssetTrack *track = [tracks objectAtIndex:0];
+        }
+        
+//        NSLog(@"export.supportedFileTypes : %@",exporter.supportedFileTypes);
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -1295,35 +1319,60 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
         
-        NSError *error;
-        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-            [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-        }
         
         exporter.outputURL = [NSURL fileURLWithPath:filePath];
-        exporter.outputFileType = AVFileTypeMPEG4;
+        exporter.shouldOptimizeForNetworkUse = YES;
         
-        [exporter exportAsynchronouslyWithCompletionHandler:^{
-            switch ([exporter status]) {
-                case AVAssetExportSessionStatusFailed:
-                    NSLog(@"Export failed: %@", [[exporter error] localizedDescription]);
-                    NSLog(@"%@", [[exporter error] localizedFailureReason]);
-                    NSLog(@"%@", [[exporter error] localizedRecoveryOptions]);
-                    NSLog(@"%@", [[exporter error] localizedRecoverySuggestion]);
-                    break;
-                case AVAssetExportSessionStatusCancelled:
-                    NSLog(@"Export canceled");
-                    break;
-                default:
-                    NSLog(@"Export succeded");
-                    if ([ABCommons notNull:exporter.outputURL]) {
-                        [ABCacheManager setCache:type object:exporter.outputURL forKey:urlString];
-                    }
-                    
-                    break;
+        if ([ABCommons notNull:exporter.outputURL]) {
+            NSString *path = [exporter.outputURL path];
+            NSString *extension = [path pathExtension];
+            
+            if (type == VideoCache) {
+                exporter.outputFileType = AVFileTypeMPEG4;
+            }
+            else if (type == AudioCache) {
+                exporter.outputFileType = AVFileTypeAppleM4A;
+                
+                if ([extension isEqualToString:@"mov"]) {
+                    filePath = [filePath stringByAppendingString:@"m4a"];
+                    exporter.outputURL = [NSURL fileURLWithPath:filePath];
+                }
+                else if (![extension isEqualToString:@"m4a"]) {
+                    return;
+                }
+                
             }
             
-        }];
+            NSError *error;
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+            }
+            
+            [exporter exportAsynchronouslyWithCompletionHandler:^{
+                NSLog(@"Output URL: %@", exporter.outputURL);
+                switch ([exporter status]) {
+                    case AVAssetExportSessionStatusFailed:
+                        
+                        NSLog(@"Export failed: %@", [[exporter error] localizedDescription]);
+                        NSLog(@"%@", [[exporter error] localizedFailureReason]);
+                        NSLog(@"Full: %@", [exporter error]);
+                        NSLog(@"%@", [[exporter error] localizedRecoverySuggestion]);
+                        break;
+                    case AVAssetExportSessionStatusCancelled:
+                        NSLog(@"Export canceled");
+                        break;
+                    default:
+                        NSLog(@"Export succeded");
+                        if ([ABCommons notNull:exporter.outputURL]) {
+                            [ABCacheManager setCache:type object:exporter.outputURL forKey:urlString];
+                        }
+                        
+                        break;
+                }
+                
+            }];
+        }
+        
     }
     
     
