@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     VideoDirectoryItems,
     AudioDirectoryItems,
     AllDirectoryItems,
+    TempDirectoryItems,
 };
 
 + (id)sharedManager {
@@ -460,6 +461,9 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     else if (type == AudioDirectoryItems) {
         path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Audio/"];
         [[ABCacheManager sharedManager] resetCache: AudioCache];
+    }
+    else if (type == TempDirectoryItems) {
+        path = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp/"];
     }
     else {
         [[ABCacheManager sharedManager] resetCache: VideoCache];

@@ -1272,109 +1272,120 @@ const CGFloat ABBufferTabBar = 49.0f;
 }
 
 - (void) exportAssetURL:(NSString *)urlString withType:(CacheType)type {
-    
-    NSString *path = [[NSURL URLWithString:urlString] path];
-    NSString *extension = [path pathExtension];
-    
+
     if (type == AudioCache) {
-//        if (!([extension isEqualToString:@"m4a"] || [extension isEqualToString:@"mov"])) {
-            return;
-//        }
+//        AVURLAsset * asset = self.player.currentItem.asset;
+//        AVAssetExportSession * exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
+//        exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//        NSString *documentsDirectory = [paths objectAtIndex:0];
+//        
+//        NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
+//        
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+//            [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil];
+//        
+//        NSString *uniqueFileName = urlString.lastPathComponent;
+//        
+//        NSString *filePath = [NSString stringWithFormat:@"%@/%@.mov", directoryPath, [uniqueFileName stringByDeletingPathExtension]];
+        
+//        NSURL *outputURL = [NSURL fileURLWithPath:filePath];
+//        exportSession.outputURL = [NSURL fileURLWithPath:filePath];
+//        exportSession.metadata = asset.metadata;
+//        exportSession.shouldOptimizeForNetworkUse = YES;
+//        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+//            NSLog(@"Output URL %@", exportSession.outputURL);
+//            
+//            if (exportSession.status == AVAssetExportSessionStatusCompleted)
+//            {
+//                NSLog(@"AV export succeeded.");
+//            }
+//            else if (exportSession.status == AVAssetExportSessionStatusCancelled)
+//            {
+//                NSLog(@"AV export cancelled.");
+//            }
+//            else
+//            {
+//                NSLog(@"AV export failed with error: %@ (%ld)", exportSession.error, (long)exportSession.error.code);
+//            }
+//        }];
     }
-    
-    if ([ABCommons isNull:[ABCacheManager getCache:type objectForKey:urlString]]) {
-        AVAssetExportSession *exporter;
-        
-        if (type == VideoCache) {
-            exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetHighestQuality];
-        }
-        else if (type == AudioCache) {
-            exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetAppleM4A];
-            
-            // get the first audio track
-            NSArray *tracks = [self.player.currentItem.asset tracksWithMediaType:AVMediaTypeAudio];
-            if ([tracks count] == 0) return;
-            
-            AVAssetTrack *track = [tracks objectAtIndex:0];
-        }
-        
-//        NSLog(@"export.supportedFileTypes : %@",exporter.supportedFileTypes);
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        
-        NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/", documentsDirectory];
-        
-        if (type == VideoCache) {
-            directoryPath = [directoryPath stringByAppendingString:@"Video"];
-        }
-        else if (type == AudioCache) {
-            directoryPath = [directoryPath stringByAppendingString:@"Audio"];
-        }
-        
-        if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
-            [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil];
-        
-        NSString *uniqueFileName = urlString.lastPathComponent;
-        
-        NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
-        
-        
-        exporter.outputURL = [NSURL fileURLWithPath:filePath];
-        exporter.shouldOptimizeForNetworkUse = YES;
-        
-        if ([ABCommons notNull:exporter.outputURL]) {
-            NSString *path = [exporter.outputURL path];
-            NSString *extension = [path pathExtension];
+    else if (type == VideoCache) {
+        if ([ABCommons isNull:[ABCacheManager getCache:type objectForKey:urlString]]) {
+            AVAssetExportSession *exporter;
             
             if (type == VideoCache) {
-                exporter.outputFileType = AVFileTypeMPEG4;
+                exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetHighestQuality];
             }
             else if (type == AudioCache) {
-                exporter.outputFileType = AVFileTypeAppleM4A;
+                exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetAppleM4A];
                 
-                if ([extension isEqualToString:@"mov"]) {
-                    filePath = [filePath stringByAppendingString:@"m4a"];
-                    exporter.outputURL = [NSURL fileURLWithPath:filePath];
-                }
-                else if (![extension isEqualToString:@"m4a"]) {
-                    return;
-                }
+                // get the first audio track
+                NSArray *tracks = [self.player.currentItem.asset tracksWithMediaType:AVMediaTypeAudio];
+                if ([tracks count] == 0) return;
                 
+                AVAssetTrack *track = [tracks objectAtIndex:0];
             }
             
-            NSError *error;
-            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-                [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+            //        NSLog(@"export.supportedFileTypes : %@",exporter.supportedFileTypes);
+            
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+            NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/", documentsDirectory];
+            
+            if (type == VideoCache) {
+                directoryPath = [directoryPath stringByAppendingString:@"Video"];
+            }
+            else if (type == AudioCache) {
+                directoryPath = [directoryPath stringByAppendingString:@"Audio"];
             }
             
-            [exporter exportAsynchronouslyWithCompletionHandler:^{
-                NSLog(@"Output URL: %@", exporter.outputURL);
-                switch ([exporter status]) {
-                    case AVAssetExportSessionStatusFailed:
-                        
-                        NSLog(@"Export failed: %@", [[exporter error] localizedDescription]);
-                        NSLog(@"%@", [[exporter error] localizedFailureReason]);
-                        NSLog(@"Full: %@", [exporter error]);
-                        NSLog(@"%@", [[exporter error] localizedRecoverySuggestion]);
-                        break;
-                    case AVAssetExportSessionStatusCancelled:
-                        NSLog(@"Export canceled");
-                        break;
-                    default:
-                        NSLog(@"Export succeded");
-                        if ([ABCommons notNull:exporter.outputURL]) {
-                            [ABCacheManager setCache:type object:exporter.outputURL forKey:urlString];
-                        }
-                        
-                        break;
+            if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil];
+            
+            NSString *uniqueFileName = urlString.lastPathComponent;
+            
+            NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+            
+            exporter.outputURL = [NSURL fileURLWithPath:filePath];
+            exporter.shouldOptimizeForNetworkUse = YES;
+            exporter.outputFileType = AVFileTypeMPEG4;
+            
+            if ([ABCommons notNull:exporter.outputURL]) {
+                
+                NSError *error;
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
                 }
                 
-            }];
+                [exporter exportAsynchronouslyWithCompletionHandler:^{
+                    NSLog(@"Output URL: %@", exporter.outputURL);
+                    switch ([exporter status]) {
+                        case AVAssetExportSessionStatusFailed:
+                            
+                            NSLog(@"Export failed: %@", [[exporter error] localizedDescription]);
+                            NSLog(@"%@", [[exporter error] localizedFailureReason]);
+                            NSLog(@"Full: %@", [exporter error]);
+                            NSLog(@"%@", [[exporter error] localizedRecoverySuggestion]);
+                            break;
+                        case AVAssetExportSessionStatusCancelled:
+                            NSLog(@"Export canceled");
+                            break;
+                        default:
+                            NSLog(@"Export succeded");
+                            if ([ABCommons notNull:exporter.outputURL]) {
+                                [ABCacheManager setCache:type object:exporter.outputURL forKey:urlString];
+                            }
+                            
+                            break;
+                    }
+                    
+                }];
+            }
+            
         }
-        
     }
-    
     
 }
 

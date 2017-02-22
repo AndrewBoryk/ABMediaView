@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     VideoDirectoryItems,
     AudioDirectoryItems,
     AllDirectoryItems,
+    TempDirectoryItems,
 };
 
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
@@ -28,6 +29,7 @@ typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
 extern const NSNotificationName ABMediaViewWillRotateNotification;
 extern const NSNotificationName ABMediaViewDidRotateNotification;
+
 
 /// Preset sizes for the ABMediaView minimized view
 extern const CGFloat ABMediaViewRatioPresetPortrait;
@@ -75,6 +77,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Shared Manager, which keeps track of mediaViews
 + (id)sharedManager;
+
+/// Saving audio files with this reader
+@property (strong, nonatomic) AVAssetReader *reader;
 
 /// Queue which holds an array of mediaViews to be displayed
 @property (strong, nonatomic) NSMutableArray *mediaViewQueue;

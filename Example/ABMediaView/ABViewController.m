@@ -30,8 +30,11 @@
 {
     [super viewDidLoad];
     
-    // Clear all of the directory of cached items
+    // Clear all of the documents directory of cached items
     [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+    
+    // Clear all of the temp directory of cached items
+    [ABMediaView clearABMediaDirectory:TempDirectoryItems];
     
     // Clear the video directory of cached items
 //    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];
@@ -90,7 +93,14 @@
     // [self.mediaView setGifData:gifData];
     
     // Set the url for the video that will be shown in the mediaView, it will download it and set it to the view. In addition, set the URL of the thumbnail for the video. Added functionality for preview GIFs when the user presses and holds.
-    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andPreviewGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
+    // Test for mp4: http://clips.vorwaerts-gmbh.de/VfE_html5.mp4
+    // Test for mpg: http://techslides.com/demos/samples/sample.mpg NOT SUPPORTED
+    // Test for mov: http://techslides.com/demos/samples/sample.mov
+    // Test for swf: http://techslides.com/demos/samples/sample.swf NOT SUPPORTED
+//    NSLog(@"Supported file types: %@", [AVURLAsset audiovisualTypes]);
+//    NSLog(@"Supported MIME types: %@", [AVURLAsset audiovisualMIMETypes]);
+    
+    [self.mediaView setVideoURL:@"http://techslides.com/demos/samples/sample.mov" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andPreviewGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
     
 //    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
@@ -161,6 +171,8 @@
     
     // Tile and details can be set for a mediaView, which displays labels on the top of the view
     [mediaView setTitle:@"\"The Take Over, The Breaks Over\"" withDetails:@"Fall Out Boy"];
+    
+    [mediaView preloadAudio];
     
     // Present the mediaView, dismiss any other mediaView that is showing
     [[ABMediaView sharedManager] presentMediaView:mediaView];
