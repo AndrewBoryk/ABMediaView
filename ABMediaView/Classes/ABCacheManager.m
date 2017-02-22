@@ -643,16 +643,10 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     if ((type == VideoCache || type == AudioCache) && [[ABCacheManager sharedManager] isAllMediaFromSameLocation]) {
         if ([ABCommons notNull:key]) {
             if (type == VideoCache) {
-                NSURL *url = [NSURL URLWithString:key];
-                
-                return [self directory:VideoDirectoryItems containsFile:url.lastPathComponent];
-
-                
+                return [self directory:VideoDirectoryItems containsFile:key.lastPathComponent];
             }
             else if (type == AudioCache) {
-                NSURL *url = [NSURL URLWithString:key];
-                
-                return [self directory:AudioDirectoryItems containsFile:url.lastPathComponent];
+                return [self directory:AudioDirectoryItems containsFile:key.lastPathComponent];
             }
         }
         

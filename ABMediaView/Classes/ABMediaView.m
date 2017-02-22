@@ -900,11 +900,16 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         [self removeObservers];
         
-        AVURLAsset *vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+        AVURLAsset *vidAsset;
         
         if (self.fileFromDirectory) {
-            vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL isDirectory:YES] options:nil];
+            vidAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:self.videoURL] options:nil];
         }
+        else {
+            vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
+        }
+        
+        [vidAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
         
         NSURL *filePath = [ABCacheManager getCache:VideoCache objectForKey:self.videoURL];
         if ([ABCommons notNull:filePath]) {
@@ -1153,11 +1158,6 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             [self layoutSubviews];
             
-//            [self updatePlayerFrame];
-//            [self.track updateBuffer];
-//            [self.track updateProgress];
-//            [self.track updateBarBackground];
-//            
             self.layer.cornerRadius = 0.0f;
             [self setBorderAlpha:0.0f];
             
@@ -1248,6 +1248,85 @@ const CGFloat ABBufferTabBar = 49.0f;
         AVPlayerItem *p = [notification object];
         [p seekToTime:kCMTimeZero];
     }
+    else {
+        [self.player pause];
+        AVPlayerItem *p = [notification object];
+        [p seekToTime:kCMTimeZero];
+    }
+    
+    [self cacheStreamedVideo];
+}
+
+- (void) cacheStreamedVideo {
+    if ([[ABMediaView sharedManager] shouldCacheMedia]) {
+        if ([ABCommons notNull:self.player.currentItem]) {
+            if ([ABCommons notNull:self.videoURL]) {
+                [self exportAssetURL:self.videoURL withType:VideoCache];
+            }
+            else if ([ABCommons notNull:self.audioURL]) {
+                [self exportAssetURL:self.audioURL withType:AudioCache];
+            }
+        }
+    }
+    
+}
+
+- (void) exportAssetURL:(NSString *)urlString withType:(CacheType)type {
+    
+    if ([ABCommons isNull:[ABCacheManager getCache:type objectForKey:urlString]]) {
+        AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetHighestQuality];
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/", documentsDirectory];
+        
+        if (type == VideoCache) {
+            directoryPath = [directoryPath stringByAppendingString:@"Video"];
+        }
+        else if (type == AudioCache) {
+            directoryPath = [directoryPath stringByAppendingString:@"Audio"];
+        }
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+            [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil];
+        
+        NSString *uniqueFileName = urlString.lastPathComponent;
+        
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+        
+        NSError *error;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+        }
+        
+        exporter.outputURL = [NSURL fileURLWithPath:filePath];
+        exporter.outputFileType = AVFileTypeMPEG4;
+        
+        [exporter exportAsynchronouslyWithCompletionHandler:^{
+            switch ([exporter status]) {
+                case AVAssetExportSessionStatusFailed:
+                    NSLog(@"Export failed: %@", [[exporter error] localizedDescription]);
+                    NSLog(@"%@", [[exporter error] localizedFailureReason]);
+                    NSLog(@"%@", [[exporter error] localizedRecoveryOptions]);
+                    NSLog(@"%@", [[exporter error] localizedRecoverySuggestion]);
+                    break;
+                case AVAssetExportSessionStatusCancelled:
+                    NSLog(@"Export canceled");
+                    break;
+                default:
+                    NSLog(@"Export succeded");
+                    if ([ABCommons notNull:exporter.outputURL]) {
+                        [ABCacheManager setCache:type object:exporter.outputURL forKey:urlString];
+                    }
+                    
+                    break;
+            }
+            
+        }];
+    }
+    
+    
 }
 
 - (void)loadVideoAnimate {
@@ -1363,9 +1442,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ([ABCommons notNull:keyPath]) {
-//        [self print:object tag:@"Object"];
-//        [self print:change tag:@"Change"];
-//        [self print:keyPath tag:@"Key"];
         if ([keyPath isEqualToString:@"currentItem.loadedTimeRanges"]) {
             
             if ([ABCommons notNull:self.player]) {
@@ -1389,12 +1465,15 @@ const CGFloat ABBufferTabBar = 49.0f;
                             bufferTime = CMTimeGetSeconds(range.duration);
                         }
                     }
+                    
                     float duration = CMTimeGetSeconds(self.player.currentItem.duration);
                     
                     [self.track setBuffer:[NSNumber numberWithFloat:bufferTime] withDuration:duration];
                     
-                    //
-                    //                    [self.track setProgress: @0 withDuration: position];
+                    if (bufferTime == duration) {
+                        [self cacheStreamedVideo];
+                    }
+                    
                     if (self.showTrack) {
                         self.track.hidden = NO;
                     }
@@ -3222,6 +3301,11 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     [[ABCacheManager sharedManager] setIsAllMediaFromSameLocation:YES];
 }
+
+@end
+
+@interface UIViewController () <AVAssetResourceLoaderDelegate>
+
 @end
 
 
