@@ -181,6 +181,7 @@
 - (IBAction)pickAudioAction:(id)sender {
     MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic];
     mediaPicker.delegate = self;
+    mediaPicker.showsCloudItems = NO;
     mediaPicker.allowsPickingMultipleItems = NO; // this is the default
     [self presentViewController:mediaPicker animated:YES completion:nil];
 }
@@ -265,23 +266,23 @@
 }
 
 - (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView {
-    NSLog(@"MediaView did play video");
+//    NSLog(@"MediaView did play video");
 }
 
 - (void) mediaViewDidFailToPlayVideo:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did fail to play video");
+//    NSLog(@"MediaView did fail to play video");
 }
 
 - (void) mediaViewDidPauseVideo:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did pause video");
+//    NSLog(@"MediaView did pause video");
 }
 
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will present");
+//    NSLog(@"MediaView will present");
 }
 
 - (void) mediaViewDidPresent:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will present");
+//    NSLog(@"MediaView will present");
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -290,7 +291,7 @@
 }
 
 - (void) mediaViewWillDismiss:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will dismiss");
+//    NSLog(@"MediaView will dismiss");
     
     // Disable rotation when the ABMediaView is being dismissed. For this application, we want the ABMediaView to rotate when in fullscreen, in order to watch landscape videos. However, our app's interface in portrait, so when leaving the ABMediaView, we want rotation to be restricted
     [self restrictRotation:YES];
@@ -300,26 +301,26 @@
 }
 
 - (void) mediaViewDidDismiss:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did dismiss");
+//    NSLog(@"MediaView did dismiss");
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will minimize to a certain value");
+//    NSLog(@"MediaView will minimize to a certain value");
 }
 
 - (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did minimize to a certain value");
+//    NSLog(@"MediaView did minimize to a certain value");
 }
 
 - (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
-    NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
+//    NSLog(@"MediaView will snap to minimized mode? %i", isMinimized);
     
     [self restrictRotation:isMinimized];
 }
 
 - (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized {
-    NSLog(@"MediaView snapped to minimized mode? %i", isMinimized);
+//    NSLog(@"MediaView snapped to minimized mode? %i", isMinimized);
     
     if (isMinimized) {
         if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {
@@ -338,21 +339,21 @@
 }
 
 - (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView {
-    NSLog(@"MediaView will change dismissing");
+//    NSLog(@"MediaView will change dismissing");
 }
 
 - (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView {
-    NSLog(@"MediaView did change dismissing");
+//    NSLog(@"MediaView did change dismissing");
 }
 
 - (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
-    NSLog(@"MediaView will end dismissing");
+//    NSLog(@"MediaView will end dismissing");
     
     [self restrictRotation:didDismiss];
 }
 
 - (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss {
-    NSLog(@"MediaView did end dismissing");
+//    NSLog(@"MediaView did end dismissing");
     
     if (didDismiss) {
         if ([[UIApplication sharedApplication] statusBarStyle] != UIStatusBarStyleDefault) {
@@ -371,7 +372,7 @@
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadVideo:(NSString *)video {
-    NSLog(@"Did download Video path: %@", video);
+//    NSLog(@"Did download Video path: %@", video);
 }
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif {
@@ -379,11 +380,11 @@
 }
 
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {
-    NSLog(@"Title label was selected");
+//    NSLog(@"Title label was selected");
 }
 
 - (void) handleDetailsSelectionInMediaView:(ABMediaView *)mediaView {
-    NSLog(@"Details label was selected");
+//    NSLog(@"Details label was selected");
 }
 
 - (void) mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {
@@ -394,7 +395,7 @@
         NSString *title = [item valueForProperty:MPMediaItemPropertyTitle];
         NSString *artist = [item valueForProperty:MPMediaItemPropertyArtist];
         
-        NSLog(@"MPMediaItemPropertyAssetURL %@", url);
+//        NSLog(@"MPMediaItemPropertyAssetURL %@", url);
         
         MPMediaItemArtwork *artWork = [item valueForProperty:MPMediaItemPropertyArtwork];
         
@@ -518,4 +519,5 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     return thumbnail;
 }
+
 @end
