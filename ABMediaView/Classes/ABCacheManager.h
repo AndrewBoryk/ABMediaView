@@ -82,17 +82,29 @@ typedef NS_ENUM(NSInteger, CacheType) {
 /// Remove the request from the queue
 - (void)removeFromQueue:(CacheType)type forKey:(NSString *)key;
 
-/// Load image and store in cache, or retrieve image from cache if already stored
+/// Load image and store in cache, or retrieve image from cache if already stored (by string)
 + (void)loadImage:(NSString *)urlString completion:(ImageDataBlock)completionBlock;
 
-/// Load video and store in cache, or retrieve video from cache if already stored
+/// Load image and store in cache, or retrieve image from cache if already stored
++ (void)loadImageURL:(NSURL *)url completion:(ImageDataBlock)completionBlock;
+
+/// Load video and store in cache, or retrieve video from cache if already stored (by string)
 + (void)loadVideo:(NSString *)urlString completion:(VideoDataBlock)completionBlock;
 
-/// Load audio and store in cache, or retrieve audio from cache if already stored
+/// Load video and store in cache, or retrieve video from cache if already stored
++ (void)loadVideoURL:(NSURL *)url completion:(VideoDataBlock)completionBlock;
+
+/// Load audio and store in cache, or retrieve audio from cache if already stored (by string)
 + (void)loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock;
 
-/// Load GIF and store in cache, or retrieve gif from cache if already stored
+/// Load audio and store in cache, or retrieve audio from cache if already stored
++ (void)loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock;
+
+/// Load GIF and store in cache, or retrieve gif from cache if already stored (by string)
 + (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock;
+
+/// Load GIF and store in cache, or retrieve gif from cache if already stored
++ (void)loadGIFURL:(NSURL *)url completion:(GIFDataBlock)completionBlock;
 
 /// Load GIF using data and store in cache, or retrieve gif from cache if already stored
 + (void)loadGIFData:(NSData *)data completion:(GIFDataBlock)completionBlock;

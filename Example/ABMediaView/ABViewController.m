@@ -419,6 +419,9 @@
         // Setting both the title and details displays two labels on the top of the mediaView
         [mediaView setTitle:title withDetails:artist];
         
+//        mediaView.fileFromDirectory = YES;
+        [mediaView preloadAudio];
+        
         // Present the mediaView, dismiss any other mediaView that is showing
         [[ABMediaView sharedManager] presentMediaView:mediaView];
         

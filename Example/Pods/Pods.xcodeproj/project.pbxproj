@@ -58,6 +58,7 @@
 		45567E671E596B44009DF236 /* ABCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCacheManager.m; sourceTree = "<group>"; };
 		4573B1431E5E9ABC00AAE751 /* ABTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABTrackView.h; sourceTree = "<group>"; };
 		4573B1441E5E9ABC00AAE751 /* ABTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTrackView.m; sourceTree = "<group>"; };
+		4573B1491E5EA4AF00AAE751 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
 		4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		4919760FC8F10ADB4D56AA2DA0A02B2A /* Pods-ABMediaView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -212,6 +213,7 @@
 		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4573B1491E5EA4AF00AAE751 /* CoreAudio.framework */,
 				7531C8F8DE19F1AA3C8A7AC97A91DC29 /* iOS */,
 			);
 			name = Frameworks;

@@ -3346,13 +3346,28 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) preloadVideo {
     if ([ABCommons notNull:self.videoURL]) {
-        [ABCacheManager loadVideo:self.videoURL completion:nil];
+        if (self.fileFromDirectory) {
+            [ABCacheManager loadVideoURL:[NSURL fileURLWithPath:self.videoURL] completion:nil];
+        }
+        else {
+            [ABCacheManager loadVideo:self.videoURL completion:nil];
+        }
+        
     }
 }
 
 - (void) preloadAudio {
     if ([ABCommons notNull:self.audioURL]) {
-        [ABCacheManager loadAudio:self.audioURL completion:nil];
+        if ([self.audioURL containsString:@"ipod-library://"]) {
+            [self loadMusicLibrary:self.audioURL completion:nil];
+        }
+        else if (self.fileFromDirectory) {
+            [ABCacheManager loadAudioURL:[NSURL fileURLWithPath:self.audioURL] completion:nil];
+        }
+        else {
+            [ABCacheManager loadAudio:self.audioURL completion:nil];
+        }
+        
     }
 }
 
@@ -3360,6 +3375,81 @@ const CGFloat ABBufferTabBar = 49.0f;
     _allMediaFromSameLocation = allMediaFromSameLocation;
     
     [[ABCacheManager sharedManager] setIsAllMediaFromSameLocation:YES];
+}
+
+- (void) loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = AudioCache;
+        
+        if ([ABCommons notNull:urlString]) {
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+            if ([ABCommons notNull: filePath]) {
+                [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                if(completionBlock) completionBlock(filePath, urlString, nil);
+            }
+            else {
+                
+                AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+                AVAssetExportSession *exporter = [[AVAssetExportSession alloc]
+                                                  initWithAsset: songAsset
+                                                  presetName: AVAssetExportPresetAppleM4A];
+                NSLog (@"created exporter. supportedFileTypes: %@", exporter.supportedFileTypes);
+                exporter.outputFileType = @"com.apple.m4a-audio";
+                
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                
+                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
+                
+                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
+                
+                NSString *uniqueFileName = urlString.lastPathComponent;
+                
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@.m4a", directoryPath, uniqueFileName];
+                
+                NSError *error;
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                }
+                
+                NSString *exportURL = [NSURL fileURLWithPath:filePath];
+                exporter.outputURL = exportURL;
+                
+                // do the export
+                [exporter exportAsynchronouslyWithCompletionHandler:^{
+                    int exportStatus = exporter.status;
+                    switch (exportStatus) {
+                        case AVAssetExportSessionStatusFailed: {
+                            // log error to text view
+                            NSError *exportError = exporter.error;
+                            NSLog (@"AVAssetExportSessionStatusFailed: %@",
+                                   exportError);
+                            break;
+                        }
+                        case AVAssetExportSessionStatusCompleted: {
+                            NSLog (@"AVAssetExportSessionStatusCompleted");
+                            break;
+                        }
+                        case AVAssetExportSessionStatusUnknown: {
+                            NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
+                        case AVAssetExportSessionStatusExporting: {
+                            NSLog (@"AVAssetExportSessionStatusExporting"); break;}
+                        case AVAssetExportSessionStatusCancelled: {
+                            NSLog (@"AVAssetExportSessionStatusCancelled"); break;}
+                        case AVAssetExportSessionStatusWaiting: {
+                            NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
+                        default: { NSLog (@"didn't get export status"); break;}
+                    }
+                }];
+            }
+            
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
 }
 
 @end

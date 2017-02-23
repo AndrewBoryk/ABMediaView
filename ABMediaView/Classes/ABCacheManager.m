@@ -180,13 +180,28 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
+
 + (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([ABCommons notNull:urlString]) {
+            NSURL *url = [NSURL URLWithString:urlString];
+            [ABCacheManager loadGIFURL:url completion:^(UIImage *gif, NSString *key, NSError *error) {
+                if(completionBlock) completionBlock(gif, key, error);
+            }];
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
+}
+
++ (void)loadGIFURL:(NSURL *)url completion:(GIFDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         CacheType type = GIFCache;
         
-        if ([ABCommons notNull:urlString]) {
+        if ([ABCommons notNull:url]) {
             
-            NSURL *url = [NSURL URLWithString:urlString];
+            NSString *urlString = url.absoluteString;
             
             UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: fileImage]) {
@@ -241,9 +256,23 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 
 + (void)loadImage:(NSString *)urlString completion:(ImageDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
-        CacheType type = ImageCache;
-        if ([ABCommons notBlank:urlString]) {
+        if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
+            [ABCacheManager loadImageURL:url completion:^(UIImage *image, NSString *key, NSError *error) {
+                if(completionBlock) completionBlock(image, key, error);
+            }];
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
+}
+
++ (void)loadImageURL:(NSURL *)url completion:(ImageDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = ImageCache;
+        if ([ABCommons notNull:url]) {
+            NSString *urlString = url.absoluteString;
             
             UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: fileImage]) {
@@ -291,12 +320,26 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 
 }
 
-+ (void)loadVideo:(NSString *)urlString completion:(VideoDataBlock)completionBlock {
++ (void) loadVideo:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([ABCommons notNull:urlString]) {
+            NSURL *url = [NSURL URLWithString:urlString];
+            [ABCacheManager loadVideoURL:url completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                if(completionBlock) completionBlock(videoPath, key, error);
+            }];
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
+}
+
++ (void)loadVideoURL:(NSURL *)url completion:(VideoDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         CacheType type = VideoCache;
         
-        if ([ABCommons notNull:urlString]) {
-            NSURL *url = [NSURL URLWithString:urlString];
+        if ([ABCommons notNull:url]) {
+            NSString *urlString = url.absoluteString;
             
             if ([ABCommons notNull:url]) {
                 NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
@@ -323,6 +366,11 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                     NSString *uniqueFileName = urlString.lastPathComponent;
                                     
                                     NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+                                    
+                                    NSError *error;
+                                    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                                        [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                                    }
                                     
                                     //saving is done on main thread
                                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -375,10 +423,25 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 
 + (void) loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
-        CacheType type = AudioCache;
-        NSURL *url = [NSURL URLWithString:urlString];
+        if ([ABCommons notNull:urlString]) {
+            NSURL *url = [NSURL URLWithString:urlString];
+            [ABCacheManager loadAudioURL:url completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                if(completionBlock) completionBlock(audioPath, key, error);
+            }];
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
         
-        if ([ABCommons notNull:urlString] && [ABCommons notNull:url]) {
+    });
+}
+
++ (void) loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = AudioCache;
+        
+        if ([ABCommons notNull:url]) {
+            NSString *urlString = url.absoluteString;
             NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: filePath]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
@@ -403,6 +466,11 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                 NSString *uniqueFileName = urlString.lastPathComponent;
                                 
                                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", directoryPath, uniqueFileName];
+                                
+                                NSError *error;
+                                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                                }
                                 
                                 //saving is done on main thread
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -444,6 +512,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         }
     });
 }
+
 
 + (void) clearDirectory:(NSInteger)type {
     NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/"];
