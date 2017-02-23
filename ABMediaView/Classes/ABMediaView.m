@@ -300,7 +300,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     swipeRecognizer.enabled = isFullscreen;
     
     if (![ABCommons notNull:self.track]) {
-        self.track = [[VideoTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
+        self.track = [[ABTrackView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60.0f)];
         self.track.translatesAutoresizingMaskIntoConstraints = NO;
         [self.track.progressView setBackgroundColor: self.themeColor];
         self.track.delegate = self;

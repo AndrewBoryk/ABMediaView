@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AVFoundation/AVFoundation.h>
 @class ABPlayer;
-#import "VideoTrackView.h"
+#import "ABTrackView.h"
 #import "UIImage+animatedGIF.h"
 
 /// Different types of directory items
@@ -42,7 +42,7 @@ extern const CGFloat ABBufferNavigationBar;
 extern const CGFloat ABBufferStatusAndNavigationBar;
 extern const CGFloat ABBufferTabBar;
 
-@interface ABMediaView : UIImageView <VideoTrackDelegate, UIGestureRecognizerDelegate> {
+@interface ABMediaView : UIImageView <ABTrackViewDelegate, UIGestureRecognizerDelegate> {
     /// Position of the swipe vertically
     CGFloat ySwipePosition;
     
@@ -115,7 +115,7 @@ extern const CGFloat ABBufferTabBar;
 - (void) setTitle:(NSString *)title withDetails:(NSString *)details;
 
 /// Track which shows the progress of the video being played
-@property (strong, nonatomic) VideoTrackView *track;
+@property (strong, nonatomic) ABTrackView *track;
 
 /// URL endpoint for image
 @property (strong, nonatomic) NSString *imageURL;

@@ -20,14 +20,14 @@
 		4531621A1E3E958200A069FC /* ABPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 453162181E3E958200A069FC /* ABPlayer.m */; };
 		45567E681E596B44009DF236 /* ABCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 45567E661E596B44009DF236 /* ABCacheManager.h */; };
 		45567E691E596B44009DF236 /* ABCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45567E671E596B44009DF236 /* ABCacheManager.m */; };
+		4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4573B1431E5E9ABC00AAE751 /* ABTrackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4573B1461E5E9ABC00AAE751 /* ABTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4573B1441E5E9ABC00AAE751 /* ABTrackView.m */; };
 		4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */ = {isa = PBXBuildFile; fileRef = 4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */; };
 		4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
 		5D53BCC2949DD8548383FACADBBAE863 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		7DDF517DBAD72F29544850EA073D0C83 /* Pods-ABMediaView_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F8F880349FE6ECF6AFA3E08C722368 /* Pods-ABMediaView_Example-dummy.m */; };
 		891A6829DA4F37A11EFA90E1B5DE049F /* ABMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */; };
-		896A7678C8E2F67FEC8DF43908D27DC2 /* VideoTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A023380458885D30A16E28353C60935 /* VideoTrackView.h */; };
-		9F4291863A44DD71D96EFBA38EA05E9F /* VideoTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */; };
 		D204C06016C1059C3CC2005DA9DB8DA1 /* Pods-ABMediaView_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 55733B9933C33F895B55373353749226 /* Pods-ABMediaView_Tests-dummy.m */; };
 		F4FE2DE830C3601029C9840EF4A985BA /* Pods-ABMediaView_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E19391C502C17A39AD7EAF5B195C75BC /* Pods-ABMediaView_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -56,6 +56,8 @@
 		453162181E3E958200A069FC /* ABPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPlayer.m; sourceTree = "<group>"; };
 		45567E661E596B44009DF236 /* ABCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABCacheManager.h; sourceTree = "<group>"; };
 		45567E671E596B44009DF236 /* ABCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABCacheManager.m; sourceTree = "<group>"; };
+		4573B1431E5E9ABC00AAE751 /* ABTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABTrackView.h; sourceTree = "<group>"; };
+		4573B1441E5E9ABC00AAE751 /* ABTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTrackView.m; sourceTree = "<group>"; };
 		4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		4919760FC8F10ADB4D56AA2DA0A02B2A /* Pods-ABMediaView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -72,12 +74,10 @@
 		876E0EC985A204AF6CE8DB31949EF1EA /* ABMediaView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ABMediaView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		982359C74882CC0544D159916F1D2628 /* Pods-ABMediaView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		9A023380458885D30A16E28353C60935 /* VideoTrackView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = VideoTrackView.h; sourceTree = "<group>"; };
 		A45C42D1F1571B191EAE8817C73102EC /* Pods-ABMediaView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A5DA0BF1F7247E87A4DA103F56D778B7 /* Pods-ABMediaView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ABMediaView_Tests-umbrella.h"; sourceTree = "<group>"; };
 		B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ABMediaView-umbrella.h"; sourceTree = "<group>"; };
-		B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = VideoTrackView.m; sourceTree = "<group>"; };
 		B962F5F9DCA1D1F3FDC6C16F28B63A44 /* Pods-ABMediaView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-ABMediaView_Example.modulemap"; sourceTree = "<group>"; };
 		BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ABMediaView-dummy.m"; sourceTree = "<group>"; };
 		BC528D0F0F3432D8A98955B2ACC0736C /* Pods-ABMediaView_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ABMediaView_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -199,8 +199,8 @@
 				453162181E3E958200A069FC /* ABPlayer.m */,
 				4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */,
 				453162101E3E8D0F00A069FC /* ABVolumeManager.m */,
-				9A023380458885D30A16E28353C60935 /* VideoTrackView.h */,
-				B75B4F01966EEC79DB799D8CFFD586A4 /* VideoTrackView.m */,
+				4573B1431E5E9ABC00AAE751 /* ABTrackView.h */,
+				4573B1441E5E9ABC00AAE751 /* ABTrackView.m */,
 				45567E661E596B44009DF236 /* ABCacheManager.h */,
 				45567E671E596B44009DF236 /* ABCacheManager.m */,
 				4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */,
@@ -287,8 +287,8 @@
 				45567E681E596B44009DF236 /* ABCacheManager.h in Headers */,
 				451306D61E428935004FA6D3 /* ABCommons.h in Headers */,
 				337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */,
+				4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */,
 				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
-				896A7678C8E2F67FEC8DF43908D27DC2 /* VideoTrackView.h in Headers */,
 				453162191E3E958200A069FC /* ABPlayer.h in Headers */,
 				453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */,
 				4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */,
@@ -400,13 +400,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				453162121E3E8D0F00A069FC /* ABVolumeManager.m in Sources */,
+				4573B1461E5E9ABC00AAE751 /* ABTrackView.m in Sources */,
 				4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */,
 				891A6829DA4F37A11EFA90E1B5DE049F /* ABMediaView.m in Sources */,
 				4531621A1E3E958200A069FC /* ABPlayer.m in Sources */,
 				451306D71E428935004FA6D3 /* ABCommons.m in Sources */,
 				45567E691E596B44009DF236 /* ABCacheManager.m in Sources */,
 				4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */,
-				9F4291863A44DD71D96EFBA38EA05E9F /* VideoTrackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
