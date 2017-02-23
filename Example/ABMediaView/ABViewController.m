@@ -31,10 +31,10 @@
     [super viewDidLoad];
     
     // Clear all of the documents directory of cached items
-    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
+//    [ABMediaView clearABMediaDirectory:AllDirectoryItems];
     
     // Clear all of the temp directory of cached items
-    [ABMediaView clearABMediaDirectory:TempDirectoryItems];
+//    [ABMediaView clearABMediaDirectory:TempDirectoryItems];
     
     // Clear the video directory of cached items
 //    [ABMediaView clearABMediaDirectory:VideoDirectoryItems];

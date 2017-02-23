@@ -3383,13 +3383,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
-            NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
-            if ([ABCommons notNull: filePath]) {
+            NSString *filePathTest = [ABCacheManager getCache:type objectForKey:urlString];
+            if ([ABCommons notNull: filePathTest]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                if(completionBlock) completionBlock(filePath, urlString, nil);
+                if(completionBlock) completionBlock(filePathTest, urlString, nil);
             }
             else {
                 
+                [[ABCacheManager sharedManager] addQueue:AudioCache object:urlString forKey:urlString];
                 AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:url options:nil];
                 AVAssetExportSession *exporter = [[AVAssetExportSession alloc]
                                                   initWithAsset: songAsset
@@ -3419,6 +3420,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 
                 // do the export
                 [exporter exportAsynchronouslyWithCompletionHandler:^{
+                    [[ABCacheManager sharedManager] removeFromQueue:AudioCache forKey:urlString];
                     int exportStatus = exporter.status;
                     switch (exportStatus) {
                         case AVAssetExportSessionStatusFailed: {
@@ -3430,6 +3432,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                         }
                         case AVAssetExportSessionStatusCompleted: {
                             NSLog (@"AVAssetExportSessionStatusCompleted");
+                            [ABCacheManager setCache:AudioCache object:exporter.outputURL forKey:urlString];
                             break;
                         }
                         case AVAssetExportSessionStatusUnknown: {
@@ -3442,6 +3445,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                             NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
                         default: { NSLog (@"didn't get export status"); break;}
                     }
+                    
                 }];
             }
             
