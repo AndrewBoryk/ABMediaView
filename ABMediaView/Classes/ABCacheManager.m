@@ -198,18 +198,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                         
                         [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
                         
-                        dispatch_queue_t downloadQueue = dispatch_queue_create("com.abdev.processimagequeue", NULL);
-                        dispatch_async(downloadQueue, ^{
-                            UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:url];
-                            
-                            if ([ABCommons notNull:urlString] && [ABCommons notNull:image] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
-                                [ABCacheManager setCache:type object:image forKey:urlString];
-                            }
-                            
-                            [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
-                            
-                            if(completionBlock) completionBlock(image, urlString, nil);
-                        });
+                        UIImage *image = [UIImage animatedImageWithAnimatedGIFURL:url];
+                        
+                        if ([ABCommons notNull:urlString] && [ABCommons notNull:image] && [[ABCacheManager sharedManager] cacheMediaWhenDownloaded]) {
+                            [ABCacheManager setCache:type object:image forKey:urlString];
+                        }
+                        
+                        [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                        
+                        if(completionBlock) completionBlock(image, urlString, nil);
                     }
                     else {
                         if(completionBlock) completionBlock(nil, nil, nil);
@@ -233,11 +230,8 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
         if ([ABCommons notNull:data]) {
             
-            dispatch_queue_t downloadQueue = dispatch_queue_create("com.abdev.processimagequeue", NULL);
-            dispatch_async(downloadQueue, ^{
-                UIImage *image = [UIImage animatedImageWithAnimatedGIFData:data];
-                if(completionBlock) completionBlock(image, nil, nil);
-            });
+            UIImage *image = [UIImage animatedImageWithAnimatedGIFData:data];
+            if(completionBlock) completionBlock(image, nil, nil);
         }
         else {
             if(completionBlock) completionBlock(nil, nil, nil);
