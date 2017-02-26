@@ -1317,12 +1317,6 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
             else if (type == AudioCache) {
                 exporter = [[AVAssetExportSession alloc] initWithAsset:self.player.currentItem.asset presetName:AVAssetExportPresetAppleM4A];
-                
-                // get the first audio track
-                NSArray *tracks = [self.player.currentItem.asset tracksWithMediaType:AVMediaTypeAudio];
-                if ([tracks count] == 0) return;
-                
-                AVAssetTrack *track = [tracks objectAtIndex:0];
             }
             
             //        NSLog(@"export.supportedFileTypes : %@",exporter.supportedFileTypes);
