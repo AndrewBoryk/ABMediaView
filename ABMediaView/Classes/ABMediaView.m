@@ -909,8 +909,6 @@ const CGFloat ABBufferTabBar = 49.0f;
             vidAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:self.videoURL] options:nil];
         }
         
-        [vidAsset.resourceLoader setDelegate:self queue:dispatch_get_main_queue()];
-        
         NSURL *filePath = [ABCacheManager getCache:VideoCache objectForKey:self.videoURL];
         if ([ABCommons notNull:filePath]) {
             self.videoCache = filePath;
@@ -2935,7 +2933,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) setVideoCache:(NSString *)videoCache {
+- (void) setVideoCache:(NSURL *)videoCache {
     _videoCache = videoCache;
     
     if ([ABCommons notNull:self.videoCache]) {
@@ -3382,13 +3380,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         CacheType type = AudioCache;
         
         if ([ABCommons notNull:urlString]) {
-            NSURL *url = [NSURL URLWithString:urlString];
-            NSString *filePathTest = [ABCacheManager getCache:type objectForKey:urlString];
+            NSURL *filePathTest = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: filePathTest]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                 if(completionBlock) completionBlock(filePathTest, urlString, nil);
             }
             else {
+                NSURL *url = [NSURL URLWithString:urlString];
                 
                 [[ABCacheManager sharedManager] addQueue:AudioCache object:urlString forKey:urlString];
                 AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -3415,7 +3413,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                     [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
                 }
                 
-                NSString *exportURL = [NSURL fileURLWithPath:filePath];
+                NSURL *exportURL = [NSURL fileURLWithPath:filePath];
                 exporter.outputURL = exportURL;
                 
                 // do the export
@@ -3455,10 +3453,6 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
     });
 }
-
-@end
-
-@interface UIViewController () <AVAssetResourceLoaderDelegate>
 
 @end
 
