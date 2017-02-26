@@ -4,8 +4,28 @@
 All notable changes to this project will be documented in this file.
 ***
 
-#### Next Release:
-* Automated caching
+##(Unreleased)
+
+####Added:
+* Automated Caching for Images, GIFs and Videos, enabled by setting the variable 'setShouldCacheMedia' on the ABMediaView sharedManager.
+* Ability to preload video and audio before being shown by calling 'preloadVideo' or 'preloadAudio' on a mediaView, or automatically handled by setting 'shouldPreloadVideoAndAudio' variable on the ABMediaView sharedManager.
+* Ability to clear Documents directory and tmp directory cached files, by calling 'clearABMediaDirectory' class method of ABMediaView and providing one of the following:
+  * 'VideoDirectoryItems' to remove cached videos on disk loaded from ABMediaView
+  * 'AudioDirectoryItems' to remove cached audio on disk loaded from ABMedaiView
+  * 'AllDirectoryItems' to remove cached videos and audio on disk loaded from ABMedaiView
+  * 'TempDirectoryItems' to remove cached files in tmp directory folder
+
+####Updated
+* Media is checked to see if proper format is received from NSURL before downloading.
+* Adjusted the following loader functions to seperate loading with a NSString and loading from a given NSURL (useful if specifying loading media from a location not on the web). Functions are available in ABCacheManager.
+  * 'loadImage' with NSString, 'loadImageURL' with NSURL
+  * 'loadVideo' with NSString, 'loadVideoURL' with NSURL
+  * 'loadAudio' with NSString, 'loadAudioURL' with NSURL
+  * 'loadGIF' with NSString, 'loadGIFURL' with NSURL
+* Detects if the video/audio failed to load, and shows a failed indicator. A custom failed indicator can be set with 'setCustomFailedButton' on the ABMediaView.
+
+####Fixed
+* Media looking to be downloaded from ipod-library is now properly loaded and cached is specified.
 
 
 ##0.3.1 (2/18/17)
