@@ -342,7 +342,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             NSString *urlString = url.absoluteString;
             
             if ([ABCommons notNull:url]) {
-                NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+                NSURL *filePath = [ABCacheManager getCache:type objectForKey:urlString];
                 if ([ABCommons notNull: filePath]) {
                     [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                     if(completionBlock) completionBlock(filePath, urlString, nil);
@@ -442,7 +442,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         
         if ([ABCommons notNull:url]) {
             NSString *urlString = url.absoluteString;
-            NSString *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+            NSURL *filePath = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: filePath]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                 if(completionBlock) completionBlock(filePath, urlString, nil);
@@ -542,7 +542,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     }
 }
 
-+ (NSString *) directory:(DirectoryItemType)type containsFile:(NSString *)fileEndingComponent {
++ (NSURL *) directory:(DirectoryItemType)type containsFile:(NSString *)fileEndingComponent {
     if ([ABCommons notNull:fileEndingComponent]) {
         NSString *path;
         
