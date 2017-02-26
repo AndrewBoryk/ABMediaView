@@ -36,7 +36,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ## Future Features
 
 - [x] Swipe down to dismiss  
-- [ ] Automated caching  
+- [x] Automated caching  
 - [ ] Zoom
 
 Tweet me [@TrepIsLife](https://twitter.com/TrepIsLife) if you have further feature suggestions!
