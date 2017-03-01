@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
   * 'AudioDirectoryItems' to remove cached audio on disk loaded from ABMedaiView
   * 'AllDirectoryItems' to remove cached videos and audio on disk loaded from ABMedaiView
   * 'TempDirectoryItems' to remove cached files in tmp directory folder
+* Functionality to not have a play button be visible by setting 'playButtonHidden' on the ABMediaView. Usefull if one is looking to use ABMediaView in a video background.
 
 ####Updated
 * Media is checked to see if proper format is received from NSURL before downloading.
@@ -23,6 +24,8 @@ All notable changes to this project will be documented in this file.
   * 'loadAudio' with NSString, 'loadAudioURL' with NSURL
   * 'loadGIF' with NSString, 'loadGIFURL' with NSURL
 * Detects if the video/audio failed to load, and shows a failed indicator. A custom failed indicator can be set with 'setCustomFailedButton' on the ABMediaView.
+* 'hideCloseButton' was changed to 'closeButtonHidden' to match the new 'playButtonHidden' variable better.
+* 'videoIndicator' (the view which held the play button image) was changed to 'playIndicatorView' to better encompass that it is visible when both video and audio is in the mediaView.
 
 ####Fixed
 * Media looking to be downloaded from ipod-library is now properly loaded and cached is specified.
