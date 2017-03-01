@@ -20,6 +20,19 @@ ABMediaView can display images, videos, as well as now GIFs and Audio! It subcla
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+## Table of Contents
+  * [Example](#description)
+  * [Example](#example)
+  * [Requirements](#requirements)
+  * [Features](#features)
+    * [Future Features](#future-features)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Calling the Manager](#calling-the-manager)
+    * [Initialization](#initialization)
+    * [Customization](#customization)
+    * [Delegate](#delegate)
+  
 ## Requirements
 
 * Requires iOS 8.0 or later
