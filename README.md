@@ -321,7 +321,7 @@ mediaView.contentMode = UIViewContentModeScaleAspectFill;
 
 If the ABMediaView is not a fullscreen view that was presented from the queue, the functionality can be enabled that would allow the ABMediaView to open up in fullscreen when selected.
 
-```objective-c
+```objective-cv
 [mediaView setShouldDisplayFullscreen:YES];
 ```
 
@@ -330,7 +330,14 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up. In addition, the close button remains visible when the view is held in landscape orientation, due to minimizing being disabled during landscape.
 
 ```objective-c
-[mediaView hideCloseButton:YES];
+[mediaView setCloseButtonHidden:YES];
+```
+
+
+Similarly, there is functionality to have the play button hidden on media that can be played (video/audio). This functionality is useful if one is looking to use ABMediaView as a background video player.
+
+```objective-c
+[mediaView setPlayButtonHidden:YES];
 ```
 
 
