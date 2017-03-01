@@ -27,6 +27,7 @@ ABMediaView can display images, videos, as well as now GIFs and Audio! It subcla
     * [Calling the Manager](#calling-the-manager)
     * [Initialization](#initialization)
     * [Customization](#customization)
+    * [Caching](#caching)
     * [Delegate](#delegate)
     
 ## Example
@@ -326,6 +327,16 @@ If the ABMediaView is not a fullscreen view that was presented from the queue, t
 ```
 
 
+If you would like to use a custom play button or failed indicator for an ABMediaView, you should set the 'customPlayButton' and 'customFailedButton' variables on the mediaView. (Applicable to video and audio)
+
+```objective-cv
+// Set a custom image for the play button visible on ABMediaView's with video or audio
+mediaView.customPlayButton = [UIImage imageNamed:@"CustomPlayButtonImage"];
+
+// Set a custom image for when the mediaView fails to play media
+mediaView.custonFailedButton = [UIImage imageNamed:@"CustomFailedButtonImage"];
+```
+
 
 There is functionality to toggle hiding the close button, that way it does not show up in a fullscreen pop-up mediaView. This functionality is only allowed if isMinimizable is enabled, or else there would be no other way to close the pop-up. In addition, the close button remains visible when the view is held in landscape orientation, due to minimizing being disabled during landscape.
 
@@ -412,6 +423,44 @@ Accompanying the above option, the ratio of the screen's width that the minimize
 mediaView.minimizedWidthRatio = 0.5f;
 ```
 
+
+***
+### Caching
+If your project does not have a caching system, and you are looking for an automated caching system, ABMediaView now has that! With ABMediaView, images and GIFs are saved in memory using NSCache, while videos and audio files are saved to disk. There are several options available for managing the cache, but let's start with how to enable automated caching. It can be done by setting the 'shouldCacheMedia' variable on the ABMediaView sharedManager.
+
+```objective-c
+[[ABMediaView sharedManager] setShouldCacheMedia:YES];
+```
+
+If you are looking to have videos and audio preloaded, you can have ABMediaView set to always download video and audio when the videoURL or audioURL is set on a mediaView by specifying 'shouldPreloadVideoAndAudio' on ABMediaView's sharedManager. However, if you are looking to preload video or audio on an individual instance basis, it can be done using the 'preloadVideo' and 'preloadAudio'. If you aren't looking to have videos or audio preloaded, and just have 'shouldCacheMedia' set to true, then video and audio will be streamed. At this moment, video is cached when the buffer is fully loaded from the stream. Audio is currently a work in progress.
+
+```objective-c
+// Ensure that all video and audio is preloaded before playing, instead of just streaming (works best if your app plays videos/audio that is short in length)
+[[ABMediaView sharedManager] setShouldPreloadVideoAndAudio:YES];
+
+// Preload the video for this specific mediaView
+[mediaView preloadVideo];
+
+// Preload the audio for this specific mediaView
+[mediaView preloadAudio];
+```
+
+
+If one is looking to clear the memory cache of images and GIFs, just set 'shouldCacheMedia' to false on the ABMediaView sharedManager. However, to clear caches on disk for the Documents directory and the tmp directory, ABMediaView comes with an easy function to clear these caches.
+
+```objective-c
+// Clear all of the documents directory of cached items in the ABMedia folder
+[ABMediaView clearABMediaDirectory:AllDirectoryItems];
+    
+// Clear the video directory of cached items in the ABMedia folder 
+[ABMediaView clearABMediaDirectory:VideoDirectoryItems];
+    
+// Clear the audio directory of cached items in the ABMedia folder
+[ABMediaView clearABMediaDirectory:AudioDirectoryItems];
+
+// Clear all of the temp directory of cached items
+[ABMediaView clearABMediaDirectory:TempDirectoryItems];
+```
 
 ***
 ### Delegate
