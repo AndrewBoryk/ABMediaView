@@ -29,6 +29,9 @@ ABMediaView can display images, videos, as well as now GIFs and Audio! It subcla
     * [Customization](#customization)
     * [Caching](#caching)
     * [Delegate](#delegate)
+  * [Complimentary Libraries](#complimentary-libraries)
+  * [Author](#author)
+  * [License](#license)
     
 ## Example
 
