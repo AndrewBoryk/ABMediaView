@@ -188,7 +188,10 @@ extern const CGFloat ABBufferTabBar;
 @property BOOL displayRemainingTime;
 
 /// Toggle functionality for hiding the close button from the fullscreen view. If minimizing is disabled, this functionality is not allowed.
-@property BOOL hideCloseButton;
+@property (nonatomic) BOOL closeButtonHidden;
+
+/// Toggle functionality to not have a play button visible
+@property (nonatomic) BOOL playButtonHidden;
 
 /// Toggle functionality to have the mediaView autoplay the video associated with it after presentation
 @property BOOL autoPlayAfterPresentation;
@@ -214,8 +217,8 @@ extern const CGFloat ABBufferTabBar;
 /// Custom image can be set for when media fails to play
 @property (strong, nonatomic) UIImage *customFailedButton;
 
-/// Play button imageView which shows in the center of the video, notifies the user that a video can be played
-@property (strong, nonatomic) UIImageView *videoIndicator;
+/// Play button imageView which shows in the center of the video or audio, notifies the user that a video or audio can be played
+@property (strong, nonatomic) UIImageView *playIndicatorView;
 
 /// Closes the mediaView when in fullscreen mode
 @property (strong, nonatomic) UIButton *closeButton;
@@ -226,7 +229,7 @@ extern const CGFloat ABBufferTabBar;
 /// AVPlayerLayer which will display video
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
 
-/// Timer for animating the videoIndicator, to show that the video is loading
+/// Timer for animating the playIndicatorView, to show that the video is loading
 @property (strong, nonatomic) NSTimer *animateTimer;
 
 /// Setting this value to true will allow you to have the fullscreen popup originate from the frame of the original view, without having to set the originRect yourself
@@ -400,9 +403,6 @@ extern const CGFloat ABBufferTabBar;
 
 /// Removes image, video, audio and GIF data
 - (void) resetMediaInView;
-
-/// Sets the close button to hidden, only allowed if isMinimizable is true
-- (void) hideCloseButton: (BOOL) hideButton;
 
 /// Determines how audio will be played when the media is playing and the app has silent mode on
 + (void) setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent;

@@ -52,7 +52,7 @@
     [self initializeSettingsForMediaView:self.mediaView];
     
     // Toggle hiding the close button, that way it does not show up in fullscreen mediaView. This functionality is only allowed if isMinimizable is enabled.
-//    [self.mediaView hideCloseButton:YES];
+//    [self.mediaView setHidesCloseButton:YES];
     
     // Setting which determines whether mediaView should pop up and display in full screen mode
     [self.mediaView setShouldDisplayFullscreen: YES];

@@ -93,7 +93,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self.track updateBarBackground];
     }
     
-    CGRect playFrame = self.videoIndicator.frame;
+    CGRect playFrame = self.playIndicatorView.frame;
     CGRect closeFrame = self.closeButton.frame;
     
     CGFloat playSize = 30.0f + (30.0f * (self.frame.size.width / self.superviewWidth));
@@ -110,8 +110,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     closeFrame.size = CGSizeMake(50.0f, 50.0f);
     
     
-    self.videoIndicator.frame = playFrame;
-    self.videoIndicator.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
+    self.playIndicatorView.frame = playFrame;
+    self.playIndicatorView.center = CGPointMake(self.frame.size.width/2.0f, self.frame.size.height/2.0f);
     
     self.closeButton.frame = closeFrame;
 }
@@ -171,7 +171,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.isDismissable = mediaView.isDismissable;
         
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
-        [self hideCloseButton: mediaView.hideCloseButton];
+        [self setCloseButtonHidden: mediaView.closeButtonHidden];
+        [self setPlayButtonHidden: mediaView.playButtonHidden];
         self.autoPlayAfterPresentation = mediaView.autoPlayAfterPresentation;
         self.delegate = mediaView.delegate;
         
@@ -264,13 +265,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         
     }
     
-    if (![ABCommons notNull:self.videoIndicator]) {
+    if (![ABCommons notNull:self.playIndicatorView]) {
         
-        self.videoIndicator = [[UIImageView alloc] initWithImage: [self imageForPlayButton]];
-        self.videoIndicator.contentMode = UIViewContentModeScaleAspectFit;
-        self.videoIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-        self.videoIndicator.center = self.center;
-        [self.videoIndicator sizeToFit];
+        self.playIndicatorView = [[UIImageView alloc] initWithImage: [self imageForPlayButton]];
+        self.playIndicatorView.contentMode = UIViewContentModeScaleAspectFit;
+        self.playIndicatorView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.playIndicatorView.center = self.center;
+        [self.playIndicatorView sizeToFit];
         
     }
     
@@ -356,18 +357,18 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self bringSubviewToFront:self.closeButton];
     }
     
-    if (![self.subviews containsObject:self.videoIndicator]) {
-        self.videoIndicator.alpha = 0;
+    if (![self.subviews containsObject:self.playIndicatorView]) {
+        self.playIndicatorView.alpha = 0;
         
-        [self addSubview:self.videoIndicator];
+        [self addSubview:self.playIndicatorView];
         
-        [self bringSubviewToFront:self.videoIndicator];
+        [self bringSubviewToFront:self.playIndicatorView];
         
 //        [self addConstraint:
 //         [NSLayoutConstraint constraintWithItem:self
 //                                      attribute:NSLayoutAttributeCenterX
 //                                      relatedBy:0
-//                                         toItem:self.videoIndicator
+//                                         toItem:self.playIndicatorView
 //                                      attribute:NSLayoutAttributeCenterX
 //                                     multiplier:1
 //                                       constant:0]];
@@ -376,7 +377,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 //         [NSLayoutConstraint constraintWithItem:self
 //                                      attribute:NSLayoutAttributeCenterY
 //                                      relatedBy:0
-//                                         toItem:self.videoIndicator
+//                                         toItem:self.playIndicatorView
 //                                      attribute:NSLayoutAttributeCenterY
 //                                     multiplier:1
 //                                       constant:0]];
@@ -559,7 +560,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     bufferTime = 0;
     
-    self.videoIndicator.alpha = 0;
+    self.playIndicatorView.alpha = 0;
     self.closeButton.alpha = 0;
     self.topOverlay.alpha = 0;
     self.titleLabel.alpha = 0;
@@ -578,7 +579,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     
     self.delegate = nil;
     self.autoPlayAfterPresentation = NO;
-    self.hideCloseButton = NO;
+    self.closeButtonHidden = NO;
+    self.playButtonHidden = NO;
     self.shouldDisplayFullscreen = NO;
     self.allowLooping = NO;
     self.showTrack = NO;
@@ -668,9 +670,9 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
         
-        self.videoIndicator.alpha = 1;
+        self.playIndicatorView.alpha = 1;
     }
     
     if ([ABCommons notNull:self.track]) {
@@ -717,7 +719,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (!self.isFullScreen) {
         [self setupGifLongPress];
         
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
     }
     
 }
@@ -731,7 +733,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (!self.isFullScreen) {
         [self setupGifLongPress];
         
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
     }
 }
 
@@ -744,7 +746,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (!self.isFullScreen) {
         [self setupGifLongPress];
         
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
     }
 }
 
@@ -757,7 +759,7 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (!self.isFullScreen) {
         [self setupGifLongPress];
         
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
     }
 }
 
@@ -808,7 +810,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
             
             [UIView animateWithDuration:0.25f animations:^{
-                self.videoIndicator.alpha = 0.0f;
+                self.playIndicatorView.alpha = 0.0f;
             }];
         }
         else if (gesture.state == UIGestureRecognizerStateEnded ||
@@ -832,7 +834,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             }
             
             [UIView animateWithDuration:0.25f animations:^{
-                self.videoIndicator.alpha = 1.0f;
+                self.playIndicatorView.alpha = 1.0f;
             }];
         }
         
@@ -847,9 +849,9 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self.track setBuffer: @0 withDuration: 0];
     
     if ([self hasMedia]) {
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.image = [self imageForPlayButton];
         
-        self.videoIndicator.alpha = 1;
+        self.playIndicatorView.alpha = 1;
     }
     
     if ([ABCommons notNull:self.track]) {
@@ -944,7 +946,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             [(AVPlayerLayer *)self.layer setPlayer:self.player];
             
-            //                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+            //                [self.layer insertSublayer:self.playerLayer below:self.playIndicatorView.layer];
             
             if (play) {
                 [self.player play];
@@ -1059,7 +1061,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             [(AVPlayerLayer *)self.layer setPlayer:self.player];
             
-            //                [self.layer insertSublayer:self.playerLayer below:self.videoIndicator.layer];
+            //                [self.layer insertSublayer:self.playerLayer below:self.playIndicatorView.layer];
             
             if (play) {
                 [self.player play];
@@ -1148,7 +1150,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             self.frame = self.superview.frame;
             
             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
-                self.videoIndicator.alpha = 1.0f;
+                self.playIndicatorView.alpha = 1.0f;
             }
             
             [self handleCloseButtonDisplay:self];
@@ -1184,7 +1186,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                     [self stopVideoAnimate];
                     isLoadingVideo = false;
                     [UIView animateWithDuration:0.15f animations:^{
-                        self.videoIndicator.alpha = 1.0f;
+                        self.playIndicatorView.alpha = 1.0f;
                     }];
                     
                     
@@ -1387,8 +1389,8 @@ const CGFloat ABBufferTabBar = 49.0f;
     [self stopVideoAnimate];
     
     if (failedToPlayMedia) {
-        self.videoIndicator.alpha = 1.0f;
-        self.videoIndicator.image = [self imageForPlayButton];
+        self.playIndicatorView.alpha = 1.0f;
+        self.playIndicatorView.image = [self imageForPlayButton];
     }
     else {
         [self animateVideo];
@@ -1405,16 +1407,16 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void) hideVideoAnimated:(BOOL) animated {
     if (failedToPlayMedia) {
-        self.videoIndicator.alpha = 1.0f;
+        self.playIndicatorView.alpha = 1.0f;
     }
     else {
         if (animated) {
             [UIView animateWithDuration:0.15f animations:^{
-                self.videoIndicator.alpha = 0.0f;
+                self.playIndicatorView.alpha = 0.0f;
             }];
         }
         else {
-            self.videoIndicator.alpha = 0.0f;
+            self.playIndicatorView.alpha = 0.0f;
         }
     }
     
@@ -1432,23 +1434,23 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
     
     if (failedToPlayMedia) {
-        self.videoIndicator.alpha = 1.0f;
+        self.playIndicatorView.alpha = 1.0f;
     }
     else {
         if (showAnimation) {
-            if (self.videoIndicator.alpha == 1.0f) {
+            if (self.playIndicatorView.alpha == 1.0f) {
                 [UIView animateWithDuration:0.75f animations:^{
-                    self.videoIndicator.alpha = 0.4f;
+                    self.playIndicatorView.alpha = 0.4f;
                 }];
             }
             else {
                 [UIView animateWithDuration:0.75f animations:^{
-                    self.videoIndicator.alpha = 1.0f;
+                    self.playIndicatorView.alpha = 1.0f;
                 }];
             }
         }
         else {
-            self.videoIndicator.alpha = 0.0f;
+            self.playIndicatorView.alpha = 0.0f;
         }
     }
     
@@ -1564,8 +1566,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         else if (object == self.player.currentItem && [keyPath isEqualToString:@"status"]) {
             if (self.player.currentItem.status == AVPlayerStatusReadyToPlay) {
                 failedToPlayMedia = NO;
-                self.videoIndicator.image = [self imageForPlayButton];
-                self.videoIndicator.alpha = 0;
+                self.playIndicatorView.image = [self imageForPlayButton];
+                self.playIndicatorView.alpha = 0;
                 
             } else if (self.player.currentItem.status == AVPlayerStatusFailed) {
                 NSLog(@"AVPlayer Error %@", self.player.currentItem.error);
@@ -1574,8 +1576,8 @@ const CGFloat ABBufferTabBar = 49.0f;
                 isLoadingVideo = false;
                 
                 [self stopVideoAnimate];
-                self.videoIndicator.image = [self imageForPlayButton];
-                self.videoIndicator.alpha = 1;
+                self.playIndicatorView.image = [self imageForPlayButton];
+                self.playIndicatorView.alpha = 1;
                 
                 [self.player pause];
                 
@@ -1602,8 +1604,8 @@ const CGFloat ABBufferTabBar = 49.0f;
                 isLoadingVideo = false;
                 
                 [self stopVideoAnimate];
-                self.videoIndicator.image = [self imageForPlayButton];
-                self.videoIndicator.alpha = 1;
+                self.playIndicatorView.image = [self imageForPlayButton];
+                self.playIndicatorView.alpha = 1;
                 
                 [self.player pause];
                 
@@ -1668,50 +1670,59 @@ const CGFloat ABBufferTabBar = 49.0f;
             return self.customFailedButton;
         }
         else {
-            static UIImage *playCircle = nil;
+            if (self.playButtonHidden) {
+                return nil;
+            }
+            else {
+                static UIImage *playCircle = nil;
+                
+                UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
+                CGContextRef ctx = UIGraphicsGetCurrentContext();
+                CGContextSaveGState(ctx);
+                
+                CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
+                UIColor *color = self.themeColor;
+                
+                CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
+                CGContextFillEllipseInRect(ctx, rect);
+                
+                UIBezierPath *leftPath = [UIBezierPath bezierPath];
+                [leftPath moveToPoint:(CGPoint){18, 18}];
+                [leftPath addLineToPoint:(CGPoint){42, 42}];
+                [leftPath closePath];
+                
+                UIBezierPath *rightPath = [UIBezierPath bezierPath];
+                [rightPath moveToPoint:(CGPoint){18, 42}];
+                [rightPath addLineToPoint:(CGPoint){42, 18}];
+                [rightPath closePath];
+                
+                CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
+                CGContextSetFillColorWithColor(ctx, col);
+                CGContextSetStrokeColorWithColor(ctx, col);
+                CGContextSetLineWidth(ctx, 1.5f);
+                CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
+                CGContextSetLineJoin(ctx, kCGLineJoinRound);
+                CGContextSetLineCap(ctx, kCGLineCapRound);
+                CGContextAddPath(ctx, rightPath.CGPath);
+                CGContextStrokePath(ctx);
+                CGContextAddPath(ctx, rightPath.CGPath);
+                CGContextFillPath(ctx);
+                CGContextAddPath(ctx, leftPath.CGPath);
+                CGContextStrokePath(ctx);
+                CGContextAddPath(ctx, leftPath.CGPath);
+                CGContextFillPath(ctx);
+                
+                CGContextRestoreGState(ctx);
+                playCircle = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                return playCircle;
+            }
             
-            UIGraphicsBeginImageContextWithOptions(CGSizeMake(60.f, 60.0f), NO, 0.0f);
-            CGContextRef ctx = UIGraphicsGetCurrentContext();
-            CGContextSaveGState(ctx);
-            
-            CGRect rect = CGRectMake(0, 0, 60.0f, 60.0f);
-            UIColor *color = self.themeColor;
-            
-            CGContextSetFillColorWithColor(ctx, [color colorWithAlphaComponent:0.8f].CGColor);
-            CGContextFillEllipseInRect(ctx, rect);
-            
-            UIBezierPath *leftPath = [UIBezierPath bezierPath];
-            [leftPath moveToPoint:(CGPoint){18, 18}];
-            [leftPath addLineToPoint:(CGPoint){42, 42}];
-            [leftPath closePath];
-            
-            UIBezierPath *rightPath = [UIBezierPath bezierPath];
-            [rightPath moveToPoint:(CGPoint){18, 42}];
-            [rightPath addLineToPoint:(CGPoint){42, 18}];
-            [rightPath closePath];
-            
-            CGColorRef col = [[UIColor whiteColor] colorWithAlphaComponent:1.0f].CGColor;
-            CGContextSetFillColorWithColor(ctx, col);
-            CGContextSetStrokeColorWithColor(ctx, col);
-            CGContextSetLineWidth(ctx, 1.5f);
-            CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 1.0f, [UIColor blackColor].CGColor);
-            CGContextSetLineJoin(ctx, kCGLineJoinRound);
-            CGContextSetLineCap(ctx, kCGLineCapRound);
-            CGContextAddPath(ctx, rightPath.CGPath);
-            CGContextStrokePath(ctx);
-            CGContextAddPath(ctx, rightPath.CGPath);
-            CGContextFillPath(ctx);
-            CGContextAddPath(ctx, leftPath.CGPath);
-            CGContextStrokePath(ctx);
-            CGContextAddPath(ctx, leftPath.CGPath);
-            CGContextFillPath(ctx);
-            
-            CGContextRestoreGState(ctx);
-            playCircle = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            return playCircle;
         }
+    }
+    else if (self.playButtonHidden) {
+        return nil;
     }
     else if ([ABCommons notNull:self.customPlayButton] && [ABCommons notNull:self.videoURL]) {
         return self.customPlayButton;
@@ -1775,7 +1786,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setThemeColor:(UIColor *)themeColor {
     _themeColor = themeColor;
     
-    self.videoIndicator.image = [self imageForPlayButton];
+    self.playIndicatorView.image = [self imageForPlayButton];
     [self.track.progressView setBackgroundColor: self.themeColor];
 }
 
@@ -1850,7 +1861,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.track.userInteractionEnabled = YES;
         
         if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
-            self.videoIndicator.alpha = 1.0f;
+            self.playIndicatorView.alpha = 1.0f;
         }
         
         [self handleCloseButtonDisplay:self];
@@ -2041,7 +2052,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                     [UIView animateWithDuration:0.25f delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
                         if (minimize) {
                             self.frame = CGRectMake(self.superviewWidth - self.minViewWidth - 12.0f, self.maxViewOffset, self.minViewWidth, self.minViewHeight);
-                            self.videoIndicator.alpha = 0;
+                            self.playIndicatorView.alpha = 0;
                             self.closeButton.alpha = 0;
                             self.topOverlay.alpha = 0;
                             self.titleLabel.alpha = 0;
@@ -2052,7 +2063,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                             self.frame = self.superview.frame;
                             
                             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia]) {
-                                self.videoIndicator.alpha = 1.0f;
+                                self.playIndicatorView.alpha = 1.0f;
                             }
                             
                             [self handleCloseButtonDisplay:self];
@@ -2256,7 +2267,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self setBorderAlpha:1.0f];
             
             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
-                self.videoIndicator.alpha = 0;
+                self.playIndicatorView.alpha = 0;
             }
             
             self.closeButton.alpha = 0;
@@ -2274,7 +2285,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self setBorderAlpha:0.0f];
             
             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
-                self.videoIndicator.alpha = 1.0f;
+                self.playIndicatorView.alpha = 1.0f;
             }
             
             [self handleCloseButtonDisplay:self];
@@ -2290,14 +2301,14 @@ const CGFloat ABBufferTabBar = 49.0f;
             [self setBorderAlpha:offsetPercentage];
             
             if ((!self.isPlayingVideo || self.isLoadingVideo) && [self hasMedia])  {
-                self.videoIndicator.alpha = (1-offsetPercentage);
+                self.playIndicatorView.alpha = (1-offsetPercentage);
             }
             
             if (self.isFullScreen) {
                 
                 UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
                 
-                if (self.hideCloseButton && self.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
+                if (self.closeButtonHidden && self.isMinimizable && UIDeviceOrientationIsPortrait(orientation)) {
                     self.closeButton.alpha = 0;
                 }
                 else {
@@ -2489,7 +2500,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         }
         
         [UIView animateWithDuration:animationTime delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
-            //            mediaView.videoIndicator.center = mediaView.center;
+            //            mediaView.playIndicatorView.center = mediaView.center;
             mediaView.frame = mediaView.superview.frame;
             [mediaView handleCloseButtonDisplay:mediaView];
             if (!mediaView.autoPlayAfterPresentation) {
@@ -2701,16 +2712,22 @@ const CGFloat ABBufferTabBar = 49.0f;
     }
 }
 
-- (void) hideCloseButton:(BOOL)hideButton {
-    _hideCloseButton = hideButton;
+- (void) setCloseButtonHidden:(BOOL)closeButtonHidden {
+    _closeButtonHidden = closeButtonHidden;
     
     [self handleCloseButtonDisplay:self];
+}
+
+- (void) setPlayButtonHidden:(BOOL)playButtonHidden {
+    _playButtonHidden = playButtonHidden;
+    
+    self.playIndicatorView = [self imageForPlayButton];
 }
 
 - (void) handleCloseButtonDisplay: (ABMediaView *) mediaView {
     if (mediaView.isFullScreen) {
         
-        if (mediaView.hideCloseButton && mediaView.isMinimizable && ![ABCommons isLandscape]) {
+        if (mediaView.closeButtonHidden && mediaView.isMinimizable && ![ABCommons isLandscape]) {
             mediaView.closeButton.alpha = 0;
         }
         else {
@@ -3236,13 +3253,13 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setCustomPlayButton:(UIImage *)customPlayButton {
     _customPlayButton = customPlayButton;
     
-    self.videoIndicator.image = [self imageForPlayButton];
+    self.playIndicatorView.image = [self imageForPlayButton];
 }
 
 - (void) setCustomMusicButton:(UIImage *)customMusicButton {
     _customMusicButton = customMusicButton;
     
-    self.videoIndicator.image = [self imageForPlayButton];
+    self.playIndicatorView.image = [self imageForPlayButton];
 }
 
 - (void) pauseVideoEnteringBackground {
@@ -3252,7 +3269,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                 [self stopVideoAnimate];
                 isLoadingVideo = false;
                 [UIView animateWithDuration:0.15f animations:^{
-                    self.videoIndicator.alpha = 1.0f;
+                    self.playIndicatorView.alpha = 1.0f;
                 }];
                 
                 
