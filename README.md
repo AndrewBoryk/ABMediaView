@@ -572,4 +572,4 @@ Reach out to me on Twitter: [@TrepIsLife](https://twitter.com/TrepIsLife) [![alt
 
 ## License
 
-ABMediaView is available under the MIT license. See the LICENSE file for more info.
+ABMediaView is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
