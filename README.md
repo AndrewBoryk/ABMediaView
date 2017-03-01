@@ -16,12 +16,8 @@ ABMediaView can display images, videos, as well as now GIFs and Audio! It subcla
 
 ![alt tag](ABMediaViewScrubScreenshot.gif)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Table of Contents
-  * [Example](#description)
+  * [Description](#description)
   * [Example](#example)
   * [Requirements](#requirements)
   * [Features](#features)
@@ -32,6 +28,10 @@ To run the example project, clone the repo, and run `pod install` from the Examp
     * [Initialization](#initialization)
     * [Customization](#customization)
     * [Delegate](#delegate)
+    
+## Example
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
   
 ## Requirements
 
