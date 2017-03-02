@@ -305,110 +305,109 @@ extern const CGFloat ABBufferTabBar;
 @property (nonatomic) BOOL fileFromDirectory;
 
 /// Clears all meda that have been downloaded to the directory
-+ (void) clearABMediaDirectory:(DirectoryItemType)directoryType;
++ (void)clearABMediaDirectory:(DirectoryItemType)directoryType;
 
 /// Allows functionality to change the videoGravity to aspectFit on the fly
-- (void) changeVideoToAspectFit: (BOOL) videoAspectFit;
+- (void)changeVideoToAspectFit:(BOOL)videoAspectFit;
 
 /// Download the image, display the image, and give completion block
-- (void) setImageURL:(NSString *)imageURL withCompletion: (ImageCompletionBlock) completion;
+- (void)setImageURL:(NSString *)imageURL withCompletion:(ImageCompletionBlock)completion;
 
 /// Set the url where the video can be downloaded from
-- (void) setVideoURL:(NSString *)videoURL;
+- (void)setVideoURL:(NSString *)videoURL;
 
 /// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found
-- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL;
 
 /// Set the url where the video can be downloaded from, as well as the url where the thumbnail gif can be found
-- (void) setVideoURL:(NSString *)videoURL withThumbnailGifURL:(NSString *) thumbnailGifURL;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailGifURL:(NSString *)thumbnailGifURL;
 
 /// Set the url where the video can be downloaded from, as well as the data for the thumbnail gif
-- (void) setVideoURL:(NSString *)videoURL withThumbnailGifData:(NSData *) thumbnailGifData;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailGifData:(NSData *)thumbnailGifData;
 
 /// Set the url where the video can be downloaded from, as well as the thumbnail image can be found
-- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail;
 
 /// Set the url where the video can be downloaded from, as well as the image for the thumbnail, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via URL
-- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail andPreviewGifURL:(NSString *) previewGifURL;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andPreviewGifURL:(NSString *)previewGifURL;
 
 /// Set the url where the video can be downloaded from, as well as the image for the thumbnail, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via NSData
-- (void) setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *) thumbnail andPreviewGifData:(NSData *) previewGifData;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailImage:(UIImage *)thumbnail andPreviewGifData:(NSData *)previewGifData;
 
 /// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via URL
-- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andPreviewGifURL:(NSString *) previewGifURL;
-
+- (void)setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifURL:(NSString *)previewGifURL;
 
 /// Set the url where the video can be downloaded from, as well as the url where the thumbnail image can be found, and added functionality where when the user presses and holds on the thumbnail, it turns into a GIF. GIF is added via NSData
-- (void) setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *) thumbnailURL andPreviewGifData:(NSData *) previewGifData;
+- (void)setVideoURL:(NSString *)videoURL withThumbnailURL:(NSString *)thumbnailURL andPreviewGifData:(NSData *)previewGifData;
 
 /// Download the video associated with this ABMediaView
-- (void) preloadVideo;
+- (void)preloadVideo;
 
 /// Set the url where the audio can be downloaded from, as well as the url where the thumbnail image can be found
-- (void) setAudioURL:(NSString *)audioURL withThumbnailURL: (NSString *)thumbnailURL;
+- (void)setAudioURL:(NSString *)audioURL withThumbnailURL:(NSString *)thumbnailURL;
 
 /// Set the url where the audio can be downloaded from, as well as the url where the thumbnail gif can be found
-- (void) setAudioURL:(NSString *)audioURL withThumbnailGifURL: (NSString *)thumbnailGifURL;
+- (void)setAudioURL:(NSString *)audioURL withThumbnailGifURL:(NSString *)thumbnailGifURL;
 
 /// Set the url where the audio can be downloaded from, as well as the data for the thumbnail gif
-- (void) setAudioURL:(NSString *)audioURL withThumbnailGifData: (NSData *)thumbnailGifData;
+- (void)setAudioURL:(NSString *)audioURL withThumbnailGifData:(NSData *)thumbnailGifData;
 
 /// Set the url where the audio can be downloaded from, as well as the thumbnail image can be found
-- (void) setAudioURL:(NSString *)audioURL withThumbnailImage: (UIImage *)thumbnail;
+- (void)setAudioURL:(NSString *)audioURL withThumbnailImage:(UIImage *)thumbnail;
 
 /// Download the audio associated with this ABMediaView
-- (void) preloadAudio;
+- (void)preloadAudio;
 
 /// Loads the video, saves to disk, and decides whether to play the video
-- (void) loadVideoWithPlay: (BOOL)play withCompletion: (VideoDataCompletionBlock) completion;
+- (void)loadVideoWithPlay:(BOOL)play withCompletion:(VideoDataCompletionBlock)completion;
 
 /// Show that the video is loading with animation
-- (void) loadVideoAnimate;
+- (void)loadVideoAnimate;
 
 /// Stop video loading animation
-- (void) stopVideoAnimate;
+- (void)stopVideoAnimate;
 
 /// Update the frame of the playerLayer
-- (void) updatePlayerFrame;
+- (void)updatePlayerFrame;
 
 /// Remove observers for player
-- (void) removeObservers;
+- (void)removeObservers;
 
 /// Selector to play the video from the playRecognizer
-- (void) handleTapFromRecognizer;
+- (void)handleTapFromRecognizer;
 
 /// Toggle functionality for remaining time to show on right track label rather than showing total time
-- (void) setShowRemainingTime: (BOOL) showRemainingTime;
+- (void)setShowRemainingTime:(BOOL)showRemainingTime;
 
 /// Add a mediaView to the queue of mediaViews that will be displayed. If no mediaView is currently showing, this will display that new mediaView
-- (void) queueMediaView: (ABMediaView *) mediaView;
+- (void)queueMediaView:(ABMediaView *)mediaView;
 
 /// Will remove the currently displaying mediaView and then display the next in the queue
-- (void) presentNextMediaView;
+- (void)presentNextMediaView;
 
 /// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown.
-- (void) presentMediaView:(ABMediaView *) mediaView;
+- (void)presentMediaView:(ABMediaView *)mediaView;
 
 /// Present a mediaView by adding it to the main window, and removing whatever previous mediaView was being shown. Has an option to decide whether or not presentation should be animated.
-- (void) presentMediaView:(ABMediaView *) mediaView animated: (BOOL) animated;
+- (void)presentMediaView:(ABMediaView *)mediaView animated:(BOOL)animated;
 
 /// Remove a mediaView from the queue
-- (void) removeFromQueue:(ABMediaView *) mediaView;
+- (void)removeFromQueue:(ABMediaView *)mediaView;
 
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
-- (void) dismissMediaViewAnimated:(BOOL) animated withCompletion:(void (^)(BOOL completed))completion;
+- (void)dismissMediaViewAnimated:(BOOL)animated withCompletion:(void (^)(BOOL completed))completion;
 
 /// Resets variables from mediaView, removing image, video, audio and GIF data
-- (void) resetVariables;
+- (void)resetVariables;
 
 /// Removes image, video, audio and GIF data
-- (void) resetMediaInView;
+- (void)resetMediaInView;
 
 /// Determines how audio will be played when the media is playing and the app has silent mode on
-+ (void) setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent;
++ (void)setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent;
 
 /// Determines how audio will be played when the media is stopping and the app has silent mode on
-+ (void) setPlaysAudioWhenStoppingMediaOnSilent:(BOOL)playAudioOnSilent;
++ (void)setPlaysAudioWhenStoppingMediaOnSilent:(BOOL)playAudioOnSilent;
 
 @end
 
@@ -417,72 +416,72 @@ extern const CGFloat ABBufferTabBar;
 @optional
 
 /// A listener to know what percentage that the view has minimized, at a value from 0 to 1
-- (void) mediaView: (ABMediaView *) mediaView didChangeOffset: (float) offsetPercentage;
+- (void)mediaView:(ABMediaView *)mediaView didChangeOffset:(float)offsetPercentage;
 
 /// When the mediaView begins playing a video
-- (void) mediaViewDidPlayVideo: (ABMediaView *) mediaView;
+- (void)mediaViewDidPlayVideo:(ABMediaView *)mediaView;
 
 /// When the mediaView fails to play a video
-- (void) mediaViewDidFailToPlayVideo: (ABMediaView *) mediaView;
+- (void)mediaViewDidFailToPlayVideo:(ABMediaView *)mediaView;
 
 /// When the mediaView pauses a video
-- (void) mediaViewDidPauseVideo: (ABMediaView *) mediaView;
+- (void)mediaViewDidPauseVideo:(ABMediaView *)mediaView;
 
 /// Called when the mediaView has begun the presentation process
-- (void) mediaViewWillPresent: (ABMediaView *) mediaView;
+- (void)mediaViewWillPresent:(ABMediaView *)mediaView;
 
 /// Called when the mediaView has been presented
-- (void) mediaViewDidPresent: (ABMediaView *) mediaView;
+- (void)mediaViewDidPresent:(ABMediaView *)mediaView;
 
 /// Called when the mediaView has begun the dismissal process
-- (void) mediaViewWillDismiss: (ABMediaView *) mediaView;
+- (void)mediaViewWillDismiss:(ABMediaView *)mediaView;
 
 /// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
-- (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
+- (void)mediaViewDidDismiss:(ABMediaView *)mediaView;
 
 /// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
-- (void) mediaViewWillChangeMinimization:(ABMediaView *)mediaView;
+- (void)mediaViewWillChangeMinimization:(ABMediaView *)mediaView;
 
 /// Called when the mediaView is in the process of minimizing, and has made a change in frame
-- (void) mediaViewDidChangeMinimization:(ABMediaView *)mediaView;
+- (void)mediaViewDidChangeMinimization:(ABMediaView *)mediaView;
 
 /// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
-- (void) mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+- (void)mediaViewWillEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
 
 /// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
-- (void) mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
+- (void)mediaViewDidEndMinimizing:(ABMediaView *)mediaView atMinimizedState:(BOOL)isMinimized;
 
 /// Called when the 'image' value of the UIImageView has been set
-- (void) mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *) image;
+- (void)mediaView:(ABMediaView *)mediaView didSetImage:(UIImage *)image;
 
 /// Called when the mediaView is in the process of minimizing, and is about to make a change in frame
-- (void) mediaViewWillChangeDismissing:(ABMediaView *)mediaView;
+- (void)mediaViewWillChangeDismissing:(ABMediaView *)mediaView;
 
 /// Called when the mediaView is in the process of minimizing, and has made a change in frame
-- (void) mediaViewDidChangeDismissing:(ABMediaView *)mediaView;
+- (void)mediaViewDidChangeDismissing:(ABMediaView *)mediaView;
 
 /// Called before the mediaView ends minimizing, and informs whether the minimized view will snap to minimized or fullscreen mode
-- (void) mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
+- (void)mediaViewWillEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
 
 /// Called when the mediaView ends minimizing, and informs whether the minimized view has snapped to minimized or fullscreen mode
-- (void) mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
+- (void)mediaViewDidEndDismissing:(ABMediaView *)mediaView withDismissal:(BOOL)didDismiss;
 
 /// Called when the mediaView has completed downloading the image from the web
-- (void) mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *) image;
+- (void)mediaView:(ABMediaView *)mediaView didDownloadImage:(UIImage *)image;
 
 /// Called when the mediaView has completed downloading the video from the web
-- (void) mediaView:(ABMediaView *)mediaView didDownloadVideo: (NSURL *)video;
+- (void)mediaView:(ABMediaView *)mediaView didDownloadVideo:(NSURL *)video;
 
 /// Called when the mediaView has completed downloading the audio from the web
-- (void) mediaView:(ABMediaView *)mediaView didDownloadAudio:(NSURL *)audio;
+- (void)mediaView:(ABMediaView *)mediaView didDownloadAudio:(NSURL *)audio;
 
 /// Called when the mediaView has completed downloading the gif from the web
-- (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
+- (void)mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif;
 
 /// Called when the user taps the title label
-- (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView;
+- (void)handleTitleSelectionInMediaView:(ABMediaView *)mediaView;
 
 /// Called when the user taps the details label
-- (void) handleDetailsSelectionInMediaView:(ABMediaView *)mediaView;
+- (void)handleDetailsSelectionInMediaView:(ABMediaView *)mediaView;
 
 @end
