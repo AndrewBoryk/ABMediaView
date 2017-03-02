@@ -43,6 +43,8 @@ extern const CGFloat ABBufferNavigationBar;
 extern const CGFloat ABBufferStatusAndNavigationBar;
 extern const CGFloat ABBufferTabBar;
 
+//extern NSString *const ABTestString;
+
 @interface ABMediaView : UIImageView <ABTrackViewDelegate, UIGestureRecognizerDelegate> {
     /// Position of the swipe vertically
     CGFloat ySwipePosition;
@@ -91,33 +93,7 @@ extern const CGFloat ABBufferTabBar;
 /// Main window which the mediaView will be added to
 @property (strong, nonatomic) UIWindow *mainWindow;
 
-/// Gradient dark overlay on top of the mediaView which UI can be placed on top of
-@property (strong, nonatomic) UIImageView *topOverlay;
-
-/// Height constraint of the top overlay
-@property (strong, nonatomic) NSLayoutConstraint *topOverlayHeight;
-
-/// Label at the top of the mediaView, displayed within the topOverlay. Designated for a title, but other text can be inserted
-@property (strong, nonatomic) UILabel *titleLabel;
-
-/// Space between the titleLabel and the superview
-@property (strong, nonatomic) NSLayoutConstraint *titleTopOffset;
-
-/// Label at the top of the mediaView, displayed within the topOverlay. Designated for details
-@property (strong, nonatomic) UILabel *detailsLabel;
-
-/// Space between the detailsLabel and the superview
-@property (strong, nonatomic) NSLayoutConstraint *detailsTopOffset;
-
-/// Set a title to the mediaView, displayed in the titleLabel of the topOverlay, without a details
-- (void) setTitle:(NSString *)title;
-
-/// Set a title and details to the mediaView, displayed in the titleLabel and detailsLabel of the topOverlay
-- (void) setTitle:(NSString *)title withDetails:(NSString *)details;
-
-/// Track which shows the progress of the video being played
-@property (strong, nonatomic) ABTrackView *track;
-
+#pragma mark - Data Properties
 /// URL endpoint for image
 @property (strong, nonatomic) NSString *imageURL;
 
@@ -145,6 +121,20 @@ extern const CGFloat ABBufferTabBar;
 /// Gif cached after loading
 @property (strong, nonatomic) UIImage *gifCache;
 
+#pragma mark - Interface properties
+/// Track which shows the progress of the video being played
+@property (strong, nonatomic) ABTrackView *track;
+
+/// Gradient dark overlay on top of the mediaView which UI can be placed on top of
+@property (strong, nonatomic) UIImageView *topOverlay;
+
+/// Label at the top of the mediaView, displayed within the topOverlay. Designated for a title, but other text can be inserted
+@property (strong, nonatomic) UILabel *titleLabel;
+
+/// Label at the top of the mediaView, displayed within the topOverlay. Designated for details
+@property (strong, nonatomic) UILabel *detailsLabel;
+
+#pragma mark - Customizable Properties
 /// If all media is sourced from the same location, then the ABCacheManager will search the Directory for files with the same name when getting cached objects, since they all have the same remote location
 @property (nonatomic) BOOL allMediaFromSameLocation;
 
@@ -304,11 +294,7 @@ extern const CGFloat ABBufferTabBar;
 /// File being played is from directory
 @property (nonatomic) BOOL fileFromDirectory;
 
-/// Clears all meda that have been downloaded to the directory
-+ (void)clearABMediaDirectory:(DirectoryItemType)directoryType;
-
-/// Allows functionality to change the videoGravity to aspectFit on the fly
-- (void)changeVideoToAspectFit:(BOOL)videoAspectFit;
+#pragma mark - Initialization Methods
 
 /// Download the image, display the image, and give completion block
 - (void)setImageURL:(NSString *)imageURL withCompletion:(ImageCompletionBlock)completion;
@@ -358,27 +344,7 @@ extern const CGFloat ABBufferTabBar;
 /// Download the audio associated with this ABMediaView
 - (void)preloadAudio;
 
-/// Loads the video, saves to disk, and decides whether to play the video
-- (void)loadVideoWithPlay:(BOOL)play withCompletion:(VideoDataCompletionBlock)completion;
-
-/// Show that the video is loading with animation
-- (void)loadVideoAnimate;
-
-/// Stop video loading animation
-- (void)stopVideoAnimate;
-
-/// Update the frame of the playerLayer
-- (void)updatePlayerFrame;
-
-/// Remove observers for player
-- (void)removeObservers;
-
-/// Selector to play the video from the playRecognizer
-- (void)handleTapFromRecognizer;
-
-/// Toggle functionality for remaining time to show on right track label rather than showing total time
-- (void)setShowRemainingTime:(BOOL)showRemainingTime;
-
+#pragma mark - Shared Manager Methods
 /// Add a mediaView to the queue of mediaViews that will be displayed. If no mediaView is currently showing, this will display that new mediaView
 - (void)queueMediaView:(ABMediaView *)mediaView;
 
@@ -397,17 +363,35 @@ extern const CGFloat ABBufferTabBar;
 /// Dismiss the mediaView by moving it offscreen and removing it from the queue
 - (void)dismissMediaViewAnimated:(BOOL)animated withCompletion:(void (^)(BOOL completed))completion;
 
+#pragma mark - Reset Methods
+/// Clears all meda that have been downloaded to the directory
++ (void)clearABMediaDirectory:(DirectoryItemType)directoryType;
+
 /// Resets variables from mediaView, removing image, video, audio and GIF data
 - (void)resetVariables;
 
 /// Removes image, video, audio and GIF data
 - (void)resetMediaInView;
 
+#pragma mark - Customization Methods
+
+/// Allows functionality to change the videoGravity to aspectFit on the fly
+- (void)changeVideoToAspectFit:(BOOL)videoAspectFit;
+
 /// Determines how audio will be played when the media is playing and the app has silent mode on
 + (void)setPlaysAudioWhenPlayingMediaOnSilent:(BOOL)playAudioOnSilent;
 
 /// Determines how audio will be played when the media is stopping and the app has silent mode on
 + (void)setPlaysAudioWhenStoppingMediaOnSilent:(BOOL)playAudioOnSilent;
+
+/// Toggle functionality for remaining time to show on right track label rather than showing total time
+- (void)setShowRemainingTime:(BOOL)showRemainingTime;
+
+/// Set a title to the mediaView, displayed in the titleLabel of the topOverlay, without a details
+- (void)setTitle:(NSString *)title;
+
+/// Set a title and details to the mediaView, displayed in the titleLabel and detailsLabel of the topOverlay
+- (void)setTitle:(NSString *)title withDetails:(NSString *)details;
 
 @end
 

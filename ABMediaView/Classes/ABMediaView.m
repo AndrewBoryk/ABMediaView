@@ -24,6 +24,39 @@ const CGFloat ABBufferNavigationBar = 44.0f;
 const CGFloat ABBufferStatusAndNavigationBar = 64.0f;
 const CGFloat ABBufferTabBar = 49.0f;
 
+//NSString *const ABTestString = @"Hello World";
+
+@interface ABMediaView ()
+
+/// Height constraint of the top overlay
+@property (strong, nonatomic) NSLayoutConstraint *topOverlayHeight;
+
+/// Space between the titleLabel and the superview
+@property (strong, nonatomic) NSLayoutConstraint *titleTopOffset;
+
+/// Space between the detailsLabel and the superview
+@property (strong, nonatomic) NSLayoutConstraint *detailsTopOffset;
+
+/// Remove observers for player
+- (void)removeObservers;
+
+/// Selector to play the video from the playRecognizer
+- (void)handleTapFromRecognizer;
+
+/// Loads the video, saves to disk, and decides whether to play the video
+- (void)loadVideoWithPlay:(BOOL)play withCompletion:(VideoDataCompletionBlock)completion;
+
+/// Show that the video is loading with animation
+- (void)loadVideoAnimate;
+
+/// Stop video loading animation
+- (void)stopVideoAnimate;
+
+/// Update the frame of the playerLayer
+- (void)updatePlayerFrame;
+
+@end
+
 @implementation ABMediaView {
     /// Number of seconds in the buffer
     float bufferTime;
