@@ -23,38 +23,45 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     TempDirectoryItems,
 };
 
+/// Image completed loading onto ABMediaView
 typedef void (^ImageCompletionBlock)(UIImage *image, NSError *error);
+
+/// Video completed loading onto ABMediaView
 typedef void (^VideoDataCompletionBlock)(NSString *video, NSError *error);
 
+/// Delegate for the ABMediaView
 @protocol ABMediaViewDelegate;
 
+/// Notification that the device will rotate
 extern const NSNotificationName ABMediaViewWillRotateNotification;
+
+/// Notification that the device did rotate
 extern const NSNotificationName ABMediaViewDidRotateNotification;
 
-
-/// Preset sizes for the ABMediaView minimized view
+/// Preset size for minimized view to be in portrait ratio (9:16)
 extern const CGFloat ABMediaViewRatioPresetPortrait;
+
+/// Preset size for minimized view to be in square ratio (1:1)
 extern const CGFloat ABMediaViewRatioPresetSquare;
+
+/// Preset size for minimized view to be in landscape ratio (16:9)
 extern const CGFloat ABMediaViewRatioPresetLandscape;
 
-/// Preset buffer offsets for easy access
+/// Preset buffer offset for 20px
 extern const CGFloat ABBufferStatusBar;
+
+/// Preset buffer offset for 44px
 extern const CGFloat ABBufferNavigationBar;
+
+/// Preset buffer offset for 64px
 extern const CGFloat ABBufferStatusAndNavigationBar;
+
+/// Preset buffer offset for 48px
 extern const CGFloat ABBufferTabBar;
 
 //extern NSString *const ABTestString;
 
 @interface ABMediaView : UIImageView <ABTrackViewDelegate, UIGestureRecognizerDelegate> {
-    /// Position of the swipe vertically
-    CGFloat ySwipePosition;
-    
-    /// Position of the swipe horizontally
-    CGFloat xSwipePosition;
-    
-    /// Variable tracking offset of video
-    CGFloat offset;
-    
     /// Determines if video is minimized
     BOOL isMinimized;
     
@@ -66,12 +73,6 @@ extern const CGFloat ABBufferTabBar;
     
     /// Determines if the video is already loading
     BOOL isLoadingVideo;
-    
-    /// Recognizer to record user swiping
-    UIPanGestureRecognizer *swipeRecognizer;
-    
-    /// Recognizer to record a user swiping right to dismiss a minimize video
-    UIPanGestureRecognizer *dismissRecognizer;
 }
 
 @property (weak, nonatomic) id<ABMediaViewDelegate> delegate;
@@ -80,9 +81,6 @@ extern const CGFloat ABBufferTabBar;
 
 /// Shared Manager, which keeps track of mediaViews
 + (id)sharedManager;
-
-/// Saving audio files with this reader
-@property (strong, nonatomic) AVAssetReader *reader;
 
 /// Queue which holds an array of mediaViews to be displayed
 @property (strong, nonatomic) NSMutableArray *mediaViewQueue;
@@ -189,15 +187,6 @@ extern const CGFloat ABBufferTabBar;
 /// Change font for track labels
 @property (strong, nonatomic) UIFont *trackFont;
 
-/// Recognizer to record user swiping
-@property (strong, nonatomic, readonly) UIPanGestureRecognizer *swipeRecognizer;
-
-/// Recognizer which keeps track of whether the user taps the view to play or pause the video
-@property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
-
-/// Indicator which shows that the video is being loaded
-@property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
-
 /// Custom image can be set for the play button (video)
 @property (strong, nonatomic) UIImage *customPlayButton;
 
@@ -206,18 +195,6 @@ extern const CGFloat ABBufferTabBar;
 
 /// Custom image can be set for when media fails to play
 @property (strong, nonatomic) UIImage *customFailedButton;
-
-/// Play button imageView which shows in the center of the video or audio, notifies the user that a video or audio can be played
-@property (strong, nonatomic) UIImageView *playIndicatorView;
-
-/// Closes the mediaView when in fullscreen mode
-@property (strong, nonatomic) UIButton *closeButton;
-
-/// ABPlayer which will handle video playback
-@property (strong, nonatomic) ABPlayer *player;
-
-/// AVPlayerLayer which will display video
-@property (strong, nonatomic) AVPlayerLayer *playerLayer;
 
 /// Timer for animating the playIndicatorView, to show that the video is loading
 @property (strong, nonatomic) NSTimer *animateTimer;
@@ -231,9 +208,6 @@ extern const CGFloat ABBufferTabBar;
 /// Rect that specifies where the mediaView's frame will originate from when presenting, and is already converted into its position in the mainWindow
 @property CGRect originRectConverted;
 
-/// Original superview for presenting mediaview
-@property (strong, nonatomic) UIView *originalSuperview;
-
 /// By default, there is a buffer of 12px on the bottom of the view, and more space can be added by adjusting this bottom buffer. This is useful in order to have the mediaView show above UITabBars, UIToolbars, and other views that need reserved space on the bottom of the screen.
 @property (nonatomic) CGFloat bottomBuffer;
 
@@ -243,35 +217,8 @@ extern const CGFloat ABBufferTabBar;
 /// Ratio of the screen's width that the mediaView's minimized view will stretch across.
 @property (nonatomic) CGFloat minimizedWidthRatio;
 
-/// Variable tracking offset of video
-@property (nonatomic, readonly) CGFloat offset;
-
-/// Position of the swipe vertically
-@property (nonatomic, readonly) CGFloat ySwipePosition;
-
-/// Position of the swipe horizontally
-@property (nonatomic, readonly) CGFloat xSwipePosition;
-
 /// Determines if video is minimized
 @property (readonly) BOOL isMinimized;
-
-/// The width of the view when minimized
-@property (nonatomic, readonly) CGFloat minViewWidth;
-
-/// The height of the view when minimized
-@property (nonatomic, readonly) CGFloat minViewHeight;
-
-/// The maximum amount of y offset for the mediaView
-@property (nonatomic, readonly) CGFloat maxViewOffset;
-
-/// Keeps track of how much the video has been minimized
-@property (nonatomic, readonly) CGFloat offsetPercentage;
-
-/// Width of the mainWindow
-@property (nonatomic, readonly) CGFloat superviewWidth;
-
-/// Height of the mainWindow
-@property (nonatomic, readonly) CGFloat superviewHeight;
 
 /// Ability to offset the subviews at the top of the screen to avoid hiding other views (ie. UIStatusBar)
 @property (nonatomic) CGFloat topBuffer;

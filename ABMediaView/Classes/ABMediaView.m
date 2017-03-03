@@ -37,6 +37,60 @@ const CGFloat ABBufferTabBar = 49.0f;
 /// Space between the detailsLabel and the superview
 @property (strong, nonatomic) NSLayoutConstraint *detailsTopOffset;
 
+/// Position of the swipe vertically
+@property (nonatomic) CGFloat ySwipePosition;
+
+/// Position of the swipe horizontally
+@property (nonatomic) CGFloat xSwipePosition;
+
+/// Variable tracking offset of video
+@property (nonatomic) CGFloat offset;
+
+/// Recognizer to record user swiping
+@property (strong, nonatomic) UIPanGestureRecognizer *swipeRecognizer;
+
+/// Recognizer to record a user swiping right to dismiss a minimize video
+@property (strong, nonatomic) UIPanGestureRecognizer *dismissRecognizer;
+
+/// Recognizer which keeps track of whether the user taps the view to play or pause the video
+@property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
+
+/// Indicator which shows that the video is being loaded
+@property (strong, nonatomic) UIActivityIndicatorView *loadingIndicator;
+
+/// Play button imageView which shows in the center of the video or audio, notifies the user that a video or audio can be played
+@property (strong, nonatomic) UIImageView *playIndicatorView;
+
+/// Closes the mediaView when in fullscreen mode
+@property (strong, nonatomic) UIButton *closeButton;
+
+/// ABPlayer which will handle video playback
+@property (strong, nonatomic) ABPlayer *player;
+
+/// AVPlayerLayer which will display video
+@property (strong, nonatomic) AVPlayerLayer *playerLayer;
+
+/// Original superview for presenting mediaview
+@property (strong, nonatomic) UIView *originalSuperview;
+
+/// The width of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewWidth;
+
+/// The height of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewHeight;
+
+/// The maximum amount of y offset for the mediaView
+@property (nonatomic, readonly) CGFloat maxViewOffset;
+
+/// Keeps track of how much the video has been minimized
+@property (nonatomic, readonly) CGFloat offsetPercentage;
+
+/// Width of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewWidth;
+
+/// Height of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewHeight;
+
 /// Remove observers for player
 - (void)removeObservers;
 
@@ -76,9 +130,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 @synthesize isMinimized = isMinimized;
 @synthesize offsetPercentage = offsetPercentage;
-@synthesize offset = offset;
-@synthesize ySwipePosition = ySwipePosition;
-@synthesize xSwipePosition = xSwipePosition;
 @synthesize isFullScreen = isFullscreen;
 @synthesize isLoadingVideo = isLoadingVideo;
 @synthesize swipeRecognizer = swipeRecognizer;
@@ -1198,7 +1249,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             
             isMinimized = NO;
             self.track.userInteractionEnabled = !isMinimized;
-            offset = self.frame.origin.y;
+            self.offset = self.frame.origin.y;
             
             self.userInteractionEnabled = YES;
             
@@ -1962,16 +2013,16 @@ const CGFloat ABBufferTabBar = 49.0f;
                 }
             }
             
-            ySwipePosition = [gesture locationInView:self].y;
-            xSwipePosition = [gesture locationInView:self].x;
-            offset = self.frame.origin.y;
+            self.ySwipePosition = [gesture locationInView:self].y;
+            self.xSwipePosition = [gesture locationInView:self].x;
+            self.offset = self.frame.origin.y;
         }
         else if (gesture.state == UIGestureRecognizerStateChanged) {
             if (self.isDismissable) {
                 [self handleSwipeDismissingForRecognizer:gesture];
             }
             else if (self.isMinimizable) {
-                if (isMinimized && offset == self.maxViewOffset) {
+                if (isMinimized && self.offset == self.maxViewOffset) {
                     CGPoint vel = [gesture velocityInView:self];
                     if (self.frame.origin.x > (self.superviewWidth - (self.minViewWidth + 12.0f))) {
                         [self handleDismissingForRecognizer: gesture];
@@ -2045,7 +2096,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                         self.closeButton.userInteractionEnabled = YES;
                         
                         self.track.userInteractionEnabled = YES;
-                        offset = self.frame.origin.y;
+                        self.offset = self.frame.origin.y;
                         
                         self.userInteractionEnabled = YES;
                         
@@ -2119,7 +2170,7 @@ const CGFloat ABBufferTabBar = 49.0f;
                         self.closeButton.userInteractionEnabled = YES;
                         
                         self.track.userInteractionEnabled = !isMinimized;
-                        offset = self.frame.origin.y;
+                        self.offset = self.frame.origin.y;
                         
                         self.userInteractionEnabled = YES;
                         
@@ -2146,7 +2197,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         //        [self logFrame:self.superview.frame withTag:@"Superview"];
         //        [self logFrame:frame withTag:@"Subview"];
         
-        CGFloat difference = [gesture locationInView:self].x - xSwipePosition;
+        CGFloat difference = [gesture locationInView:self].x - self.xSwipePosition;
         
         CGFloat tempOffset = self.frame.origin.x + difference;
         
@@ -2155,19 +2206,19 @@ const CGFloat ABBufferTabBar = 49.0f;
         if (offsetRatio >= 1) {
             origin.y = self.maxViewOffset;
             origin.x = self.superviewWidth;
-            offset = self.maxViewOffset;
+            self.offset = self.maxViewOffset;
             self.alpha = 0;
         }
         else if (offsetRatio < 0) {
             origin.y = self.maxViewOffset;
             origin.x = self.superviewWidth - (self.minViewWidth + 12.0f);
-            offset = self.maxViewOffset;
+            self.offset = self.maxViewOffset;
             self.alpha = 1;
         }
         else {
             origin.y = self.maxViewOffset;
             origin.x += difference;
-            offset = self.maxViewOffset;
+            self.offset = self.maxViewOffset;
             self.alpha = (1 - offsetRatio);
         }
         
@@ -2179,8 +2230,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         }];
         
         
-        ySwipePosition = [gesture locationInView:self].y;
-        xSwipePosition = [gesture locationInView:self].x;
+        self.ySwipePosition = [gesture locationInView:self].y;
+        self.xSwipePosition = [gesture locationInView:self].x;
     }
     
 }
@@ -2200,8 +2251,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         //        [self logFrame:self.superview.frame withTag:@"Superview"];
         //        [self logFrame:frame withTag:@"Subview"];
         
-        CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
-        CGFloat tempOffset = offset + difference;
+        CGFloat difference = [gesture locationInView:self].y - self.ySwipePosition;
+        CGFloat tempOffset = self.offset + difference;
         offsetPercentage = tempOffset / self.superviewHeight;
         
         if (offsetPercentage > 1) {
@@ -2226,15 +2277,15 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         if (testOrigin >= self.superviewHeight) {
             origin.y = self.superviewHeight;
-            offset = self.superviewHeight;
+            self.offset = self.superviewHeight;
         }
         else if (testOrigin <= 0) {
             origin.y = 0;
-            offset = 0.0f;
+            self.offset = 0.0f;
         }
         else {
             origin.y = testOrigin;
-            offset+= difference;
+            self.offset+= difference;
         }
         
         frame.origin = origin;
@@ -2251,8 +2302,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         }];
         
         
-        ySwipePosition = [gesture locationInView:self].y;
-        xSwipePosition = [gesture locationInView:self].x;
+        self.ySwipePosition = [gesture locationInView:self].y;
+        self.xSwipePosition = [gesture locationInView:self].x;
     }
     
     
@@ -2273,8 +2324,8 @@ const CGFloat ABBufferTabBar = 49.0f;
 //        [self logFrame:self.superview.frame withTag:@"Superview"];
 //        [self logFrame:frame withTag:@"Subview"];
         
-        CGFloat difference = [gesture locationInView:self].y - ySwipePosition;
-        CGFloat tempOffset = offset + difference;
+        CGFloat difference = [gesture locationInView:self].y - self.ySwipePosition;
+        CGFloat tempOffset = self.offset + difference;
         offsetPercentage = tempOffset / self.maxViewOffset;
         
         if (offsetPercentage > 1) {
@@ -2295,7 +2346,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             size.width = self.minViewWidth;
             size.height = self.minViewHeight;
             origin.x = self.superviewWidth - size.width - 12.0f;
-            offset = self.maxViewOffset;
+            self.offset = self.maxViewOffset;
 //            self.layer.cornerRadius = 1.5f;
             [self setBorderAlpha:1.0f];
             
@@ -2313,7 +2364,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             size.width = self.superviewWidth;
             size.height = self.superviewHeight;
             origin.x = 0;
-            offset = 0.0f;
+            self.offset = 0.0f;
             self.layer.cornerRadius = 0;
             [self setBorderAlpha:0.0f];
             
@@ -2329,7 +2380,7 @@ const CGFloat ABBufferTabBar = 49.0f;
             size.width = self.superviewWidth - (offsetPercentage * (self.superviewWidth - self.minViewWidth));
             size.height = self.superviewHeight - (offsetPercentage * (self.superviewHeight - self.minViewHeight));
             origin.x = self.superviewWidth - size.width - (offsetPercentage * 12.0f);
-            offset+= difference;
+            self.offset+= difference;
 //            self.layer.cornerRadius = 1.5f * offsetPercentage;
             [self setBorderAlpha:offsetPercentage];
             
@@ -2382,8 +2433,8 @@ const CGFloat ABBufferTabBar = 49.0f;
         }];
         
         
-        ySwipePosition = [gesture locationInView:self].y;
-        xSwipePosition = [gesture locationInView:self].x;
+        self.ySwipePosition = [gesture locationInView:self].y;
+        self.xSwipePosition = [gesture locationInView:self].x;
     }
     
     
@@ -2754,7 +2805,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void) setPlayButtonHidden:(BOOL)playButtonHidden {
     _playButtonHidden = playButtonHidden;
     
-    self.playIndicatorView = [self imageForPlayButton];
+    self.playIndicatorView.image = [self imageForPlayButton];
 }
 
 - (void) handleCloseButtonDisplay: (ABMediaView *) mediaView {
