@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "UIImage+animatedGIF.h"
+#import <AVFoundation/AVFoundation.h>
 
 typedef void (^ImageDataBlock)(UIImage *image, NSString *key, NSError *error);
 typedef void (^VideoDataBlock)(NSURL *videoPath, NSString *key, NSError *error);
@@ -101,7 +102,7 @@ typedef NS_ENUM(NSInteger, CacheType) {
 + (void)loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock;
 
 /// Load audio from the iPod music library directory
-+ (void) loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock;
++ (void)loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock;
 
 /// Load GIF and store in cache, or retrieve gif from cache if already stored (by string)
 + (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock;
@@ -113,9 +114,12 @@ typedef NS_ENUM(NSInteger, CacheType) {
 + (void)loadGIFData:(NSData *)data completion:(GIFDataBlock)completionBlock;
 
 /// Remove videos from documents directory
-+ (void) clearDirectory:(NSInteger)type;
++ (void)clearDirectory:(NSInteger)type;
 
 /// Determines if the url should be downloaded for the cache type
-+ (void) detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock;
++ (void)detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock;
+
+/// Exports an asset to disk given the asset, a url, and the type of cache
++ (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVURLAsset *)asset;
 
 @end

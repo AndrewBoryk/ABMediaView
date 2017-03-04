@@ -11,11 +11,11 @@
 @implementation ABCommons
 
 #pragma mark - Conditional Oriented
+
 + (BOOL)notNull:(id)object {
     if ([object isEqual:[NSNull null]] || [object isKindOfClass:[NSNull class]] || object == nil) {
         return false;
-    }
-    else {
+    } else {
         return true;
     }
 }
