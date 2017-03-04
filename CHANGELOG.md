@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 ***
 
-##(Unreleased)
+##0.4.1 (3/4/17)
 
 ####Added:
 * Automated Caching for Images, GIFs and Videos, enabled by setting the variable 'setShouldCacheMedia' on the ABMediaView sharedManager.
