@@ -286,11 +286,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45567E681E596B44009DF236 /* ABCacheManager.h in Headers */,
 				451306D61E428935004FA6D3 /* ABCommons.h in Headers */,
 				337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */,
 				4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */,
 				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
+				45567E681E596B44009DF236 /* ABCacheManager.h in Headers */,
 				453162191E3E958200A069FC /* ABPlayer.h in Headers */,
 				453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */,
 				4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */,

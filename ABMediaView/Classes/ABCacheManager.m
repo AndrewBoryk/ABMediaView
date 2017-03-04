@@ -8,6 +8,7 @@
 
 #import "ABCacheManager.h"
 #import "ABCommons.h"
+#import <AVFoundation/AVFoundation.h>
 
 @implementation ABCacheManager
 
@@ -504,6 +505,85 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 }];
                 
                 
+            }
+            
+        }
+        else {
+            if(completionBlock) completionBlock(nil, nil, nil);
+        }
+    });
+}
+
++ (void) loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CacheType type = AudioCache;
+        
+        if ([ABCommons notNull:urlString]) {
+            NSURL *filePathTest = [ABCacheManager getCache:type objectForKey:urlString];
+            if ([ABCommons notNull: filePathTest]) {
+                [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                if(completionBlock) completionBlock(filePathTest, urlString, nil);
+            }
+            else {
+                NSURL *url = [NSURL URLWithString:urlString];
+                
+                [[ABCacheManager sharedManager] addQueue:AudioCache object:urlString forKey:urlString];
+                AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+                AVAssetExportSession *exporter = [[AVAssetExportSession alloc]
+                                                  initWithAsset: songAsset
+                                                  presetName: AVAssetExportPresetAppleM4A];
+                NSLog (@"created exporter. supportedFileTypes: %@", exporter.supportedFileTypes);
+                exporter.outputFileType = @"com.apple.m4a-audio";
+                
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                
+                NSString *directoryPath = [NSString stringWithFormat: @"%@/ABMedia/Audio", documentsDirectory];
+                
+                if (![[NSFileManager defaultManager] fileExistsAtPath:directoryPath])
+                    [[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:NO attributes:nil error:nil]; //Create folder
+                
+                NSString *uniqueFileName = urlString.lastPathComponent;
+                
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@.m4a", directoryPath, uniqueFileName];
+                
+                NSError *error;
+                if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+                }
+                
+                NSURL *exportURL = [NSURL fileURLWithPath:filePath];
+                exporter.outputURL = exportURL;
+                
+                // do the export
+                [exporter exportAsynchronouslyWithCompletionHandler:^{
+                    [[ABCacheManager sharedManager] removeFromQueue:AudioCache forKey:urlString];
+                    int exportStatus = exporter.status;
+                    switch (exportStatus) {
+                        case AVAssetExportSessionStatusFailed: {
+                            // log error to text view
+                            NSError *exportError = exporter.error;
+                            NSLog (@"AVAssetExportSessionStatusFailed: %@",
+                                   exportError);
+                            break;
+                        }
+                        case AVAssetExportSessionStatusCompleted: {
+                            NSLog (@"AVAssetExportSessionStatusCompleted");
+                            [ABCacheManager setCache:AudioCache object:exporter.outputURL forKey:urlString];
+                            break;
+                        }
+                        case AVAssetExportSessionStatusUnknown: {
+                            NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
+                        case AVAssetExportSessionStatusExporting: {
+                            NSLog (@"AVAssetExportSessionStatusExporting"); break;}
+                        case AVAssetExportSessionStatusCancelled: {
+                            NSLog (@"AVAssetExportSessionStatusCancelled"); break;}
+                        case AVAssetExportSessionStatusWaiting: {
+                            NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
+                        default: { NSLog (@"didn't get export status"); break;}
+                    }
+                    
+                }];
             }
             
         }

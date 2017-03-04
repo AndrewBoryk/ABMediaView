@@ -100,6 +100,9 @@ typedef NS_ENUM(NSInteger, CacheType) {
 /// Load audio and store in cache, or retrieve audio from cache if already stored
 + (void)loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock;
 
+/// Load audio from the iPod music library directory
++ (void) loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock;
+
 /// Load GIF and store in cache, or retrieve gif from cache if already stored (by string)
 + (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock;
 
