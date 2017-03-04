@@ -34,11 +34,11 @@ typedef NS_ENUM(NSInteger, AudioType) {
 + (id)sharedManager;
 
 /// Sets the audio when the ABPlayer is supposed to play
-- (void) setAudioWhenPlaying;
+- (void)setAudioWhenPlaying;
 
 /// Sets the audio when the ABPlayer is supposed to pause
-- (void) setAudioWhenStopping;
+- (void)setAudioWhenStopping;
 
 /// Set the audio session type to play audio when video is playing, and mute it when not
-- (void) setAudioSession: (AudioType) type;
+- (void)setAudioSession:(AudioType)type;
 @end

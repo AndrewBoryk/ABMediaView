@@ -28,7 +28,7 @@
 + (BOOL)isNil:(id)object;
 
 /// Returns true if the object is not just spaces or blank, otherwise returns false
-+ (BOOL)notBlank: (NSString *) text;
++ (BOOL)notBlank:(NSString *)text;
 
 /// Determines if the view is in landscape mode and has rotated to landscape mode
 + (BOOL)isLandscape;
@@ -40,26 +40,26 @@
  * @param text the string looking to be converted
  * @return a string without special characters
  */
-+ (NSString *)removeSpecialCharacters: (NSString *) text;
++ (NSString *)removeSpecialCharacters:(NSString *)text;
 
 /// Trims white space and removes extra new lines from string
-+ (NSString *)trimWhiteSpace: (NSString *) text;
++ (NSString *)trimWhiteSpace:(NSString *)text;
 
 /// Replaces instances of "\n\n" with "\n" and "  " with " "
-+ (NSString *)trimMultiSpace: (NSString *) text;
++ (NSString *)trimMultiSpace:(NSString *)text;
 
 /// Trims white space and removes extra new lines from string, and replaces instances of "\n\n" with "\n" and "  " with " "
-+ (NSString *)trimWhiteAndMultiSpace: (NSString *) text;
++ (NSString *)trimWhiteAndMultiSpace:(NSString *)text;
 
 /*!
  * @brief Removes spaces from a string
  * @param text The string that spaces will be removed from
  * @return A string without spaces
  */
-+ (NSString *)removeSpaces: (NSString *) text;
++ (NSString *)removeSpaces:(NSString *)text;
 
 /// Determine that string is not blank and not null
-+ (BOOL)isValidEntry: (NSString *) text;
++ (BOOL)isValidEntry:(NSString *)text;
 
 /// Returns the width of the view
 + (float)viewWidth;

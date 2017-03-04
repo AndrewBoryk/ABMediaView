@@ -32,36 +32,35 @@
         self.mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-50, -50, 0, 0)];
         
         [[self.mpVolumeView subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            
             if ([obj isKindOfClass:[UISlider class]]) {
                 self.volumeSlider = obj;
                 *stop = YES;
             }
+            
         }];
         
         UIWindow* currentWindow = [UIApplication sharedApplication].keyWindow;
         
         if (self.mpVolumeView) [currentWindow addSubview:self.mpVolumeView];
         
-        
-        
     }
     return self;
 }
 
-- (void) setAudioWhenPlaying {
+- (void)setAudioWhenPlaying {
     [[ABVolumeManager sharedManager] setAudioSession:self.defaultAudioPlayingType];
 }
 
-- (void) setAudioWhenStopping {
+- (void)setAudioWhenStopping {
     [[ABVolumeManager sharedManager] setAudioSession:self.defaultAudioStoppingType];
 }
 
-- (void) setAudioSession: (AudioType) type {
+- (void)setAudioSession:(AudioType)type {
     
     if (type == PlayAudioWhenSilent) {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
-    }
-    else {
+    } else {
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategorySoloAmbient
                                          withOptions:AVAudioSessionCategoryOptionMixWithOthers
                                                error:nil];

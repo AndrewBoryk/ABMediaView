@@ -19,7 +19,7 @@
  }
  */
 
-- (instancetype) initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     
     if (self) {
@@ -87,7 +87,7 @@
     return self;
 }
 
-- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
@@ -151,7 +151,7 @@
     return self;
 }
 
-- (void) addShadow {
+- (void)addShadow {
     self.barBackgroundView.layer.masksToBounds = NO;
     self.barBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.barBackgroundView.layer.shadowOffset = CGSizeMake(0, 2);
@@ -159,13 +159,14 @@
     self.barBackgroundView.layer.shadowRadius = 4.0f;
 }
 
-- (void) setProgress:(NSNumber *)progress withDuration: (CGFloat) duration {
+- (void)setProgress:(NSNumber *)progress withDuration:(CGFloat)duration {
     _progress = progress;
     _duration = duration;
     
     [self updateProgress];
     
     int trackInt = 0;
+    
     if ([ABCommons notNull:progress]) {
         trackInt = progress.intValue;
     }
@@ -183,28 +184,27 @@
     
     if (seconds < 10) {
         self.currentTimeLabel.text = [NSString stringWithFormat:@"%i:0%i", minutes, seconds];
-    }
-    else {
+    } else {
         self.currentTimeLabel.text = [NSString stringWithFormat:@"%i:%i", minutes, seconds];
     }
     
     if (doneSeconds < 10) {
         self.totalTimeLabel.text = [NSString stringWithFormat:@"%i:0%i", doneMinutes, doneSeconds];
-    }
-    else {
+    } else {
         self.totalTimeLabel.text = [NSString stringWithFormat:@"%i:%i", doneMinutes, doneSeconds];
     }
+    
 }
 
-- (void) updateProgress {
+- (void)updateProgress {
     
     if ([ABCommons notNull:self.progress]) {
         CGFloat prog = self.progress.floatValue;
         
         if (prog == 0) {
             self.progressView.frame = CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight);
-        }
-        else {
+        } else {
+            
             if (isnan(self.duration)) {
                 self.duration = 15.0f;
             }
@@ -217,25 +217,25 @@
             }];
         }
     }
+    
 }
 
-- (void) setBuffer:(NSNumber *)buffer withDuration: (CGFloat) duration {
-    
+- (void)setBuffer:(NSNumber *)buffer withDuration:(CGFloat)duration {
     _buffer = buffer;
     _duration = duration;
     
     [self updateBuffer];
-    
 }
 
 - (void) updateBuffer {
+    
     if ([ABCommons notNull:self.buffer]) {
         CGFloat buff = self.buffer.floatValue;
         
         if (buff == 0) {
             self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight);
-        }
-        else {
+        } else {
+            
             if (isnan(self.duration)) {
                 self.duration = 15.0f;
             }
@@ -247,13 +247,14 @@
                 self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, width, _barHeight);
             }];
         }
-    }
-    else {
+        
+    } else {
         self.bufferView.frame = CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight);
     }
+    
 }
 
-- (void) updateBarBackground {
+- (void)updateBarBackground {
     [UIView animateWithDuration:0.1f animations:^{
         self.barBackgroundView.frame = CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight);
         self.currentTimeLabel.frame = CGRectMake(8, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f);
@@ -261,7 +262,8 @@
     }];
 }
 
-- (void) seekToPoint: (float) point {
+- (void)seekToPoint:(float)point {
+    
     if (point <= self.bufferView.frame.size.width && self.canSeek) {
         float ratio = point/self.frame.size.width;
         
@@ -271,15 +273,18 @@
             if ([self.delegate respondsToSelector:@selector(seekToTime:)]) {
                 [self.delegate seekToTime:seekTime];
             }
+            
         }
+        
     }
+    
 }
 
-- (void) turnOnSeek {
+- (void)turnOnSeek {
     self.canSeek = YES;
 }
 
-- (void) addShadow: (UIView *) view {
+- (void)addShadow:(UIView *)view {
     view.layer.masksToBounds = NO;
     view.layer.shadowColor = [UIColor blackColor].CGColor;
     view.layer.shadowOffset = CGSizeMake(0, 0);
@@ -287,15 +292,14 @@
     view.layer.shadowRadius = 1.0f;
 }
 
-- (void) handleScrub: (UIGestureRecognizer *) gesture {
+- (void)handleScrub:(UIGestureRecognizer *)gesture {
+    
     if (gesture.state == UIGestureRecognizerStateBegan) {
         self.barHeight = 6.0f;
         
         if (self.progressView.frame.size.height == 6.0f) {
-            
             [self seekToPoint:[gesture locationInView:self].x];
-        }
-        else {
+        } else {
             [UIView animateWithDuration:0.2f animations:^{
                 self.currentTimeLabel.alpha = 1;
                 self.totalTimeLabel.alpha = 1;
@@ -308,32 +312,29 @@
         }
         
         [self.hideTimer invalidate];
-    }
-    else if (gesture.state == UIGestureRecognizerStateChanged) {
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
         if (self.progressView.frame.size.height == 6.0f) {
             
             [self seekToPoint:[gesture locationInView:self].x];
         }
         
         [self.hideTimer invalidate];
-    }
-    else if (gesture.state == UIGestureRecognizerStateEnded ||
+    } else if (gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed ||
              gesture.state == UIGestureRecognizerStateCancelled) {
         [self.hideTimer invalidate];
         
         self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f target:self selector:@selector(hideTrack) userInfo:nil repeats:NO];
     }
+    
 }
 
-- (void) trackTap: (UIGestureRecognizer *) gesture {
+- (void)trackTap:(UIGestureRecognizer *)gesture {
     self.barHeight = 6.0f;
     
     if (self.progressView.frame.size.height == 6.0f) {
-        
         [self seekToPoint:[gesture locationInView:self].x];
-    }
-    else {
+    } else {
         [UIView animateWithDuration:0.2f animations:^{
             self.currentTimeLabel.alpha = 1;
             self.totalTimeLabel.alpha = 1;
@@ -346,20 +347,22 @@
     }
     
     [self.hideTimer invalidate];
-    
     self.hideTimer = [NSTimer scheduledTimerWithTimeInterval:1.5f target:self selector:@selector(hideTrack) userInfo:nil repeats:NO];
 }
 
-- (void) setTrackFont: (UIFont *) font {
+- (void)setTrackFont:(UIFont *)font {
+    
     if ([ABCommons notNull:font]) {
         self.totalTimeLabel.font = font;
         self.currentTimeLabel.font = font;
     }
+    
 }
 
-- (void) hideTrack {
+- (void)hideTrack {
     self.barHeight = 2.0f;
     self.canSeek = NO;
+    
     [UIView animateWithDuration:0.4f animations:^{
         self.currentTimeLabel.alpha = 0;
         self.totalTimeLabel.alpha = 0;

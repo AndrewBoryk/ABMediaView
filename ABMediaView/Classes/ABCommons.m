@@ -13,45 +13,53 @@
 #pragma mark - Conditional Oriented
 
 + (BOOL)notNull:(id)object {
+    
     if ([object isEqual:[NSNull null]] || [object isKindOfClass:[NSNull class]] || object == nil) {
         return false;
     } else {
         return true;
     }
+    
 }
 
 + (BOOL)isNull:(id)object {
+    
     if ([object isEqual:[NSNull null]] || [object isKindOfClass:[NSNull class]] || object == nil) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
+    
 }
 
 + (BOOL)notNil:(id)object {
+    
     if (object == nil) {
         return false;
-    }
-    else {
+    } else {
         return true;
     }
+    
 }
 
 + (BOOL)isNil:(id)object {
+    
     if (object == nil) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
+    
 }
 
-+ (BOOL)notBlank: (NSString *) text {
++ (BOOL)notBlank:(NSString *)text {
+    
     if ([ABCommons notNull:text]) {
+        
         if (![text isEqualToString:@""]) {
             return YES;
         }
+        
     }
     
     return NO;
@@ -59,12 +67,13 @@
 
 #pragma mark - String Modification Oriented
 
-+ (NSString *)removeSpecialCharacters: (NSString *) text {
++ (NSString *)removeSpecialCharacters:(NSString *)text {
     NSCharacterSet *notAllowedChars = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"] invertedSet];
     return  [[text componentsSeparatedByCharactersInSet:notAllowedChars] componentsJoinedByString:@""];
 }
 
-+ (NSString *)trimWhiteSpace: (NSString *) text {
++ (NSString *)trimWhiteSpace:(NSString *)text {
+    
     if ([ABCommons notNull:text]) {
         text = [text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
@@ -72,8 +81,10 @@
     return text;
 }
 
-+ (NSString *)trimMultiSpace: (NSString *) text {
++ (NSString *)trimMultiSpace:(NSString *)text {
+    
     if ([ABCommons notNull:text]) {
+        
         while ([text containsString:@"  "]) {
             text = [text stringByReplacingOccurrencesOfString:@"  " withString:@" "];
         }
@@ -81,12 +92,14 @@
         while ([text containsString:@"\n\n"]) {
             text = [text stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
         }
+        
     }
     
     return text;
 }
 
-+ (NSString *)trimWhiteAndMultiSpace: (NSString *) text {
++ (NSString *)trimWhiteAndMultiSpace:(NSString *)text {
+    
     if ([ABCommons notNull:text]) {
         text = [ABCommons trimWhiteSpace:text];
         text = [ABCommons trimMultiSpace:text];
@@ -95,19 +108,23 @@
     return text;
 }
 
-+ (NSString *)removeSpaces: (NSString *) text {
++ (NSString *)removeSpaces:(NSString *)text {
     text = [self trimWhiteAndMultiSpace:text];
     text = [text stringByReplacingOccurrencesOfString:@" " withString:@""];
     text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     return text;
 }
 
-+ (BOOL)isValidEntry: (NSString *) text {
++ (BOOL)isValidEntry:(NSString *)text {
+    
     if ([ABCommons notNull:text]) {
+        
         if ([ABCommons notBlank:[ABCommons removeSpaces:text]]) {
             return YES;
         }
+        
     }
+    
     return NO;
 }
 
@@ -165,20 +182,19 @@
         
         if (height < width) {
             return YES;
-        }
-        else {
+        } else {
             return NO;
         }
-    }
-    else {
+        
+    } else {
         
         if (height > width) {
             return NO;
-        }
-        else {
+        } else {
             return YES;
         }
         
     }
 }
+
 @end

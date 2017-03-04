@@ -11,13 +11,13 @@
 
 @implementation ABPlayer
 
-- (void) play {
+- (void)play {
     [[ABVolumeManager sharedManager] setAudioWhenPlaying];
     
     [super play];
 }
 
-- (void) pause {
+- (void)pause {
     [[ABVolumeManager sharedManager] setAudioWhenStopping];
     
     [super pause];

@@ -59,25 +59,26 @@
 @property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
 
 /// Update progress for the streaming video
-- (void) setProgress:(NSNumber *)progress withDuration: (CGFloat) duration;
+- (void)setProgress:(NSNumber *)progress withDuration:(CGFloat)duration;
 
 /// Update buffer for the streaming video
-- (void) setBuffer:(NSNumber *)buffer withDuration: (CGFloat) duration;
+- (void)setBuffer:(NSNumber *)buffer withDuration:(CGFloat)duration;
 
 /// Updates UI to reflect current progress
-- (void) updateProgress;
+- (void)updateProgress;
 
 /// Updates UI to reflect current buffer
-- (void) updateBuffer;
+- (void)updateBuffer;
 
 /// Update UI for bar background
-- (void) updateBarBackground;
+- (void)updateBarBackground;
 
 /// Minimize the progress track
-- (void) hideTrack;
+- (void)hideTrack;
 
 /// Set font for track labels
-- (void) setTrackFont: (UIFont *) font;
+- (void)setTrackFont:(UIFont *)font;
+
 @end
 
 @protocol ABTrackViewDelegate <NSObject>
@@ -85,6 +86,6 @@
 @optional
 
 /// Seek to a time
-- (void) seekToTime: (float) time;
+- (void)seekToTime:(float)time;
 
 @end

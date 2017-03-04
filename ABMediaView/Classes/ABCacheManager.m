@@ -36,8 +36,10 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     return self;
 }
 
-- (id) getCache: (CacheType) type objectForKey: (NSString *) key {
+- (id)getCache:(CacheType)type objectForKey:(NSString *)key {
+    
     if ([ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 return [self.imageCache objectForKey:key];
@@ -56,12 +58,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 return nil;
                 break;
         }
+        
     }
+    
     return nil;
 }
 
-- (void) setCache: (CacheType) type object: (id) object forKey: (NSString *) key {
+- (void)setCache:(CacheType)type object:(id)object forKey:(NSString *)key {
+    
     if ([ABCommons notNull:object] && [ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 [self.imageCache setObject:object forKey:key];
@@ -79,12 +85,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 
                 break;
         }
+        
     }
     
 }
 
-- (void) removeCache: (CacheType) type forKey: (NSString *) key {
+- (void)removeCache:(CacheType)type forKey:(NSString *)key {
+    
     if ([ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 [self.imageCache removeObjectForKey:key];
@@ -104,12 +113,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 
                 break;
         }
+        
     }
     
 }
 
-- (id) getQueue: (CacheType) type objectForKey: (NSString *) key {
+- (id)getQueue:(CacheType)type objectForKey:(NSString *)key {
+    
     if ([ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 return [self.imageQueue objectForKey:key];
@@ -128,12 +140,16 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 return nil;
                 break;
         }
+        
     }
+    
     return nil;
 }
 
-- (void) addQueue: (CacheType) type object: (id) object forKey: (NSString *) key {
+- (void)addQueue:(CacheType)type object:(id)object forKey:(NSString *)key {
+    
     if ([ABCommons notNull:object] && [ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 [self.imageQueue setObject:object forKey:key];
@@ -152,12 +168,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 
                 break;
         }
+        
     }
     
 }
 
-- (void) removeFromQueue: (CacheType) type forKey: (NSString *) key {
+- (void)removeFromQueue:(CacheType)type forKey:(NSString *)key {
+    
     if ([ABCommons notNull:key]) {
+        
         switch (type) {
             case ImageCache:
                 [self.imageQueue removeObjectForKey:key];
@@ -176,6 +195,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 
                 break;
         }
+        
     }
     
 }
@@ -183,14 +203,18 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 
 + (void)loadGIF:(NSString *)urlString completion:(GIFDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
         if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
             [ABCacheManager loadGIFURL:url completion:^(UIImage *gif, NSString *key, NSError *error) {
+                
                 if(completionBlock) completionBlock(gif, key, error);
+                
             }];
-        }
-        else {
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
     });
 }
@@ -204,11 +228,15 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             NSString *urlString = url.absoluteString;
             
             UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
+            
             if ([ABCommons notNull: fileImage]) {
+                
                 if(completionBlock) completionBlock(fileImage, urlString, nil);
-            }
-            else {
+                
+            } else {
+                
                 if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
+                    
                     if ([ABCommons notNull:url]) {
                         
                         [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
@@ -222,15 +250,17 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                         [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                         
                         if(completionBlock) completionBlock(image, urlString, nil);
-                    }
-                    else {
+                        
+                    } else {
+                        
                         if(completionBlock) completionBlock(nil, nil, nil);
+                        
                     }
-                }
-                else {
                     
                 }
+                
             }
+            
         }
         else {
             if(completionBlock) completionBlock(nil, nil, nil);
@@ -246,45 +276,60 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         if ([ABCommons notNull:data]) {
             
             UIImage *image = [UIImage animatedImageWithAnimatedGIFData:data];
+            
             if(completionBlock) completionBlock(image, nil, nil);
-        }
-        else {
+            
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
+        
     });
 }
 
 + (void)loadImage:(NSString *)urlString completion:(ImageDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
         if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
             [ABCacheManager loadImageURL:url completion:^(UIImage *image, NSString *key, NSError *error) {
+                
                 if(completionBlock) completionBlock(image, key, error);
+                
             }];
-        }
-        else {
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
+        
     });
 }
 
 + (void)loadImageURL:(NSURL *)url completion:(ImageDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         CacheType type = ImageCache;
+        
         if ([ABCommons notNull:url]) {
             NSString *urlString = url.absoluteString;
-            
             UIImage *fileImage = [ABCacheManager getCache:type objectForKey:urlString];
+            
             if ([ABCommons notNull: fileImage]) {
+                
                 if(completionBlock) completionBlock(fileImage, urlString, nil);
+                
             }
             else {
+                
                 if ([[ABCacheManager sharedManager] getQueue:type objectForKey:urlString] == nil) {
+                    
                     if ([ABCommons notNull:url]) {
                         
                         [[ABCacheManager sharedManager] addQueue:type object:urlString forKey:urlString];
                         
                         NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                            
                             if (data) {
                                 UIImage *image = [UIImage imageWithData:data];
                                 
@@ -297,40 +342,46 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                         [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                         
                                         if(completionBlock) completionBlock(image, urlString, nil);
+                                        
                                     });
                                 }
+                                
                             }
+                            
                         }];
                         
                         [task resume];
-                    }
-                    else {
+                    } else {
+                        
                         if(completionBlock) completionBlock(nil, nil, nil);
+                        
                     }
-                }
-                else {
-                    
                 }
             }
-        }
-        else {
+        } else {
             if(completionBlock) completionBlock(nil, nil, nil);
         }
     });
 
 }
 
-+ (void) loadVideo:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
++ (void)loadVideo:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
         if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
+            
             [ABCacheManager loadVideoURL:url completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                
                 if(completionBlock) completionBlock(videoPath, key, error);
+                
             }];
+            
         }
         else {
             if(completionBlock) completionBlock(nil, nil, nil);
         }
+        
     });
 }
 
@@ -343,9 +394,12 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             
             if ([ABCommons notNull:url]) {
                 NSURL *filePath = [ABCacheManager getCache:type objectForKey:urlString];
+                
                 if ([ABCommons notNull: filePath]) {
                     [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                    
                     if(completionBlock) completionBlock(filePath, urlString, nil);
+                    
                 }
                 else {
                     [ABCacheManager detectIfURL:url isValidForCacheType:type completion:^(BOOL isValidURL) {
@@ -353,6 +407,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                             //download the file in a seperate thread.
                             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                 NSData *urlData = [NSData dataWithContentsOfURL:url];
+                                
                                 if (urlData)
                                 {
                                     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -388,55 +443,65 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                             [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                             
                                             if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                                        }
-                                        else {
+                                            
+                                        } else {
                                             [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                             
                                             if(completionBlock) completionBlock(nil, urlString, nil);
+                                            
                                         }
                                         
                                     });
+                                    
                                 }
                                 
                             });
-                        }
-                        else {
+                            
+                        } else {
+                            
                             if(completionBlock) completionBlock(nil, nil, nil);
+                            
                         }
                     }];
                     
                     
                 }
-            }
-            else {
+            } else {
+                
                 if(completionBlock) completionBlock(nil, nil, nil);
+                
             }
         }
         else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
-        
         
     });
     
 }
 
-+ (void) loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
++ (void)loadAudio:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
         if ([ABCommons notNull:urlString]) {
             NSURL *url = [NSURL URLWithString:urlString];
             [ABCacheManager loadAudioURL:url completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                
                 if(completionBlock) completionBlock(audioPath, key, error);
+                
             }];
-        }
-        else {
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
         
     });
 }
 
-+ (void) loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock {
++ (void)loadAudioURL:(NSURL *)url completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         CacheType type = AudioCache;
         
@@ -445,9 +510,10 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             NSURL *filePath = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: filePath]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                
                 if(completionBlock) completionBlock(filePath, urlString, nil);
-            }
-            else {
+                
+            } else {
                 [ABCacheManager detectIfURL:url isValidForCacheType:type completion:^(BOOL isValidURL) {
                     if (isValidURL) {
                         //download the file in a seperate thread.
@@ -487,43 +553,52 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                         [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                         
                                         if(completionBlock) completionBlock(cachedURL, urlString, nil);
-                                    }
-                                    else {
+                                        
+                                    } else {
                                         [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                         
                                         if(completionBlock) completionBlock(nil, urlString, nil);
+                                        
                                     }
                                 });
+                                
                             }
                             
                         });
-                    }
-                    else {
+                        
+                    } else {
+                        
                         if(completionBlock) completionBlock(nil, nil, nil);
+                        
                     }
+                    
                 }];
-                
                 
             }
             
-        }
-        else {
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
+        
     });
+    
 }
 
-+ (void) loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
++ (void)loadMusicLibrary:(NSString *)urlString completion:(AudioDataBlock)completionBlock {
     dispatch_async(dispatch_get_main_queue(), ^{
         CacheType type = AudioCache;
         
         if ([ABCommons notNull:urlString]) {
             NSURL *filePathTest = [ABCacheManager getCache:type objectForKey:urlString];
+            
             if ([ABCommons notNull: filePathTest]) {
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
+                
                 if(completionBlock) completionBlock(filePathTest, urlString, nil);
-            }
-            else {
+                
+            } else {
                 NSURL *url = [NSURL URLWithString:urlString];
                 
                 [[ABCacheManager sharedManager] addQueue:AudioCache object:urlString forKey:urlString];
@@ -558,6 +633,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 [exporter exportAsynchronouslyWithCompletionHandler:^{
                     [[ABCacheManager sharedManager] removeFromQueue:AudioCache forKey:urlString];
                     int exportStatus = exporter.status;
+                    
                     switch (exportStatus) {
                         case AVAssetExportSessionStatusFailed: {
                             // log error to text view
@@ -585,11 +661,13 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                 }];
             }
             
-        }
-        else {
+        } else {
+            
             if(completionBlock) completionBlock(nil, nil, nil);
+            
         }
     });
+    
 }
 
 + (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVURLAsset *)asset {
@@ -636,8 +714,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             
             if (type == VideoCache) {
                 exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
-            }
-            else if (type == AudioCache) {
+            } else if (type == AudioCache) {
                 exporter = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetAppleM4A];
             }
             
@@ -702,45 +779,43 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
-+ (void) clearDirectory:(NSInteger)type {
++ (void)clearDirectory:(NSInteger)type {
     NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/"];
     
     if (type == VideoDirectoryItems) {
         path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Video/"];
         [[ABCacheManager sharedManager] resetCache: VideoCache];
-    }
-    else if (type == AudioDirectoryItems) {
+    } else if (type == AudioDirectoryItems) {
         path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Audio/"];
         [[ABCacheManager sharedManager] resetCache: AudioCache];
-    }
-    else if (type == TempDirectoryItems) {
+    } else if (type == TempDirectoryItems) {
         path = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp/"];
-    }
-    else {
+    } else {
         [[ABCacheManager sharedManager] resetCache: VideoCache];
         [[ABCacheManager sharedManager] resetCache: AudioCache];
     }
     
     NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    
     for (NSString *string in array) {
         NSString *fullPath = [path stringByAppendingPathComponent:string];
         
         /// Make sure not to remove realm file
         [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
     }
+    
 }
 
-+ (NSURL *) directory:(DirectoryItemType)type containsFile:(NSString *)fileEndingComponent {
++ (NSURL *)directory:(DirectoryItemType)type containsFile:(NSString *)fileEndingComponent {
+    
     if ([ABCommons notNull:fileEndingComponent]) {
         NSString *path;
         
         if (type == VideoDirectoryItems) {
             path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Video/"];
-        }
-        else if (type == AudioDirectoryItems) {
+        } else if (type == AudioDirectoryItems) {
             path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/Audio/"];
-        }
-        else {
+        } else {
             path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/ABMedia/"];
         }
         
@@ -756,7 +831,8 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
-- (NSCache *) cacheForType: (CacheType) type {
+- (NSCache *)cacheForType:(CacheType)type {
+    
     switch (type) {
         case ImageCache:
             return self.imageCache;
@@ -775,9 +851,11 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             return nil;
             break;
     }
+    
 }
 
-- (NSCache *) queueForType: (CacheType) type {
+- (NSCache *)queueForType:(CacheType)type {
+    
     switch (type) {
         case ImageCache:
             return self.imageQueue;
@@ -796,9 +874,10 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             return nil;
             break;
     }
+    
 }
 
-+ (void) detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock {
++ (void)detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock {
     NSURLRequest *request = [NSURLRequest requestWithURL: url];
     [NSURLConnection
      sendAsynchronousRequest:request
@@ -814,54 +893,71 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
              
              if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
                  NSDictionary *dictionary = [httpResponse allHeaderFields];
+                 
                  if ([ABCommons notNull:[dictionary valueForKey:@"content-type"]]) {
                      NSString *contentType = [dictionary valueForKey:@"content-type"];
+                     
                      if ([contentType containsString:@"video/"] && type == VideoCache) {
+                         
                          if (completionBlock) completionBlock(YES);
-                     }
-                     else if ([contentType containsString:@"audio/"] && type == AudioCache) {
+                         
+                     } else if ([contentType containsString:@"audio/"] && type == AudioCache) {
+                         
                          if (completionBlock) completionBlock(YES);
-                     }
-                     else if ([contentType containsString:@"image/gif"] && type == GIFCache) {
+                         
+                     } else if ([contentType containsString:@"image/gif"] && type == GIFCache) {
+                         
                          if (completionBlock) completionBlock(YES);
-                     }
-                     else if ([contentType containsString:@"image/"] && type == ImageCache) {
+                         
+                     } else if ([contentType containsString:@"image/"] && type == ImageCache) {
+                         
                          if (completionBlock) completionBlock(YES);
-                     }
-                     else {
+                         
+                     } else {
+                         
                          if (completionBlock) completionBlock(NO);
+                         
                      }
-                 }
-                 else {
+                     
+                 } else {
+                     
                      if (completionBlock) completionBlock(NO);
+                     
                  }
-             }
-             else {
+                 
+             } else {
+                 
                  if (completionBlock) completionBlock(NO);
+                 
              }
-         }
-         else if ([data length] == 0 && error == nil)
-         {
+             
+         } else if ([data length] == 0 && error == nil) {
              NSLog(@"Nothing was downloaded.");
+             
              if (completionBlock) completionBlock(NO);
-         }
-         else if (error != nil){
+             
+         } else if (error != nil) {
              NSLog(@"Error = %@", error);
+        
              if (completionBlock) completionBlock(NO);
+             
          }
          
      }];
+    
 }
 
-- (void) setCacheMediaWhenDownloaded:(BOOL)cacheMediaWhenDownloaded {
+- (void)setCacheMediaWhenDownloaded:(BOOL)cacheMediaWhenDownloaded {
     _cacheMediaWhenDownloaded = cacheMediaWhenDownloaded;
     
     if (!self.cacheMediaWhenDownloaded) {
         [self resetAllCaches];
     }
+    
 }
 
-- (void) resetCache:(CacheType)type {
+- (void)resetCache:(CacheType)type {
+    
     switch (type) {
         case ImageCache:
             self.imageCache = [[NSCache alloc] init];
@@ -879,9 +975,10 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         default:
             break;
     }
+    
 }
 
-- (void) resetAllCaches {
+- (void)resetAllCaches {
     self.imageCache = [[NSCache alloc] init];
     self.videoCache = [[NSCache alloc] init];
     self.audioCache = [[NSCache alloc] init];
@@ -899,14 +996,12 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
         if ([ABCommons notNull:key]) {
             if (type == VideoCache) {
                 return [self directory:VideoDirectoryItems containsFile:key.lastPathComponent];
-            }
-            else if (type == AudioCache) {
+            } else if (type == AudioCache) {
                 return [self directory:AudioDirectoryItems containsFile:key.lastPathComponent];
             }
         }
         
-    }
-    else {
+    } else {
         id cacheObject = [[ABCacheManager sharedManager] getCache:type objectForKey:key];
         
         return cacheObject;
@@ -919,4 +1014,5 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
 + (void)setCache:(CacheType)type object:(id)object forKey:(NSString *)key {
     [[ABCacheManager sharedManager] setCache:type object:object forKey:key];
 }
+
 @end
