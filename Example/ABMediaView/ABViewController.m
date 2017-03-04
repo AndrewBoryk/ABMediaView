@@ -380,11 +380,11 @@
 }
 
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {
-//    NSLog(@"Title label was selected");
+    NSLog(@"Title label was selected");
 }
 
 - (void) handleDetailsSelectionInMediaView:(ABMediaView *)mediaView {
-//    NSLog(@"Details label was selected");
+    NSLog(@"Details label was selected");
 }
 
 - (void) mediaPicker:(MPMediaPickerController *)mediaPicker didPickMediaItems:(MPMediaItemCollection *)mediaItemCollection {

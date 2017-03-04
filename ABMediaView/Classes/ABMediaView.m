@@ -11,6 +11,7 @@
 #import "ABCommons.h"
 #import "ABVolumeManager.h"
 #import "ABCacheManager.h"
+#import "ABLabel.h"
 
 const NSNotificationName ABMediaViewWillRotateNotification = @"ABMediaViewWillRotateNotification";
 const NSNotificationName ABMediaViewDidRotateNotification = @"ABMediaViewDidRotateNotification";
@@ -28,7 +29,7 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 #pragma mark - Private Interface
 
-@interface ABMediaView ()
+@interface ABMediaView () <ABLabelDelegate>
 
 #pragma mark - UI Properties
 
@@ -66,12 +67,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 /// Recognizer which keeps track of whether the user taps the view to play or pause the video
 @property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
-
-/// Recognizer for when title label is tapped
-@property (strong, nonatomic) UITapGestureRecognizer *titleTapRecognizer;
-
-/// Recognizer for when details label is tapped
-@property (strong, nonatomic) UITapGestureRecognizer *detailsTapRecognizer;
 
 /// Recognizer for when the thumbnail experiences a long press
 @property (strong, nonatomic) UILongPressGestureRecognizer *gifLongPressRecognizer;
@@ -2004,6 +1999,38 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
+#pragma mark - ABLabel Delegate Methods
+
+- (void)labelDidTouchUpInside:(ABLabel *)label {
+    
+    if (label.tag == 1000) {
+        
+        if ([self.delegate respondsToSelector:@selector(handleTitleSelectionInMediaView:)]) {
+            [self.delegate handleTitleSelectionInMediaView:self];
+        }
+        
+    }
+    else if (label.tag == 2000) {
+        
+        if ([self.delegate respondsToSelector:@selector(handleDetailsSelectionInMediaView:)]) {
+            [self.delegate handleDetailsSelectionInMediaView:self];
+        }
+        
+    }
+    
+}
+
+#pragma mark - ABTrackView Delegate Methods
+
+- (void)trackView:(ABTrackView *)trackView seekToTime:(float)time {
+    
+    if ([ABCommons notNull:self.player]) {
+        int32_t timeScale = self.player.currentItem.asset.duration.timescale;
+        CMTime timeCM = CMTimeMakeWithSeconds(time, timeScale);
+        [self.player seekToTime:timeCM toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    }
+    
+}
 
 #pragma mark - Custom Accessor Methods
 
@@ -2119,19 +2146,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 
 - (void)setTitle:(NSString *)title withDetails:(NSString *)details {
     
-    //initializes gestures
-    if (![ABCommons notNull:self.titleTapRecognizer]) {
-        self.titleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTitleTap)];
-        self.titleTapRecognizer.numberOfTapsRequired = 1;
-        self.titleTapRecognizer.delegate = self;
-    }
-    
-    if (![ABCommons notNull:self.detailsTapRecognizer]) {
-        self.detailsTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailsTap)];
-        self.detailsTapRecognizer.numberOfTapsRequired = 1;
-        self.detailsTapRecognizer.delegate = self;
-    }
-    
     [self.titleLabel removeFromSuperview];
     [self.detailsLabel removeFromSuperview];
     self.titleTopOffset = nil;
@@ -2145,19 +2159,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     if (hasTitle) {
         title = [ABCommons trimWhiteAndMultiSpace:title];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
+        self.titleLabel = [[ABLabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
         self.titleLabel.text = title;
-        self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
-        self.titleLabel.textAlignment = NSTextAlignmentLeft;
         self.titleLabel.alpha = 0.0f;
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.titleLabel.userInteractionEnabled = YES;
-        [self addShadow:self.titleLabel];
-        
-        if (![self.titleLabel.gestureRecognizers containsObject:self.titleTapRecognizer]) {
-            [self.titleLabel addGestureRecognizer:self.titleTapRecognizer];
-        }
+        self.titleLabel.touchUpInside = YES;
+        self.titleLabel.delegate = self;
+        self.titleLabel.tag = 1000;
         
         if (![self.subviews containsObject:self.titleLabel]) {
             [self addSubview:self.titleLabel];
@@ -2194,19 +2202,13 @@ const CGFloat ABBufferTabBar = 49.0f;
         
         if (hasDetails) {
             details = [ABCommons trimWhiteAndMultiSpace:details];
-            self.detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
+            self.detailsLabel = [[ABLabel alloc] initWithFrame:CGRectMake(0, 0, self.topOverlay.frame.size.width, 16.0f)];
             self.detailsLabel.text = details;
-            self.detailsLabel.textColor = [UIColor whiteColor];
             self.detailsLabel.font = [UIFont systemFontOfSize:12.0f];
-            self.detailsLabel.textAlignment = NSTextAlignmentLeft;
             self.detailsLabel.alpha = 0.0f;
-            self.detailsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            self.detailsLabel.userInteractionEnabled = YES;
-            [self addShadow:self.detailsLabel];
-            
-            if (![self.detailsLabel.gestureRecognizers containsObject:self.detailsTapRecognizer]) {
-                [self.detailsLabel addGestureRecognizer:self.detailsTapRecognizer];
-            }
+            self.detailsLabel.touchUpInside = YES;
+            self.detailsLabel.delegate = self;
+            self.detailsLabel.tag = 2000;
             
             if (![self.subviews containsObject:self.detailsLabel]) {
                 [self addSubview:self.detailsLabel];
@@ -2755,22 +2757,6 @@ const CGFloat ABBufferTabBar = 49.0f;
     return NO;
 }
 
-- (void)handleTitleTap {
-    
-    if ([self.delegate respondsToSelector:@selector(handleTitleSelectionInMediaView:)]) {
-        [self.delegate handleTitleSelectionInMediaView:self];
-    }
-    
-}
-
-- (void)handleDetailsTap {
-    
-    if ([self.delegate respondsToSelector:@selector(handleDetailsSelectionInMediaView:)]) {
-        [self.delegate handleDetailsSelectionInMediaView:self];
-    }
-    
-}
-
 - (void)updateTitleLabelOffsets:(BOOL)hasDetails {
     
     if ([ABCommons notNull:self.titleLabel]) {
@@ -2853,12 +2839,6 @@ const CGFloat ABBufferTabBar = 49.0f;
         
     }
     
-}
-
-- (void)addShadow:(UILabel *)label {
-    label.layer.masksToBounds = NO;
-    label.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.32f];
-    label.shadowOffset = CGSizeMake(0, 1);
 }
 
 - (void)setBorderAlpha:(CGFloat)alpha {
@@ -3229,15 +3209,6 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
-- (void)seekToTime:(float)time {
-    
-    if ([ABCommons notNull:self.player]) {
-        int32_t timeScale = self.player.currentItem.asset.duration.timescale;
-        CMTime timeCM = CMTimeMakeWithSeconds(time, timeScale);
-        [self.player seekToTime:timeCM toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-    }
-    
-}
 
 @end
 

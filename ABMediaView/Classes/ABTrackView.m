@@ -8,6 +8,7 @@
 
 #import "ABTrackView.h"
 #import "ABCommons.h"
+#import "ABLabel.h"
 
 @implementation ABTrackView
 
@@ -24,64 +25,8 @@
     
     if (self) {
         self.frame = frame;
-        self.backgroundColor = [UIColor clearColor];
         
-        _barHeight = 2.0f;
-        self.buffer = @0;
-        
-        self.barBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight)];
-        self.barBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
-        
-        [self addShadow];
-        
-        [self addSubview:self.barBackgroundView];
-        
-        self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
-        self.bufferView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.25f];
-        
-        [self addSubview:self.bufferView];
-        
-        self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
-        self.progressView.backgroundColor = [UIColor cyanColor];
-        
-        [self addSubview:self.progressView];
-        
-        self.currentTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
-        self.currentTimeLabel.textAlignment = NSTextAlignmentLeft;
-        self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
-        
-        [self addShadow:self.currentTimeLabel];
-        
-        self.currentTimeLabel.font = [UIFont systemFontOfSize:12.0f];
-        self.currentTimeLabel.text = @"0:00";
-        self.currentTimeLabel.alpha = 0;
-        [self addSubview:self.currentTimeLabel];
-        
-        self.totalTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
-        self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
-        self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
-        [self addShadow:self.totalTimeLabel];
-        self.totalTimeLabel.font = [UIFont systemFontOfSize:12.0f];
-        self.totalTimeLabel.text = @"0:00";
-        self.totalTimeLabel.alpha = 0;
-        [self addSubview:self.totalTimeLabel];
-        
-        self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
-        self.scrubRecognizer.delegate = self;
-        self.scrubRecognizer.delaysTouchesBegan = YES;
-        self.scrubRecognizer.cancelsTouchesInView = YES;
-        self.scrubRecognizer.maximumNumberOfTouches = 1;
-        
-        [self addGestureRecognizer:self.scrubRecognizer];
-        
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(trackTap:)];
-        self.tapRecognizer.cancelsTouchesInView = YES;
-        self.tapRecognizer.delaysTouchesBegan = YES;
-        self.tapRecognizer.delegate = self;
-        self.tapRecognizer.numberOfTapsRequired = 1;
-        self.tapRecognizer.numberOfTouchesRequired = 1;
-        
-        [self addGestureRecognizer:self.tapRecognizer];
+        [self commonInit];
     }
     
     return self;
@@ -91,72 +36,75 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        
-        _barHeight = 2.0f;
-        self.buffer = @0;
-        
-        self.barBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight)];
-        self.barBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
-        
-        [self addShadow];
-        
-        [self addSubview:self.barBackgroundView];
-        
-        self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
-        self.bufferView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.25f];
-        
-        [self addSubview:self.bufferView];
-        
-        self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
-        self.progressView.backgroundColor = [UIColor cyanColor];
-        
-        [self addSubview:self.progressView];
-        
-        self.currentTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f)];
-        self.currentTimeLabel.textAlignment = NSTextAlignmentLeft;
-        self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
-        [self addShadow:self.currentTimeLabel];
-        self.currentTimeLabel.font = [UIFont fontWithName:@"Helvetica-Nueue" size:10.0f];
-        self.currentTimeLabel.text = @"0:00";
-        self.currentTimeLabel.alpha = 0;
-        [self addSubview:self.currentTimeLabel];
-        
-        self.totalTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 20.0f, 120.0f, 20.0f)];
-        self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
-        self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
-        [self addShadow:self.totalTimeLabel];
-        self.totalTimeLabel.font = [UIFont fontWithName:@"Helvetica-Nueue" size:10.0f];
-        self.totalTimeLabel.text = @"0:00";
-        self.totalTimeLabel.alpha = 0;
-        [self addSubview:self.totalTimeLabel];
-        
-        self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
-        self.scrubRecognizer.delegate = self;
-        self.scrubRecognizer.cancelsTouchesInView = YES;
-        self.scrubRecognizer.maximumNumberOfTouches = 1;
-        
-        [self addGestureRecognizer:self.scrubRecognizer];
-        
-        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(trackTap:)];
-        self.tapRecognizer.cancelsTouchesInView = YES;
-        self.tapRecognizer.delaysTouchesBegan = YES;
-        self.tapRecognizer.delegate = self;
-        self.tapRecognizer.numberOfTapsRequired = 1;
-        self.tapRecognizer.numberOfTouchesRequired = 1;
-        
-        [self addGestureRecognizer:self.tapRecognizer];
+        [self commonInit];
     }
     
     return self;
 }
 
-- (void)addShadow {
+- (void)commonInit {
+    self.backgroundColor = [UIColor clearColor];
+    
+    _barHeight = 2.0f;
+    self.buffer = @0;
+    
+    self.barBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, self.frame.size.width, _barHeight)];
+    self.barBackgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.1f];
     self.barBackgroundView.layer.masksToBounds = NO;
     self.barBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.barBackgroundView.layer.shadowOffset = CGSizeMake(0, 2);
     self.barBackgroundView.layer.shadowOpacity = 0.8f;
     self.barBackgroundView.layer.shadowRadius = 4.0f;
+    
+    [self addSubview:self.barBackgroundView];
+    
+    self.bufferView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
+    self.bufferView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.25f];
+    
+    [self addSubview:self.bufferView];
+    
+    self.progressView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - _barHeight, 0, _barHeight)];
+    self.progressView.backgroundColor = [UIColor cyanColor];
+    
+    [self addSubview:self.progressView];
+    
+    self.currentTimeLabel = [[ABLabel alloc] initWithFrame:CGRectMake(8, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
+    self.currentTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+    self.currentTimeLabel.font = [UIFont systemFontOfSize:12.0f];
+    self.currentTimeLabel.text = @"0:00";
+    self.currentTimeLabel.alpha = 0;
+    self.currentTimeLabel.userInteractionEnabled = NO;
+    [self addShadow:self.currentTimeLabel];
+    
+    [self addSubview:self.currentTimeLabel];
+    
+    self.totalTimeLabel = [[ABLabel alloc] initWithFrame:CGRectMake(self.frame.size.width - 128, self.frame.size.height - _barHeight - 14.0f, 120.0f, 14)];
+    self.totalTimeLabel.textAlignment = NSTextAlignmentRight;
+    self.totalTimeLabel.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8f];
+    self.totalTimeLabel.font = [UIFont systemFontOfSize:12.0f];
+    self.totalTimeLabel.text = @"0:00";
+    self.totalTimeLabel.alpha = 0;
+    self.totalTimeLabel.userInteractionEnabled = NO;
+    [self addShadow:self.totalTimeLabel];
+    
+    [self addSubview:self.totalTimeLabel];
+    
+    self.scrubRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleScrub:)];
+    self.scrubRecognizer.delegate = self;
+    self.scrubRecognizer.delaysTouchesBegan = YES;
+    self.scrubRecognizer.cancelsTouchesInView = YES;
+    self.scrubRecognizer.maximumNumberOfTouches = 1;
+    
+    [self addGestureRecognizer:self.scrubRecognizer];
+    
+    self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(trackTap:)];
+    self.tapRecognizer.cancelsTouchesInView = YES;
+    self.tapRecognizer.delaysTouchesBegan = YES;
+    self.tapRecognizer.delegate = self;
+    self.tapRecognizer.numberOfTapsRequired = 1;
+    self.tapRecognizer.numberOfTouchesRequired = 1;
+    
+    [self addGestureRecognizer:self.tapRecognizer];
 }
 
 - (void)setProgress:(NSNumber *)progress withDuration:(CGFloat)duration {
@@ -270,8 +218,8 @@
         if (!isnan(_duration)) {
             float seekTime = ratio * _duration;
             
-            if ([self.delegate respondsToSelector:@selector(seekToTime:)]) {
-                [self.delegate seekToTime:seekTime];
+            if ([self.delegate respondsToSelector:@selector(trackView:seekToTime:)]) {
+                [self.delegate trackView:self seekToTime:seekTime];
             }
             
         }

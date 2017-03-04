@@ -41,4 +41,5 @@ typedef NS_ENUM(NSInteger, AudioType) {
 
 /// Set the audio session type to play audio when video is playing, and mute it when not
 - (void)setAudioSession:(AudioType)type;
+
 @end

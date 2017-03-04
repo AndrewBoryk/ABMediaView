@@ -22,6 +22,8 @@
 		45567E691E596B44009DF236 /* ABCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45567E671E596B44009DF236 /* ABCacheManager.m */; };
 		4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4573B1431E5E9ABC00AAE751 /* ABTrackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4573B1461E5E9ABC00AAE751 /* ABTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4573B1441E5E9ABC00AAE751 /* ABTrackView.m */; };
+		458C22A01E6B7E71007196BA /* ABLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 458C229E1E6B7E71007196BA /* ABLabel.h */; };
+		458C22A11E6B7E71007196BA /* ABLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 458C229F1E6B7E71007196BA /* ABLabel.m */; };
 		4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */ = {isa = PBXBuildFile; fileRef = 4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */; };
 		4943FD1CA565534F9BCC955062B7C527 /* ABMediaView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BA727EB44EBD04DB325D8F922EE1F21B /* ABMediaView-dummy.m */; };
@@ -59,6 +61,8 @@
 		4573B1431E5E9ABC00AAE751 /* ABTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABTrackView.h; sourceTree = "<group>"; };
 		4573B1441E5E9ABC00AAE751 /* ABTrackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTrackView.m; sourceTree = "<group>"; };
 		4573B1491E5EA4AF00AAE751 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		458C229E1E6B7E71007196BA /* ABLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABLabel.h; sourceTree = "<group>"; };
+		458C229F1E6B7E71007196BA /* ABLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABLabel.m; sourceTree = "<group>"; };
 		4592E8DB1E244A6400AAF01F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		4592E8DC1E244A6400AAF01F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		4919760FC8F10ADB4D56AA2DA0A02B2A /* Pods-ABMediaView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ABMediaView_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -198,6 +202,8 @@
 				74BEDC680335D0662AAB7CD9FAC4ACFB /* ABMediaView.m */,
 				453162171E3E958200A069FC /* ABPlayer.h */,
 				453162181E3E958200A069FC /* ABPlayer.m */,
+				458C229E1E6B7E71007196BA /* ABLabel.h */,
+				458C229F1E6B7E71007196BA /* ABLabel.m */,
 				4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */,
 				453162101E3E8D0F00A069FC /* ABVolumeManager.m */,
 				4573B1431E5E9ABC00AAE751 /* ABTrackView.h */,
@@ -293,6 +299,7 @@
 				45567E681E596B44009DF236 /* ABCacheManager.h in Headers */,
 				453162191E3E958200A069FC /* ABPlayer.h in Headers */,
 				453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */,
+				458C22A01E6B7E71007196BA /* ABLabel.h in Headers */,
 				4592E8DD1E244A6400AAF01F /* UIImage+animatedGIF.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,6 +415,7 @@
 				4531621A1E3E958200A069FC /* ABPlayer.m in Sources */,
 				451306D71E428935004FA6D3 /* ABCommons.m in Sources */,
 				45567E691E596B44009DF236 /* ABCacheManager.m in Sources */,
+				458C22A11E6B7E71007196BA /* ABLabel.m in Sources */,
 				4592E8DE1E244A6400AAF01F /* UIImage+animatedGIF.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

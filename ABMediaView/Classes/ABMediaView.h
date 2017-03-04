@@ -13,7 +13,7 @@
 @class ABPlayer;
 #import "ABTrackView.h"
 #import "UIImage+animatedGIF.h"
-
+@class ABLabel;
 
 /// Different types of directory items
 typedef NS_ENUM(NSInteger, DirectoryItemType) {
@@ -127,10 +127,10 @@ extern const CGFloat ABBufferTabBar;
 @property (strong, nonatomic) UIImageView *topOverlay;
 
 /// Label at the top of the mediaView, displayed within the topOverlay. Designated for a title, but other text can be inserted
-@property (strong, nonatomic) UILabel *titleLabel;
+@property (strong, nonatomic) ABLabel *titleLabel;
 
 /// Label at the top of the mediaView, displayed within the topOverlay. Designated for details
-@property (strong, nonatomic) UILabel *detailsLabel;
+@property (strong, nonatomic) ABLabel *detailsLabel;
 
 #pragma mark - Customizable Properties
 /// If all media is sourced from the same location, then the ABCacheManager will search the Directory for files with the same name when getting cached objects, since they all have the same remote location

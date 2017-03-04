@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
+@class ABLabel;
 
 @protocol ABTrackViewDelegate;
 
@@ -29,10 +30,10 @@
 @property (strong, nonatomic) UIView *barBackgroundView;
 
 /// Label which displays current time for video
-@property (strong, nonatomic) UILabel *currentTimeLabel;
+@property (strong, nonatomic) ABLabel *currentTimeLabel;
 
 /// Label which displays total time for video
-@property (strong, nonatomic) UILabel *totalTimeLabel;
+@property (strong, nonatomic) ABLabel *totalTimeLabel;
 
 /// Current progress for streaming video
 @property (strong, nonatomic) NSNumber *progress;
@@ -86,6 +87,6 @@
 @optional
 
 /// Seek to a time
-- (void)seekToTime:(float)time;
+- (void)trackView:(ABTrackView *)trackView seekToTime:(float)time;
 
 @end
