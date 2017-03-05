@@ -20,18 +20,58 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     
-    [self testImageLoading];
+    [self testImageURLValidity];
     
-    [self testGIFLoading];
+    [self testVideoURLValidity];
     
-    [self testVideoLoading];
+    [self testGIFURLValidity];
     
-    [self testAudioLoading];
+    [self testAudioURLValidity];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+- (void) testImageURLValidity {
+    [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://camendesign.com/code/video_for_everybody/poster.jpg"] isValidForCacheType:ImageCache completion:^(BOOL isValidURL) {
+        if (isValidURL) {
+            [self testImageLoading];
+        } else {
+            XCTFail(@"Image URL is invalid");
+        }
+    }];
+}
+
+- (void) testVideoURLValidity {
+    [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"] isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
+        if (isValidURL) {
+            [self testVideoLoading];
+        } else {
+            XCTFail(@"Video URL is invalid");
+        }
+    }];
+}
+
+- (void) testGIFURLValidity {
+    [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"] isValidForCacheType:GIFCache completion:^(BOOL isValidURL) {
+        if (isValidURL) {
+            [self testGIFLoading];
+        } else {
+            XCTFail(@"GIF URL is invalid");
+        }
+    }];
+}
+
+- (void) testAudioURLValidity {
+    [ABCacheManager detectIfURL:[NSURL URLWithString:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3"] isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
+        if (isValidURL) {
+            [self testAudioLoading];
+        } else {
+            XCTFail(@"Audio URL is invalid");
+        }
+    }];
 }
 
 - (void)testImageLoading {
