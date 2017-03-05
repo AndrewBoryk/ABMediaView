@@ -68,6 +68,12 @@ it, simply add the following line to your Podfile:
 pod "ABMediaView"
 ```
 
+You can add import ABMediaView to your classes with the following line:
+
+```objective-c
+#import <ABMediaView/ABMediaView.h>
+```
+
 ## Usage
 ### Calling the manager
 As a singleton class, the manager can be accessed from anywhere within your app via the + sharedManager function:
