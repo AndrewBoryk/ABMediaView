@@ -102,41 +102,25 @@
 - (void)testGetImageCacheForKey:(NSString *)key {
     UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
     
-    if ([ABCommons notNull:cachedObject]) {
-        
-    } else {
-        XCTAssertNotNil(cachedObject, "cached image should not be nil");
-    }
+    XCTAssert([ABCommons notNull:cachedObject], "cached image should not be null");
 }
 
 - (void)testGetVideoCacheForKey:(NSString *)key {
     NSString *cachedObject = [ABCacheManager getCache:VideoCache objectForKey:key];
     
-    if ([ABCommons notNull:cachedObject]) {
-        
-    } else {
-        XCTAssertNotNil(cachedObject, "cached video should not be nil");
-    }
+    XCTAssert([ABCommons notNull:cachedObject], "cached video should not be null");
 }
 
 - (void)testGetGIFCacheForKey:(NSString *)key {
     UIImage *cachedObject = [ABCacheManager getCache:GIFCache objectForKey:key];
     
-    if ([ABCommons notNull:cachedObject]) {
-        
-    } else {
-        XCTAssertNotNil(cachedObject, "cached video should not be nil");
-    }
+    XCTAssert([ABCommons notNull:cachedObject], "cached GIF should not be null");
 }
 
 - (void)testGetAudioCacheForKey:(NSString *)key {
     NSString *cachedObject = [ABCacheManager getCache:AudioCache objectForKey:key];
     
-    if ([ABCommons notNull:cachedObject]) {
-        
-    } else {
-        XCTAssertNotNil(cachedObject, "cached audio should not be nil");
-    }
+    XCTAssert([ABCommons notNull:cachedObject], "cached audio should not be null");
 }
 
 @end
