@@ -86,14 +86,7 @@
     [ABCacheManager loadImage:@"http://camendesign.com/code/video_for_everybody/poster.jpg" completion:^(UIImage *image, NSString *key, NSError *error) {
         
         if ([ABCommons notNull:image]) {
-            UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
-            
-            if ([ABCommons notNull:cachedObject]) {
-                
-            } else {
-                XCTAssertNotNil(cachedObject, "cached image should not be nil");
-            }
-            
+            [self testGetImageCacheForKey:key];
         } else {
             XCTAssertNotNil(image, "image should not be nil");
         }
@@ -105,13 +98,7 @@
     [ABCacheManager loadVideo:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" completion:^(NSURL *videoPath, NSString *key, NSError *error) {
         
         if ([ABCommons notNull:videoPath]) {
-            UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
-            
-            if ([ABCommons notNull:cachedObject]) {
-                
-            } else {
-                XCTAssertNotNil(cachedObject, "cached video should not be nil");
-            }
+            [self testGetVideoCacheForKey:key];
             
         } else {
             XCTAssertNotNil(videoPath, "videoPath should not be nil");
@@ -124,13 +111,7 @@
     [ABCacheManager loadGIF:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif" completion:^(UIImage *gif, NSString *key, NSError *error) {
         
         if ([ABCommons notNull:gif]) {
-            UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
-            
-            if ([ABCommons notNull:cachedObject]) {
-                
-            } else {
-                XCTAssertNotNil(cachedObject, "cached GIF should not be nil");
-            }
+            [self testGetGIFCacheForKey:key];
             
         } else {
             XCTAssertNotNil(gif, "GIF should not be nil");
@@ -143,19 +124,52 @@
     [ABCacheManager loadAudio:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3" completion:^(NSURL *audioPath, NSString *key, NSError *error) {
         
         if ([ABCommons notNull:audioPath]) {
-            UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
-            
-            if ([ABCommons notNull:cachedObject]) {
-                
-            } else {
-                XCTAssertNotNil(cachedObject, "cached audio should not be nil");
-            }
-            
+            [self testGetAudioCacheForKey:key];
         } else {
             XCTAssertNotNil(audioPath, "audioPath should not be nil");
         }
         
     }];
+}
+
+- (void)testGetImageCacheForKey:(NSString *)key {
+    UIImage *cachedObject = [ABCacheManager getCache:ImageCache objectForKey:key];
+    
+    if ([ABCommons notNull:cachedObject]) {
+        
+    } else {
+        XCTAssertNotNil(cachedObject, "cached image should not be nil");
+    }
+}
+
+- (void)testGetVideoCacheForKey:(NSString *)key {
+    UIImage *cachedObject = [ABCacheManager getCache:GIFCache objectForKey:key];
+    
+    if ([ABCommons notNull:cachedObject]) {
+        
+    } else {
+        XCTAssertNotNil(cachedObject, "cached video should not be nil");
+    }
+}
+
+- (void)testGetGIFCacheForKey:(NSString *)key {
+    NSString *cachedObject = [ABCacheManager getCache:VideoCache objectForKey:key];
+    
+    if ([ABCommons notNull:cachedObject]) {
+        
+    } else {
+        XCTAssertNotNil(cachedObject, "cached video should not be nil");
+    }
+}
+
+- (void)testGetAudioCacheForKey:(NSString *)key {
+    NSString *cachedObject = [ABCacheManager getCache:AudioCache objectForKey:key];
+    
+    if ([ABCommons notNull:cachedObject]) {
+        
+    } else {
+        XCTAssertNotNil(cachedObject, "cached audio should not be nil");
+    }
 }
 
 @end
