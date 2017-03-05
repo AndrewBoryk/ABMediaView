@@ -49,12 +49,13 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 * Fullscreen display with minimization and dismissal
 * Queue for presenting mediaViews in fullscreen
 * Track for buffer, progress, and scrubbing
+* Automated caching
 
 ## Future Features
 
-- [x] Swipe down to dismiss  
-- [x] Automated caching  
+- [ ] Progress and Loading views
 - [ ] Zoom
+- [ ] Tap to show details option (instead of tap to pause)
 
 Tweet me [@TrepIsLife](https://twitter.com/TrepIsLife) if you have further feature suggestions!
 
