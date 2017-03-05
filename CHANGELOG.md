@@ -4,7 +4,7 @@
 All notable changes to this project will be documented in this file.
 ***
 
-##0.4.0 (3/4/17)
+##0.4.1 (3/4/17)
 
 ####Added:
 * Automated Caching for Images, GIFs and Videos, enabled by setting the variable 'setShouldCacheMedia' on the ABMediaView sharedManager.
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
   * 'AllDirectoryItems' to remove cached videos and audio on disk loaded from ABMedaiView
   * 'TempDirectoryItems' to remove cached files in tmp directory folder
 * Functionality to not have a play button be visible by setting 'playButtonHidden' on the ABMediaView. Usefull if one is looking to use ABMediaView in a video background.
+* Tests added to ensure that caching is working properly.
 
 ####Updated
 * Media is checked to see if proper format is received from NSURL before downloading.
@@ -29,7 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ####Fixed
 * Media looking to be downloaded from ipod-library is now properly loaded and cached is specified.
-
+* AVURLAsset in exporting videos from stream changed to AVAsset.
 
 ##0.3.1 (2/18/17)
 
