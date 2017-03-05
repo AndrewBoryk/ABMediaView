@@ -11,6 +11,8 @@
 #endif
 
 #import "ABMediaView.h"
+#import "ABCacheManager.h"
+#import "ABCommons.h"
 
 FOUNDATION_EXPORT double ABMediaViewVersionNumber;
 FOUNDATION_EXPORT const unsigned char ABMediaViewVersionString[];

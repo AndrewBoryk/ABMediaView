@@ -12,13 +12,13 @@
 		1F78FE39370E8574EAC21D9BC71FDEE9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB3DE36805AF21409EC968A9691732F /* Foundation.framework */; };
 		257A5337C65A09F112F5CCB03105DF74 /* Pods-ABMediaView_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AA9A513229D3346DD7E368D707B99AA1 /* Pods-ABMediaView_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B4FB02BBD9BC494BC30B7A3B46502E02 /* ABMediaView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		451306D61E428935004FA6D3 /* ABCommons.h in Headers */ = {isa = PBXBuildFile; fileRef = 451306D41E428935004FA6D3 /* ABCommons.h */; };
+		451306D61E428935004FA6D3 /* ABCommons.h in Headers */ = {isa = PBXBuildFile; fileRef = 451306D41E428935004FA6D3 /* ABCommons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		451306D71E428935004FA6D3 /* ABCommons.m in Sources */ = {isa = PBXBuildFile; fileRef = 451306D51E428935004FA6D3 /* ABCommons.m */; };
 		453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4531620F1E3E8D0F00A069FC /* ABVolumeManager.h */; };
 		453162121E3E8D0F00A069FC /* ABVolumeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 453162101E3E8D0F00A069FC /* ABVolumeManager.m */; };
 		453162191E3E958200A069FC /* ABPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 453162171E3E958200A069FC /* ABPlayer.h */; };
 		4531621A1E3E958200A069FC /* ABPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 453162181E3E958200A069FC /* ABPlayer.m */; };
-		45567E681E596B44009DF236 /* ABCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 45567E661E596B44009DF236 /* ABCacheManager.h */; };
+		45567E681E596B44009DF236 /* ABCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 45567E661E596B44009DF236 /* ABCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		45567E691E596B44009DF236 /* ABCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45567E671E596B44009DF236 /* ABCacheManager.m */; };
 		4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4573B1431E5E9ABC00AAE751 /* ABTrackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4573B1461E5E9ABC00AAE751 /* ABTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4573B1441E5E9ABC00AAE751 /* ABTrackView.m */; };
@@ -292,11 +292,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				451306D61E428935004FA6D3 /* ABCommons.h in Headers */,
 				337A5247436B1C32ADE23F39AB28AB00 /* ABMediaView-umbrella.h in Headers */,
 				4573B1451E5E9ABC00AAE751 /* ABTrackView.h in Headers */,
-				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
 				45567E681E596B44009DF236 /* ABCacheManager.h in Headers */,
+				038A9C0B7E4EB1568D5EF8A0213E6AD5 /* ABMediaView.h in Headers */,
+				451306D61E428935004FA6D3 /* ABCommons.h in Headers */,
 				453162191E3E958200A069FC /* ABPlayer.h in Headers */,
 				453162111E3E8D0F00A069FC /* ABVolumeManager.h in Headers */,
 				458C22A01E6B7E71007196BA /* ABLabel.h in Headers */,

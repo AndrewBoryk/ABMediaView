@@ -100,7 +100,7 @@
 //    NSLog(@"Supported file types: %@", [AVURLAsset audiovisualTypes]);
 //    NSLog(@"Supported MIME types: %@", [AVURLAsset audiovisualMIMETypes]);
     
-    [self.mediaView setVideoURL:@"http://techslides.com/demos/samples/sample.mov" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andPreviewGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
+    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg" andPreviewGifURL:@"https://i.makeagif.com/media/10-02-2015/TZiwZH.gif"];
     
 //    [self.mediaView setVideoURL:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" withThumbnailURL:@"http://camendesign.com/code/video_for_everybody/poster.jpg"];
     
