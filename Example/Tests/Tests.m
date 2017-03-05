@@ -27,6 +27,15 @@
     [self testGIFURLValidity];
     
     [self testAudioURLValidity];
+    
+    [self testImageLoading];
+    
+    [self testVideoLoading];
+    
+    [self testGIFLoading];
+    
+    [self testAudioLoading];
+    
 }
 
 - (void)tearDown {
@@ -36,99 +45,57 @@
 
 - (void) testImageURLValidity {
     [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://camendesign.com/code/video_for_everybody/poster.jpg"] isValidForCacheType:ImageCache completion:^(BOOL isValidURL) {
-        
-        if (isValidURL) {
-            [self testImageLoading];
-        } else {
-            XCTFail(@"Image URL is invalid");
-        }
-        
+        XCTAssert(isValidURL, @"Image URL is invalid");
     }];
 }
 
 - (void) testVideoURLValidity {
     [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"] isValidForCacheType:VideoCache completion:^(BOOL isValidURL) {
-        
-        if (isValidURL) {
-            [self testVideoLoading];
-        } else {
-            XCTFail(@"Video URL is invalid");
-        }
-        
+        XCTAssert(isValidURL, @"Video URL is invalid");
     }];
 }
 
 - (void) testGIFURLValidity {
     [ABCacheManager detectIfURL:[NSURL URLWithString:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif"] isValidForCacheType:GIFCache completion:^(BOOL isValidURL) {
-        
-        if (isValidURL) {
-            [self testGIFLoading];
-        } else {
-            XCTFail(@"GIF URL is invalid");
-        }
-        
+        XCTAssert(isValidURL, @"GIF URL is invalid");
     }];
 }
 
 - (void) testAudioURLValidity {
     [ABCacheManager detectIfURL:[NSURL URLWithString:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3"] isValidForCacheType:AudioCache completion:^(BOOL isValidURL) {
-        
-        if (isValidURL) {
-            [self testAudioLoading];
-        } else {
-            XCTFail(@"Audio URL is invalid");
-        }
-        
+        XCTAssert(isValidURL, @"GIF URL is invalid");
     }];
 }
 
 - (void)testImageLoading {
     [ABCacheManager loadImage:@"http://camendesign.com/code/video_for_everybody/poster.jpg" completion:^(UIImage *image, NSString *key, NSError *error) {
+        XCTAssert([ABCommons notNull:image], "image should not be null");
         
-        if ([ABCommons notNull:image]) {
-            [self testGetImageCacheForKey:key];
-        } else {
-            XCTAssertNotNil(image, "image should not be nil");
-        }
-        
+        [self testGetImageCacheForKey:key];
     }];
 }
 
 - (void)testVideoLoading {
     [ABCacheManager loadVideo:@"http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+        XCTAssert([ABCommons notNull:videoPath], "videoPath should not be null");
         
-        if ([ABCommons notNull:videoPath]) {
-            [self testGetVideoCacheForKey:key];
-            
-        } else {
-            XCTAssertNotNil(videoPath, "videoPath should not be nil");
-        }
-        
+        [self testGetVideoCacheForKey:key];
     }];
 }
 
 - (void)testGIFLoading {
     [ABCacheManager loadGIF:@"http://static1.squarespace.com/static/552a5cc4e4b059a56a050501/565f6b57e4b0d9b44ab87107/566024f5e4b0354e5b79dd24/1449141991793/NYCGifathon12.gif" completion:^(UIImage *gif, NSString *key, NSError *error) {
+        XCTAssert([ABCommons notNull:gif], "gif should not be null");
         
-        if ([ABCommons notNull:gif]) {
-            [self testGetGIFCacheForKey:key];
-            
-        } else {
-            XCTAssertNotNil(gif, "GIF should not be nil");
-        }
-        
+        [self testGetGIFCacheForKey:key];
     }];
 }
 
 - (void)testAudioLoading {
     [ABCacheManager loadAudio:@"https://a.tumblr.com/tumblr_ojs6z4VJp31u5escjo1.mp3" completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+        XCTAssert([ABCommons notNull:audioPath], "audioPath should not be null");
         
-        if ([ABCommons notNull:audioPath]) {
-            [self testGetAudioCacheForKey:key];
-        } else {
-            XCTAssertNotNil(audioPath, "audioPath should not be nil");
-        }
-        
+        [self testGetAudioCacheForKey:key];
     }];
 }
 
