@@ -143,7 +143,7 @@
 }
 
 - (void)testGetVideoCacheForKey:(NSString *)key {
-    UIImage *cachedObject = [ABCacheManager getCache:GIFCache objectForKey:key];
+    NSString *cachedObject = [ABCacheManager getCache:VideoCache objectForKey:key];
     
     if ([ABCommons notNull:cachedObject]) {
         
@@ -153,7 +153,7 @@
 }
 
 - (void)testGetGIFCacheForKey:(NSString *)key {
-    NSString *cachedObject = [ABCacheManager getCache:VideoCache objectForKey:key];
+    UIImage *cachedObject = [ABCacheManager getCache:GIFCache objectForKey:key];
     
     if ([ABCommons notNull:cachedObject]) {
         
