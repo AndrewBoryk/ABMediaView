@@ -670,7 +670,7 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
     
 }
 
-+ (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVURLAsset *)asset {
++ (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVAsset *)asset {
     
     if (type == AudioCache) {
         //        AVURLAsset * asset = self.player.currentItem.asset;

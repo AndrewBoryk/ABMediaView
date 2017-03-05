@@ -120,6 +120,6 @@ typedef NS_ENUM(NSInteger, CacheType) {
 + (void)detectIfURL:(NSURL *)url isValidForCacheType:(CacheType)type completion:(void (^)(BOOL isValidURL))completionBlock;
 
 /// Exports an asset to disk given the asset, a url, and the type of cache
-+ (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVURLAsset *)asset;
++ (void)exportAssetURL:(NSString *)urlString type:(CacheType)type asset:(AVAsset *)asset;
 
 @end

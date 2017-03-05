@@ -2976,9 +2976,9 @@ const CGFloat ABBufferTabBar = 49.0f;
         if ([ABCommons notNull:self.player.currentItem]) {
             
             if ([ABCommons notNull:self.videoURL]) {
-                [ABCacheManager exportAssetURL:self.videoURL type:VideoCache asset:(AVURLAsset *)self.player.currentItem.asset];
+                [ABCacheManager exportAssetURL:self.videoURL type:VideoCache asset:self.player.currentItem.asset];
             } else if ([ABCommons notNull:self.audioURL]) {
-                [ABCacheManager exportAssetURL:self.audioURL type:AudioCache asset:(AVURLAsset *)self.player.currentItem.asset];
+                [ABCacheManager exportAssetURL:self.audioURL type:AudioCache asset:self.player.currentItem.asset];
             }
             
         }
