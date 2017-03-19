@@ -241,6 +241,24 @@ extern const CGFloat ABBufferTabBar;
 /// File being played is from directory
 @property (nonatomic) BOOL fileFromDirectory;
 
+/// The width of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewWidth;
+
+/// The height of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewHeight;
+
+/// The maximum amount of y offset for the mediaView
+@property (nonatomic, readonly) CGFloat maxViewOffset;
+
+/// Keeps track of how much the video has been minimized
+@property (nonatomic, readonly) CGFloat offsetPercentage;
+
+/// Width of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewWidth;
+
+/// Height of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewHeight;
+
 #pragma mark - Initialization Methods
 
 /// Download the image, display the image, and give completion block
