@@ -379,6 +379,10 @@
 //    NSLog(@"Did download Gif: %@", gif);
 }
 
+- (void)mediaView:(ABMediaView *)mediaView didDownloadAudio:(NSURL *)audio {
+    NSLog(@"Did download audio: %@", audio);
+}
+
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {
     NSLog(@"Title label was selected");
 }

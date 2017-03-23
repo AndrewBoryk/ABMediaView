@@ -516,7 +516,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.image = nil;
     }
     
-    if ([ABCommons notNull:imageURL]) {
+    if ([ABCommons notNull:self.imageURL]) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImage) name:self.imageURL object:nil];
+        
         UIImage *fileImage = [ABCacheManager getCache:ImageCache objectForKey:imageURL];
         if ([ABCommons notNull: fileImage]) {
             self.imageCache = fileImage;
@@ -2466,9 +2469,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     if ([ABCommons notNull:self.videoURL]) {
         
         if (self.fileFromDirectory) {
-            [ABCacheManager loadVideoURL:[NSURL fileURLWithPath:self.videoURL] completion:nil];
+            [ABCacheManager loadVideoURL:[NSURL fileURLWithPath:self.videoURL] completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                self.videoCache = videoPath;
+            }];
         }else {
-            [ABCacheManager loadVideo:self.videoURL completion:nil];
+            [ABCacheManager loadVideo:self.videoURL completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                self.videoCache = videoPath;
+            }];
         }
         
     }
@@ -2482,11 +2489,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         if ([self.audioURL containsString:@"ipod-library://"]) {
             [ABCacheManager loadMusicLibrary:self.audioURL completion:nil];
         } else if (self.fileFromDirectory) {
-            [ABCacheManager loadAudioURL:[NSURL fileURLWithPath:self.audioURL] completion:nil];
+            [ABCacheManager loadAudioURL:[NSURL fileURLWithPath:self.audioURL] completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                self.audioCache = audioPath;
+            }];
         } else {
-            [ABCacheManager loadAudio:self.audioURL completion:nil];
+            [ABCacheManager loadAudio:self.audioURL completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                self.audioCache = audioPath;
+            }];
         }
-        
     }
     
 }
