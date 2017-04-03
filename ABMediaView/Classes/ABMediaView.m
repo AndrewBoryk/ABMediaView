@@ -1385,6 +1385,12 @@ const CGFloat ABBufferTabBar = 49.0f;
     
 }
 
+- (void)updateImage {
+    if ([ABCommons notNull:self.imageURL]) {
+        self.image = [ABCacheManager getCache:ImageCache objectForKey:self.imageURL];
+    }
+}
+
 #pragma mark - Gesture Methods
 
 - (void)handleSwipe: (UIPanGestureRecognizer *) gesture {
