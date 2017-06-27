@@ -277,6 +277,10 @@
 //    NSLog(@"MediaView did pause video");
 }
 
+- (void) mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)didLoop {
+    //    NSLog(@"MediaView did finish video");
+}
+
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
 //    NSLog(@"MediaView will present");
 }

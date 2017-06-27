@@ -1246,6 +1246,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         [p seekToTime:kCMTimeZero];
     }
     
+    if ([self.delegate respondsToSelector:@selector(mediaViewDidFinishVideo:withLoop:)]) {
+        [self.delegate mediaViewDidFinishVideo:self withLoop:self.allowLooping];
+    }
+    
     [self cacheStreamedVideo];
 }
 

@@ -376,6 +376,9 @@ extern const CGFloat ABBufferTabBar;
 /// When the mediaView pauses a video
 - (void)mediaViewDidPauseVideo:(ABMediaView *)mediaView;
 
+/// When the mediaView finishes playing a video, and whether it looped
+- (void)mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)didLoop;
+
 /// Called when the mediaView has begun the presentation process
 - (void)mediaViewWillPresent:(ABMediaView *)mediaView;
 
