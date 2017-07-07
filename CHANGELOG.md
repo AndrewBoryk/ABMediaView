@@ -4,6 +4,22 @@
 All notable changes to this project will be documented in this file.
 ***
 
+##0.4.2 (7/7/17)
+
+####Added:
+* Setting the 'shouldDismissAfterFinish' variable on a mediaView will have it dismiss after it finished playing its video. This value take precedence over 'allowLooping' when mediaView is fullscreen.
+* Utilize the 'mediaViewDidFinishVideo:withLooping' delegate method to take action after a mediaView has completed playing of its video. This delegate also lets you know whether the mediaView will loop (this delegate is called before the video loops).
+
+####Updated:
+* Moved the following variables to public read-only so that they can be utilized:
+  * 'minViewHeight' is the width the mediaView will be when fully minimized
+  * 'minViewHeight' is the height the mediaView will be when fully minimized
+  * 'maxViewOffset' is the maximum space between the top of the mediaView and the top of its superview, when fully minimized
+  * 'offsetPercentage' is the fraction (0 to 1) by which the mediaView has completed minimization 
+  * 'superviewWidth' is the width of view which presents the mediaView
+  * 'superviewHeight' is the height of view which presents the mediaView
+* Tune ups for caching
+
 ##0.4.1 (3/4/17)
 
 ####Added:
