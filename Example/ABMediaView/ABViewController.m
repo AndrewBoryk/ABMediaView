@@ -277,7 +277,15 @@
 //    NSLog(@"MediaView did pause video");
 }
 
+- (void) mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)willLoop {
+//    if ([mediaView isFullScreen]) {
+//        [mediaView dismissMediaViewAnimated:true withCompletion:nil];
+//    }
+    //    NSLog(@"MediaView did finish video");
+}
+
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
+//    mediaView.shouldDismissAfterFinish = true;
 //    NSLog(@"MediaView will present");
 }
 
@@ -377,6 +385,10 @@
 
 - (void) mediaView:(ABMediaView *)mediaView didDownloadGif:(UIImage *)gif {
 //    NSLog(@"Did download Gif: %@", gif);
+}
+
+- (void)mediaView:(ABMediaView *)mediaView didDownloadAudio:(NSURL *)audio {
+    NSLog(@"Did download audio: %@", audio);
 }
 
 - (void) handleTitleSelectionInMediaView:(ABMediaView *)mediaView {

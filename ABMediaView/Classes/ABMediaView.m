@@ -82,24 +82,6 @@ const CGFloat ABBufferTabBar = 49.0f;
 /// Variable tracking offset of video
 @property (nonatomic) CGFloat offset;
 
-/// The width of the view when minimized
-@property (nonatomic, readonly) CGFloat minViewWidth;
-
-/// The height of the view when minimized
-@property (nonatomic, readonly) CGFloat minViewHeight;
-
-/// The maximum amount of y offset for the mediaView
-@property (nonatomic, readonly) CGFloat maxViewOffset;
-
-/// Keeps track of how much the video has been minimized
-@property (nonatomic, readonly) CGFloat offsetPercentage;
-
-/// Width of the mainWindow
-@property (nonatomic, readonly) CGFloat superviewWidth;
-
-/// Height of the mainWindow
-@property (nonatomic, readonly) CGFloat superviewHeight;
-
 /// Number of seconds in the buffer
 @property (nonatomic) CGFloat bufferTime;
 
@@ -226,6 +208,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setCustomPlayButton:mediaView.customPlayButton];
         [self setCustomMusicButton:mediaView.customMusicButton];
         
+        
         self.originalSuperview = mediaView.superview;
         
         self.pressForGIF = NO;
@@ -257,6 +240,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.allowLooping = mediaView.allowLooping;
         self.isMinimizable = mediaView.isMinimizable;
         self.isDismissable = mediaView.isDismissable;
+        self.shouldDismissAfterFinish = mediaView.shouldDismissAfterFinish;
         
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         [self setCloseButtonHidden: mediaView.closeButtonHidden];
@@ -534,7 +518,10 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.image = nil;
     }
     
-    if ([ABCommons notNull:imageURL]) {
+    if ([ABCommons notNull:self.imageURL]) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateImage) name:self.imageURL object:nil];
+        
         UIImage *fileImage = [ABCacheManager getCache:ImageCache objectForKey:imageURL];
         if ([ABCommons notNull: fileImage]) {
             self.imageCache = fileImage;
@@ -1252,7 +1239,14 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     // Loop video when end is reached
     
-    if (self.allowLooping) {
+    if ([self.delegate respondsToSelector:@selector(mediaViewDidFinishVideo:withLoop:)]) {
+        [self.delegate mediaViewDidFinishVideo:self withLoop:self.allowLooping];
+    }
+    
+    if (self.isFullScreen && self.shouldDismissAfterFinish) {
+        [self dismissMediaViewAnimated:true withCompletion:nil];
+    }
+    else if (self.allowLooping) {
         AVPlayerItem *p = [notification object];
         [p seekToTime:kCMTimeZero];
     } else {
@@ -1398,6 +1392,12 @@ const CGFloat ABBufferTabBar = 49.0f;
         
     }
     
+}
+
+- (void)updateImage {
+    if ([ABCommons notNull:self.imageURL]) {
+        self.image = [ABCacheManager getCache:ImageCache objectForKey:self.imageURL];
+    }
 }
 
 #pragma mark - Gesture Methods
@@ -2484,9 +2484,13 @@ const CGFloat ABBufferTabBar = 49.0f;
     if ([ABCommons notNull:self.videoURL]) {
         
         if (self.fileFromDirectory) {
-            [ABCacheManager loadVideoURL:[NSURL fileURLWithPath:self.videoURL] completion:nil];
+            [ABCacheManager loadVideoURL:[NSURL fileURLWithPath:self.videoURL] completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                self.videoCache = videoPath;
+            }];
         }else {
-            [ABCacheManager loadVideo:self.videoURL completion:nil];
+            [ABCacheManager loadVideo:self.videoURL completion:^(NSURL *videoPath, NSString *key, NSError *error) {
+                self.videoCache = videoPath;
+            }];
         }
         
     }
@@ -2500,11 +2504,14 @@ const CGFloat ABBufferTabBar = 49.0f;
         if ([self.audioURL containsString:@"ipod-library://"]) {
             [ABCacheManager loadMusicLibrary:self.audioURL completion:nil];
         } else if (self.fileFromDirectory) {
-            [ABCacheManager loadAudioURL:[NSURL fileURLWithPath:self.audioURL] completion:nil];
+            [ABCacheManager loadAudioURL:[NSURL fileURLWithPath:self.audioURL] completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                self.audioCache = audioPath;
+            }];
         } else {
-            [ABCacheManager loadAudio:self.audioURL completion:nil];
+            [ABCacheManager loadAudio:self.audioURL completion:^(NSURL *audioPath, NSString *key, NSError *error) {
+                self.audioCache = audioPath;
+            }];
         }
-        
     }
     
 }

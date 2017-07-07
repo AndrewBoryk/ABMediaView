@@ -509,6 +509,8 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
             NSString *urlString = url.absoluteString;
             NSURL *filePath = [ABCacheManager getCache:type objectForKey:urlString];
             if ([ABCommons notNull: filePath]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:url.absoluteString object:nil];
+                
                 [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                 
                 if(completionBlock) completionBlock(filePath, urlString, nil);
@@ -548,7 +550,11 @@ typedef NS_ENUM(NSInteger, DirectoryItemType) {
                                         
                                         if ([ABCommons notNull:urlString] && [ABCommons notNull:cachedURL]) {
                                             [ABCacheManager setCache:type object:cachedURL forKey:urlString];
+                                            
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:url.absoluteString object:nil];
                                         }
+                                        
+                                        
                                         
                                         [[ABCacheManager sharedManager] removeFromQueue:type forKey:urlString];
                                         

@@ -59,8 +59,6 @@ extern const CGFloat ABBufferStatusAndNavigationBar;
 /// Preset buffer offset for 48px
 extern const CGFloat ABBufferTabBar;
 
-//extern NSString *const ABTestString;
-
 @interface ABMediaView : UIImageView <ABTrackViewDelegate, UIGestureRecognizerDelegate> {
     /// Determines if video is minimized
     BOOL isMinimized;
@@ -166,6 +164,9 @@ extern const CGFloat ABBufferTabBar;
 /// Determines whether the mediaView can be dismissed by swiping down on the view, this setting would override isMinimizable
 @property (nonatomic) BOOL isDismissable;
 
+/// Determines whether the mediaView should dismiss after playing (Overrides looping when mediaView is fullscreen)
+@property (nonatomic) BOOL shouldDismissAfterFinish;
+
 /// Determines whether the video occupies the full screen when displayed
 @property BOOL shouldDisplayFullscreen;
 
@@ -240,6 +241,24 @@ extern const CGFloat ABBufferTabBar;
 
 /// File being played is from directory
 @property (nonatomic) BOOL fileFromDirectory;
+
+/// The width of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewWidth;
+
+/// The height of the view when minimized
+@property (nonatomic, readonly) CGFloat minViewHeight;
+
+/// The maximum amount of y offset for the mediaView
+@property (nonatomic, readonly) CGFloat maxViewOffset;
+
+/// Keeps track of how much the video has been minimized
+@property (nonatomic, readonly) CGFloat offsetPercentage;
+
+/// Width of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewWidth;
+
+/// Height of the mainWindow
+@property (nonatomic, readonly) CGFloat superviewHeight;
 
 #pragma mark - Initialization Methods
 
@@ -357,6 +376,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// When the mediaView pauses a video
 - (void)mediaViewDidPauseVideo:(ABMediaView *)mediaView;
+
+/// When the mediaView finishes playing a video, and whether it will loop
+- (void)mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)willLoop;
 
 /// Called when the mediaView has begun the presentation process
 - (void)mediaViewWillPresent:(ABMediaView *)mediaView;

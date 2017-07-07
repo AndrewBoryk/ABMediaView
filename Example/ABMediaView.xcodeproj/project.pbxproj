@@ -265,7 +265,7 @@
 				ORGANIZATIONNAME = "Andrew Boryk";
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = EM32C32CW4;
+						DevelopmentTeam = F6ALBB84EY;
 					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
@@ -543,7 +543,7 @@
 			baseConfigurationReference = FD4655CFBEE31DBCE544EC85 /* Pods-ABMediaView_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = EM32C32CW4;
+				DEVELOPMENT_TEAM = F6ALBB84EY;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ABMediaView/ABMediaView-Prefix.pch";
 				INFOPLIST_FILE = "ABMediaView/ABMediaView-Info.plist";
@@ -560,7 +560,7 @@
 			baseConfigurationReference = CFB1FB72DF1BDC0723C43EB8 /* Pods-ABMediaView_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = EM32C32CW4;
+				DEVELOPMENT_TEAM = F6ALBB84EY;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ABMediaView/ABMediaView-Prefix.pch";
 				INFOPLIST_FILE = "ABMediaView/ABMediaView-Info.plist";
