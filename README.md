@@ -299,7 +299,7 @@ ABMediaView also comes with a few playback options for video and audio. One opti
 If you are looking for the functionality to have a fullscreen mediaView dismiss after its video finished playing, you can set the value 'shouldDismissAfterFinish' to true on the mediaView. This functionality will take precedence over 'allowLooping' for fullscreen mediaViews.
 
 ```objective-c
-[mediaView setIsDismissable: YES];
+[mediaView setShouldDismissAfterFinish: YES];
 ```
 
 
