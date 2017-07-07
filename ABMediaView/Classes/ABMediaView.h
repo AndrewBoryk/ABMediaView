@@ -59,8 +59,6 @@ extern const CGFloat ABBufferStatusAndNavigationBar;
 /// Preset buffer offset for 48px
 extern const CGFloat ABBufferTabBar;
 
-//extern NSString *const ABTestString;
-
 @interface ABMediaView : UIImageView <ABTrackViewDelegate, UIGestureRecognizerDelegate> {
     /// Determines if video is minimized
     BOOL isMinimized;
@@ -165,6 +163,9 @@ extern const CGFloat ABBufferTabBar;
 
 /// Determines whether the mediaView can be dismissed by swiping down on the view, this setting would override isMinimizable
 @property (nonatomic) BOOL isDismissable;
+
+/// Determines whether the mediaView should dismiss after playing (Overrides looping when mediaView is fullscreen)
+@property (nonatomic) BOOL shouldDismissAfterFinish;
 
 /// Determines whether the video occupies the full screen when displayed
 @property BOOL shouldDisplayFullscreen;

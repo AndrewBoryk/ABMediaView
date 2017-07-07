@@ -278,10 +278,14 @@
 }
 
 - (void) mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)didLoop {
+//    if ([mediaView isFullScreen]) {
+//        [mediaView dismissMediaViewAnimated:true withCompletion:nil];
+//    }
     //    NSLog(@"MediaView did finish video");
 }
 
 - (void) mediaViewWillPresent:(ABMediaView *)mediaView {
+//    mediaView.shouldDismissAfterFinish = true;
 //    NSLog(@"MediaView will present");
 }
 

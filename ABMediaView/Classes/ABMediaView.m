@@ -208,6 +208,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         [self setCustomPlayButton:mediaView.customPlayButton];
         [self setCustomMusicButton:mediaView.customMusicButton];
         
+        
         self.originalSuperview = mediaView.superview;
         
         self.pressForGIF = NO;
@@ -239,6 +240,7 @@ const CGFloat ABBufferTabBar = 49.0f;
         self.allowLooping = mediaView.allowLooping;
         self.isMinimizable = mediaView.isMinimizable;
         self.isDismissable = mediaView.isDismissable;
+        self.shouldDismissAfterFinish = mediaView.shouldDismissAfterFinish;
         
         self.shouldDisplayFullscreen = mediaView.shouldDisplayFullscreen;
         [self setCloseButtonHidden: mediaView.closeButtonHidden];
@@ -1237,17 +1239,20 @@ const CGFloat ABBufferTabBar = 49.0f;
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     // Loop video when end is reached
     
-    if (self.allowLooping) {
+    if ([self.delegate respondsToSelector:@selector(mediaViewDidFinishVideo:withLoop:)]) {
+        [self.delegate mediaViewDidFinishVideo:self withLoop:self.allowLooping];
+    }
+    
+    if (self.isFullScreen && self.shouldDismissAfterFinish) {
+        [self dismissMediaViewAnimated:true withCompletion:nil];
+    }
+    else if (self.allowLooping) {
         AVPlayerItem *p = [notification object];
         [p seekToTime:kCMTimeZero];
     } else {
         [self.player pause];
         AVPlayerItem *p = [notification object];
         [p seekToTime:kCMTimeZero];
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(mediaViewDidFinishVideo:withLoop:)]) {
-        [self.delegate mediaViewDidFinishVideo:self withLoop:self.allowLooping];
     }
     
     [self cacheStreamedVideo];
