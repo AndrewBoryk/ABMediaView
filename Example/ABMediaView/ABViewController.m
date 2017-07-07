@@ -277,7 +277,7 @@
 //    NSLog(@"MediaView did pause video");
 }
 
-- (void) mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)didLoop {
+- (void) mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)willLoop {
 //    if ([mediaView isFullScreen]) {
 //        [mediaView dismissMediaViewAnimated:true withCompletion:nil];
 //    }

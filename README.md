@@ -296,6 +296,13 @@ ABMediaView also comes with a few playback options for video and audio. One opti
 ```
 
 
+If you are looking for the functionality to have a fullscreen mediaView dismiss after its video finished playing, you can set the value 'shouldDismissAfterFinish' to true on the mediaView. This functionality will take precedence over 'allowLooping' for fullscreen mediaViews.
+
+```objective-c
+[mediaView setIsDismissable: YES];
+```
+
+
 ABMediaView has several options for enabling and editing the progress track that shows when displaying videos and audio
 
 ```objective-c
@@ -502,6 +509,14 @@ In addition, there are also delegate methods to help determine whether a ABMedia
 
 /// Called when the mediaView has completed the dismissal process. Useful if not looking to utilize the dismissal completion block
 - (void) mediaViewDidDismiss: (ABMediaView *) mediaView;
+```
+
+
+If looking to determine whether a mediaView has finished playing its video, you can utilize the 'mediaViewDidFinishVideo:withLoop:' method. This also specifies whether the mediaView is set to loop after it has finished playing.
+
+```objective-c
+/// When the mediaView finishes playing a video, and whether it will loop
+- (void)mediaViewDidFinishVideo:(ABMediaView *)mediaView withLoop:(BOOL)willLoop;
 ```
 
 
