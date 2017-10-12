@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/cocoapods/l/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 [![Platform](https://img.shields.io/cocoapods/p/ABMediaView.svg?style=flat)](http://cocoapods.org/pods/ABMediaView)
 
-# [I've moved on to building out the Swift version of this library](https://github.com/AndrewBoryk/MediaView)
+# [I've built out the Swift version of this library!](https://github.com/AndrewBoryk/MediaView)
 
 ## Screenshots
 
